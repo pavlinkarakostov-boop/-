@@ -635,10 +635,33 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
 .fee-input-group { flex: 1; display: flex; flex-direction: column; }
 .fee-input-group label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
 .fee-input-group input { margin-bottom: 0 !important; padding: 10px 12px; }
+
+/* --- НАПОМНЯНЕ ЗА АРХИВ (HIGHLIGHT НА ИКОНКАТА) --- */
+#backup-modal {
+    background-color: rgba(15, 23, 42, 0.68);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+body.backup-reminder-active header {
+    position: relative;
+    z-index: auto;
+}
+
+body.backup-reminder-active header button[onclick*="exportDB"] {
+    position: relative;
+    z-index: 2005;
+    background: #ffffff !important;
+    color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 20px rgba(255, 255, 255, 0.95);
+    transform: scale(1.1);
+    transition: all 0.25s ease;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web/src/regular/style.css">
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web/src/fill/style.css">
+
 <style>
     @font-face {
         font-family: "Phosphor";
@@ -648,6 +671,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         font-style: normal;
     }
 </style>
+
 
 </head>
 <body>
@@ -676,6 +700,27 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     </div>
     <div id="help-body" style="font-size: 0.9rem; color: var(--text-main); line-height: 1.6;"></div>
     <button class="action-btn" style="margin-top: 20px;" onclick="document.getElementById('help-modal').style.display='none'">РАЗБРАХ</button>
+  </div>
+</div>
+
+<div id="backup-modal" class="modal">
+  <div class="modal-content" style="text-align: center;">
+    <div style="width: 56px; height: 56px; border-radius: 50%; background: #eff6ff; color: var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+        <i class="ph ph-floppy-disk" style="font-size: 2rem;"></i>
+    </div>
+    <h3 style="margin-top: 0; margin-bottom: 10px; color: var(--primary);">Напомняне за архив</h3>
+    <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 22px;">
+        При последното ползване на приложението са правени промени (такси, плащания, разходи или апартаменти), които все още не са архивирани.<br><br>
+        Искате ли да запазите архив сега?
+    </p>
+    <div style="display: flex; gap: 10px;">
+        <button class="action-btn" style="margin-bottom: 0; background: var(--accent); display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="exportDB()">
+            <i class="ph ph-floppy-disk"></i> ЗАПАЗИ АРХИВ
+        </button>
+        <button class="action-btn" style="margin-bottom: 0; background: #e2e8f0; color: var(--text-main);" onclick="closeBackupModal()">
+            ОТКАЗ
+        </button>
+    </div>
   </div>
 </div>
 
@@ -1093,6 +1138,34 @@ function dbReq(req) {
     });
 }
 
+function markUnsavedChanges() {
+    localStorage.setItem('hasUnsavedChanges', 'true');
+}
+
+function clearUnsavedChanges() {
+    localStorage.removeItem('hasUnsavedChanges');
+    closeBackupModal();
+}
+
+function checkBackupReminder() {
+    if (localStorage.getItem('hasUnsavedChanges') === 'true') {
+        const modal = document.getElementById('backup-modal');
+        if (modal) {
+            window.scrollTo(0, 0);
+            modal.style.display = 'flex';
+            document.body.classList.add('backup-reminder-active');
+        }
+    }
+}
+
+function closeBackupModal() {
+    localStorage.removeItem('hasUnsavedChanges');
+    const modal = document.getElementById('backup-modal');
+    if (modal) modal.style.display = 'none';
+    document.body.classList.remove('backup-reminder-active');
+}
+
+
 function dbTx(tx) {
     return new Promise((resolve, reject) => {
         let settled = false;
@@ -1100,8 +1173,10 @@ function dbTx(tx) {
         tx.oncomplete = () => {
             if (settled) return;
             settled = true;
+            markUnsavedChanges();
             resolve();
         };
+
 
         tx.onerror = (e) => {
             if (settled) return;
@@ -1149,7 +1224,9 @@ if (!window.indexedDB) {
         db = e.target.result; 
         setDefaultDate(); 
         loadAllData(); 
+        checkBackupReminder();
     };
+
     
     request.onerror = e => {
         console.error("Грешка при отваряне на базата данни:", e);
@@ -3374,10 +3451,12 @@ function exportDB() {
                 const date = getLocalDateStr();
                 a.download = `⅟вход_${date}.json`;
                 a.click();
+                clearUnsavedChanges();
             }
         }
     });
 }
+
 
 // --- ВЪЗСТАНОВЯВАНЕ ОТ АРХИВ (ПЪЛНА ЗАМЯНА НА ДАННИТЕ) ---
 function importDBFile(event) {
@@ -3425,6 +3504,7 @@ function importDBFile(event) {
             });
 
             tx.oncomplete = () => {
+                localStorage.removeItem('hasUnsavedChanges');
                 alert("Данните са възстановени успешно!");
                 location.reload();
             };
@@ -3460,8 +3540,14 @@ function importDBFile(event) {
     reader.readAsText(file);
 }
 
+function resetDB() {
+    if (confirm("Изтриване?")) {
+        localStorage.removeItem('hasUnsavedChanges');
+        indexedDB.deleteDatabase("DomoupravitelPro_v7");
+        location.reload();
+    }
+}
 
-function resetDB(){if(confirm("Изтриване?")){indexedDB.deleteDatabase("DomoupravitelPro_v7");location.reload();}}
 
 async function deleteMonthFees() {
     const period = document.getElementById("fee-month").value;

@@ -14,36 +14,26 @@
 <meta name="apple-mobile-web-app-title" content="⅟вход">
 <meta name="theme-color" content="#0f172a">
 
-
 <style>
-    
-
-        
-    
-   
 /* --- 1. ГЛОБАЛНИ ПРОМЕНЛИВИ И ОСНОВИ (FinTech Theme) --- */
 :root {
-    /* Основна палитра */
-    --primary: #0f172a;       /* Тъмно синьо-сиво (Slate 900) - Доверие/Финанси */
-    --primary-light: #334155; /* По-светло сиво (Slate 700) */
-    --accent: #3b82f6;        /* Ярко синьо за акценти (Blue 500) */
-    --bg-body: #f1f5f9;       /* Много светло сиво за фон (Slate 100) */
-    --bg-card: #ffffff;       /* Бяло за картите */
+    --primary: #0f172a;
+    --primary-light: #334155;
+    --accent: #3b82f6;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
     
-    /* Статуси */
-    --success: #10b981;       /* Емералд (по-модерно зелено) */
+    --success: #10b981;
     --success-bg: #d1fae5;
-    --danger: #ef4444;        /* Меко червено */
+    --danger: #ef4444;
     --danger-bg: #fee2e2;
-    --warning: #f59e0b;       /* Кехлибар */
+    --warning: #f59e0b;
     --orange: #f97316;
     
-    /* Текст */
-    --text-main: #1e293b;     /* Тъмен текст */
-    --text-muted: #64748b;    /* Сив текст за детайли */
+    --text-main: #1e293b;
+    --text-muted: #64748b;
     
-    /* UI Елементи */
-    --radius: 12px;           /* Закръгляне на ъгли */
+    --radius: 12px;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
     --header-height: 60px;
@@ -52,29 +42,25 @@
 
 /* --- СТИЛОВЕ ЗА ИКОНИ --- */
 i.ph, i.ph-fill {
-    font-size: 1.5rem; /* Размер на иконите */
+    font-size: 1.5rem;
     vertical-align: middle;
     transition: color 0.2s;
 }
 
-/* Специален размер за навигацията */
 nav button i.ph {
     font-size: 1.8rem;
     margin-bottom: 4px;
 }
 
-/* Цвят на активната икона в навигацията */
 nav button.active i.ph {
     font-weight: bold;
     color: var(--accent);
 }
 
-/* Икони в заглавията */
 h2 i.ph {
     margin-right: 8px;
     color: var(--primary-light);
 }
-
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -89,7 +75,7 @@ body {
 
 /* --- 2. ХЕДЪР --- */
 header { 
-    background: var(--bg-card); /* Бял хедър вместо син */
+    background: var(--bg-card);
     color: var(--primary);
     height: var(--header-height);
     padding: 0 16px;
@@ -112,9 +98,8 @@ header h1 {
     letter-spacing: 0.5px;
 }
 
-/* Бутони в хедъра */
 button.btn-icon {
-    color: var(--primary) !important; /* Презаписваме inline styles */
+    color: var(--primary) !important;
     background: #f1f5f9;
     border-radius: 50%;
     width: 36px;
@@ -123,6 +108,8 @@ button.btn-icon {
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
     transition: background 0.2s;
 }
 button.btn-icon:active { background: #e2e8f0; }
@@ -153,6 +140,7 @@ nav button {
     align-items: center; 
     justify-content: center;
     flex: 1; 
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
@@ -195,23 +183,30 @@ h3 {
     margin-bottom: 15px;
 }
 
-/* Стил на картите */
 .card-list { display: flex; flex-direction: column; gap: 12px; }
 
 .card { 
     background: var(--bg-card); 
     border-radius: var(--radius); 
     padding: 16px; 
-    border: 1px solid #e2e8f0; /* Фина рамка вместо само сянка */
+    border: 1px solid #e2e8f0;
     box-shadow: var(--shadow-sm); 
-    transition: transform 0.1s, box-shadow 0.1s;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
     position: relative;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .card:active { transform: scale(0.99); }
 
-/* Премахваме старите дебели леви бордери и ги заменяме с фини */
+/* Визуален ефект при задържане (Long Press) */
+.card.long-pressing {
+    transform: scale(0.96) !important;
+    background-color: #fff1f2 !important;
+    box-shadow: 0 0 0 2px var(--danger) !important;
+}
+
 .card[style*="border-left"] {
     border-left-width: 4px !important; 
 }
@@ -247,28 +242,25 @@ input, select, textarea {
     background: var(--bg-card); 
     color: var(--text-main);
     transition: border-color 0.2s, box-shadow 0.2s;
-    appearance: none; /* За iOS */
+    appearance: none;
 }
 
-/* --- ПОПРАВКА ЗА ТИКЧЕТА (CHECKBOX) --- */
 input[type="checkbox"] {
-    appearance: auto !important; /* Връща системния вид на тикчето */
-    width: 20px !important;      /* Задава фиксиран размер, да не се разпъва */
+    appearance: auto !important;
+    width: 20px !important;
     height: 20px !important;
     margin: 0 10px 0 0 !important;
     vertical-align: middle;
-    accent-color: var(--accent); /* Оцветява тикчето в синьо */
+    accent-color: var(--accent);
     cursor: pointer;
-    box-shadow: none !important; /* Маха сенките на инпут полетата */
+    box-shadow: none !important;
 }
 
-/* Поправка за контейнера на тикчето, за да са на един ред с текста */
 .resident-check {
     display: flex !important;
     align-items: center !important;
     cursor: pointer;
 }
-
 
 input:focus, select:focus, textarea:focus {
     outline: none;
@@ -276,7 +268,6 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Бутони за действие */
 button.action-btn { 
     width: 100%; 
     padding: 14px; 
@@ -309,6 +300,8 @@ button.btn-small {
     border-radius: 6px; 
     font-weight: 600;
     letter-spacing: 0.3px;
+    border: none;
+    cursor: pointer;
     box-shadow: var(--shadow-sm);
 }
 
@@ -332,21 +325,15 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
 .filter-bar input { margin: 0; flex: 1; border: none; background: #f8fafc; }
 .filter-bar button { width: auto; margin: 0; background: var(--primary-light); color: white; border-radius: 8px;}
 
-/* Чипове за филтри */
-
-/* --- ОБЕДИНЕНИ И ПОДОБРЕНИ СТИЛОВЕ ЗА ФИЛТРИТЕ --- */
-/* --- ОБЕДИНЕНИ И ПОДОБРЕНИ СТИЛОВЕ ЗА ФИЛТРИТЕ --- */
 .filter-group {
     display: flex;
     gap: 8px; 
     background: transparent; 
     overflow-x: auto; 
-    padding: 2px 2px 6px 2px; /* <-- НОВО: Добавихме място отгоре, отдолу и отстрани! */
+    padding: 2px 2px 6px 2px;
     margin-bottom: 15px;
 }
 
-
-/* Изключваме скролбара, за да е красиво на телефон */
 .filter-group::-webkit-scrollbar { display: none; }
 
 .filter-group button {
@@ -356,32 +343,32 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     align-items: center;
     gap: 6px;
     height: 42px;
-    border-radius: 12px !important; /* Елегантно заобляне */
+    border-radius: 12px !important;
     border: 1px solid transparent;
     font-size: 0.95rem;
     font-weight: 600;
     transition: all 0.2s ease;
     cursor: pointer;
     padding: 0 16px;
-    white-space: nowrap; /* Предпазва текста от счупване на 2 реда */
+    white-space: nowrap;
 }
 
-/* Активно състояние - Магия с currentColor! */
 .filter-group button.active {
     background: white !important;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border: 1px solid currentColor !important; /* Рамката взима цвета на текста/иконката */
+    border: 1px solid currentColor !important;
     transform: translateY(-1px);
 }
 
-
-/* Stats Buttons (Апартаменти) */
 .stats-filter-btn {
     border: 1px solid #e2e8f0;
     background: var(--bg-card);
     font-weight: 600;
     color: var(--text-main);
     box-shadow: var(--shadow-sm);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
 }
 
 .stats-filter-btn[data-state="1"] {
@@ -416,30 +403,33 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
 .bg-repair { background: linear-gradient(90deg, #10b981, #059669); }
 .bg-spent { background: var(--danger); }
 
-/* Цветове на фондове */
 .color-main { color: var(--accent); }
 .color-repair { color: var(--success); }
 
-/* --- 8. MODAL (Подобрен) --- */
+/* --- 8. MODAL --- */
 .modal-content { 
     background-color: var(--bg-card); 
     border-radius: 20px;
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
     border: none;
     padding: 24px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    width: 92%;
+    max-width: 500px;
 }
 .modal-header {
     display: flex !important;
-    justify-content: space-between !important; /* Текст вляво, Х вдясно */
-    align-items: center !important; /* Центриране вертикално */
+    justify-content: space-between !important;
+    align-items: center !important;
     width: 100%;
 }
 .modal-header h3 {
-    margin: 0 !important; /* Махаме излишните отстояния на заглавието */
+    margin: 0 !important;
 }
-.close-modal { color: var(--text-muted); background: #f1f5f9; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.close-modal { color: var(--text-muted); background: #f1f5f9; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
 
-/* Форма за апартамент контейнер */
 #apt-form-container, #cash-form-container { 
     border: 1px solid #e2e8f0 !important;
     box-shadow: var(--shadow-md);
@@ -456,24 +446,23 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
 }
 
 .rule-info {
-    flex-grow: 1; /* Текстът заема цялото свободно място */
-    margin-right: 10px; /* Малко разстояние до бутона */
+    flex-grow: 1;
+    margin-right: 10px;
 }
 
 .occupant-row {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
-/* --- 9. PRINT STYLES (Таблици за отчет) --- */
+/* --- 9. PRINT STYLES --- */
 @media print {
     @page { margin: 1cm; size: A4; }
     body { background: white; padding: 0; color: black; font-family: "Times New Roman", serif; }
-    
-    /* Скриваме всичко ненужно */
     header, nav, .filter-bar, .action-btn, .card, h2, .modal { display: none !important; }
-    
-    /* Показваме само секцията за печат */
     #print-view { 
         position: absolute; 
         top: 0; 
@@ -484,37 +473,26 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         background: white;
         z-index: 9999;
     }
-    
-    .print-header { display: none !important; } /* Скриваме тъмната лента с бутони */
-
-    /* Стилове на таблицата */
+    .print-header { display: none !important; }
     .print-table { 
         width: 100%; 
         border-collapse: collapse; 
         margin-top: 10px; 
         font-size: 11pt; 
     }
-    
     .print-table th, .print-table td { 
         border: 1px solid black; 
         padding: 8px 5px; 
         text-align: left; 
         color: black; 
     }
-    
     .print-table th { 
         background-color: #f0f0f0 !important; 
         text-align: center; 
         font-weight: bold; 
         -webkit-print-color-adjust: exact; 
     }
-
-    /* Специално за подписите - повече височина */
-    .print-table tr {
-        height: 35px; /* Достатъчно място за подпис */
-    }
-    
-    /* Заглавие на листа */
+    .print-table tr { height: 35px; }
     .print-title {
         text-align: center;
         font-size: 16pt;
@@ -526,13 +504,8 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     }
 }
 
-
-
-/* --- ПОПРАВКИ (FIXES) --- */
-
-/* 1. Скрива модалния прозорец по подразбиране */
 .modal {
-    display: none; /* Това скрива "Индивидуални такси" при старт */
+    display: none;
     position: fixed;
     z-index: 2000;
     left: 0;
@@ -544,20 +517,12 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     align-items: center;
     justify-content: center;
 }
-/* Когато модалът е активен, го правим flex за центриране */
 .modal[style*="display: block"] {
     display: flex !important;
 }
 
-/* 2. Скрива червения бутон X в списъка с такси по подразбиране */
-.rule-delete-btn {
-    display: none;
-}
-
-/* Показва бутона X само когато сме в режим редакция (натиснат +) */
-.edit-mode .rule-delete-btn {
-    display: block;
-}
+.rule-delete-btn { display: none; }
+.edit-mode .rule-delete-btn { display: block; }
 
 .row-header {
     display: flex !important;
@@ -566,10 +531,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     margin-bottom: 8px;
 }
 
-
-/* --- НОВИ СТИЛОВЕ ЗА ГРУПИРАНЕ И ЛЕНТИ --- */
-
-/* Рамка за секциите в Инфо (Финансов статус) */
 .section-frame {
     background: var(--bg-card);
     border: 1px solid #e2e8f0;
@@ -579,7 +540,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     box-shadow: var(--shadow-sm);
 }
 
-/* Заглавията вътре в рамките */
 .section-frame h3 {
     margin-top: 0;
     margin-bottom: 15px;
@@ -588,70 +548,41 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     font-size: 1.1rem;
 }
 
-/* Поправка за текста под лентите (ляво-дясно) */
 .progress-text {
     display: flex;
-    justify-content: space-between; /* Това праща "Остават" вдясно */
+    justify-content: space-between;
     font-size: 0.85rem;
     margin-top: 5px;
     font-weight: 500;
 }
 
-/* Уверяваме се, че лентата има височина */
 .progress-fill {
     height: 100%;
     border-radius: 5px;
     transition: width 0.5s ease-in-out;
 }
 
-/* --- ЦВЕТОВЕ ЗА РАМКИТЕ В ИНФО --- */
-
-/* Бледо синьо за ТАКСИ (Приходи) */
-.section-frame.frame-fees {
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-}
+.section-frame.frame-fees { background: #f0f9ff; border: 1px solid #bae6fd; }
 .section-frame.frame-fees h3 { color: #0369a1; border-color: #bae6fd; }
 
-/* Бледо червено за РАЗХОДИ */
-.section-frame.frame-expenses {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-}
+.section-frame.frame-expenses { background: #fef2f2; border: 1px solid #fecaca; }
 .section-frame.frame-expenses h3 { color: #b91c1c; border-color: #fecaca; }
 
-/* Бледо зелено/сиво за НАЛИЧНОСТИ */
-.section-frame.frame-cash {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-}
+.section-frame.frame-cash { background: #f0fdf4; border: 1px solid #bbf7d0; }
 .section-frame.frame-cash h3 { color: #15803d; border-color: #bbf7d0; }
 
-/* --- ПОПРАВКА ЗА СКРОЛИРАНЕ НА ДЪЛГИ МОДАЛИ --- */
-.modal-content {
-    max-height: 90vh; /* Модалът не може да е по-висок от 90% от екрана */
-    display: flex;
-    flex-direction: column;
-    width: 92%; /* Предпазва от залепване в краищата на телефона */
-    max-width: 500px;
-}
-
-/* Скролбар само за списъка с такси */
 #fee-override-list {
-    overflow-y: auto; /* Появява се скрол, ако таксите са много */
-    flex-shrink: 1;   /* Свива се, за да направи място на бутона ЗАПАЗИ */
-    padding-right: 5px; /* Оставя малко място за самия скролбар */
+    overflow-y: auto;
+    flex-shrink: 1;
+    padding-right: 5px;
     margin-bottom: 15px;
 }
 
-/* Скролбар и за помощния текст (за всеки случай) */
 #help-body {
     overflow-y: auto;
     flex-shrink: 1;
     margin-bottom: 15px;
 }
-
-/* --- ПОДРАВНЯВАНЕ НА "ЕД. ЦЕНА" И "ФИКС. СУМА" НА ЕДИН РЕД --- */
 
 .fee-override-row {
     background: #f8fafc;
@@ -674,36 +605,15 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     color: var(--text-muted);
 }
 
-.fee-inputs {
-    display: flex;         /* Подрежда елементите на един ред */
-    gap: 12px;             /* Разстояние между двете полета */
-}
-
-.fee-input-group {
-    flex: 1;               /* Разпъва двете полета поравно (50/50) */
-    display: flex;
-    flex-direction: column; /* Текстът (Ед.Цена) да е над самото поле */
-}
-
-.fee-input-group label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.fee-input-group input {
-    margin-bottom: 0 !important; /* Махаме излишното празно място отдолу */
-    padding: 10px 12px;          /* Правим ги малко по-компактни */
-}
-
-
+.fee-inputs { display: flex; gap: 12px; }
+.fee-input-group { flex: 1; display: flex; flex-direction: column; }
+.fee-input-group label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+.fee-input-group input { margin-bottom: 0 !important; padding: 10px 12px; }
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web/src/regular/style.css">
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web/src/fill/style.css">
 <style>
-    /* Допълнителна застраховка за шрифта */
     @font-face {
         font-family: "Phosphor";
         src: url("https://unpkg.com/@phosphor-icons/web/src/regular/Phosphor.ttf") format("truetype"),
@@ -712,7 +622,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         font-style: normal;
     }
 </style>
-
 
 </head>
 <body>
@@ -739,12 +648,10 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         <h3 id="help-title"><i class="ph ph-info"></i> Помощ</h3>
         <span class="close-modal" onclick="document.getElementById('help-modal').style.display='none'">&times;</span>
     </div>
-    <div id="help-body" style="font-size: 0.9rem; color: var(--text-main); line-height: 1.6;">
-        </div>
+    <div id="help-body" style="font-size: 0.9rem; color: var(--text-main); line-height: 1.6;"></div>
     <button class="action-btn" style="margin-top: 20px;" onclick="document.getElementById('help-modal').style.display='none'">РАЗБРАХ</button>
   </div>
 </div>
-
 
 <div id="fee-modal" class="modal">
   <div class="modal-content">
@@ -781,7 +688,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     <div id="financial-content"></div>
 </section>
 
-
 <section id="apartments" class="tab">
     <div style="display:flex; justify-content:space-between; align-items:center;">
         <h2><i class="ph ph-house"></i> Апартаменти</h2>
@@ -816,7 +722,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         </button>
     </div>
 
-
     <div id="apt-form-container" style="display:none; padding: 20px; border-radius: var(--radius); margin-bottom: 20px;">
         <h3 id="form-title" style="margin-top:0;">Нов Апартамент</h3>
         <input type="hidden" id="ap-id">
@@ -827,7 +732,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         </div>
         
         <div style="display:flex; gap:12px; margin-bottom: 15px;">
-            <input id="ap-parts" type="number" placeholder="% Ид. части" style="margin-bottom:0; flex:1;">
+            <input id="ap-parts" type="number" step="0.01" placeholder="% Ид. части" style="margin-bottom:0; flex:1;">
             <button class="btn-small" style="background:#6366f1; color:white; border:none; padding: 10px; display:flex; align-items:center; gap:5px;" onclick="openFeeSettings()">
                 <i class="ph ph-receipt"></i> Инд. Такси
             </button>
@@ -854,22 +759,18 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     <div id="ap-list" class="card-list"></div>
 </section>
 
-
-
 <section id="fees" class="tab">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
         <div style="display:flex; align-items:center; gap:10px;">
             <h2 style="margin:0;"><i class="ph ph-calendar-check"></i> Месечни Такси</h2>
             <button class="btn-icon" onclick="toggleRulesVisibility()" style="width:30px; height:30px; background:transparent; box-shadow:none; border:1px solid #e2e8f0;">
                 <i id="rules-toggle-icon" class="ph ph-caret-down"></i>
-
             </button>
         </div>
         
-<div style="display:flex; gap:10px;">
-    <button class="btn-icon" style="background: var(--accent); color: white !important;" onclick="toggleFeeEditor()" title="Нова такса"><i class="ph ph-plus"></i></button>
-</div>
-
+        <div style="display:flex; gap:10px;">
+            <button class="btn-icon" style="background: var(--accent); color: white !important;" onclick="toggleFeeEditor()" title="Нова такса"><i class="ph ph-plus"></i></button>
+        </div>
     </div>
 
     <div style="background:white; padding:10px; border-radius:var(--radius); border:1px solid #e2e8f0; margin-bottom:15px; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-sm);">
@@ -887,7 +788,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         </div>
 
         <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <input id="rule-amount" type="number" placeholder="Цена" style="margin-bottom:0; flex:1;">
+            <input id="rule-amount" type="number" step="0.01" placeholder="Цена" style="margin-bottom:0; flex:1;">
             <select id="rule-type" style="margin-bottom:0; flex:1;">
                 <option value="apart">на Апартамент</option>
                 <option value="person">на Човек</option>
@@ -910,10 +811,8 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
             <button class="action-btn" style="background:#e2e8f0; color:#333;" onclick="resetFeeEditor()">Отказ</button>
         </div>
     </div>
-
     
     <div id="active-rules-container" style="display: none; transition: all 0.3s ease;">
-
         <div id="active-rules-list" style="margin-bottom: 20px;"></div>
         
         <div class="card" style="margin-bottom: 20px; border-left: none; background:#f8fafc;">
@@ -943,9 +842,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     <div id="fees-list" class="card-list"></div>
 </section>
 
-
-
-
 <section id="print-view" class="tab" style="background: white; min-height: 100vh; display:none; padding:0;">
     <div class="print-header no-print" style="background:#333; color:white; padding: 15px; display:flex; justify-content:space-between; align-items:center;">
         <h3 style="margin:0; color:white;">🖨️ Преглед за печат</h3>
@@ -957,7 +853,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     
     <div id="print-content" style="padding: 20px;"></div>
 </section>
-
 
 <section id="cash" class="tab">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -988,10 +883,9 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     <div id="cash-form-container" style="display:none; padding:20px; border-radius:var(--radius); margin-bottom:20px; background:var(--bg-card); border: 1px solid #e2e8f0; box-shadow: var(--shadow-md);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
             <h3 style="margin:0;">Нова операция</h3>
-                        <button class="btn-small" style="height:36px; padding:0 16px; border-radius:10px; background:#e0e7ff; color:#4f46e5 !important; border:none; display:flex; align-items:center; gap:6px; font-weight:bold;" onclick="saveCashTemplate()" title="Запази като шаблон">
+            <button class="btn-small" style="height:36px; padding:0 16px; border-radius:10px; background:#e0e7ff; color:#4f46e5 !important; border:none; display:flex; align-items:center; gap:6px; font-weight:bold;" onclick="saveCashTemplate()" title="Запази като шаблон">
                 <i class="ph ph-floppy-disk" style="font-size:1.2rem;"></i> ШАБЛОН
             </button>
-
         </div>
         
         <div style="display:flex; gap:10px; margin-bottom:15px;">
@@ -1014,7 +908,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         </div>
 
         <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <input id="cash-amount" type="number" inputmode="decimal" placeholder="Сума" style="margin-bottom:0; font-weight:bold; font-size:1.1rem; flex:1;">
+            <input id="cash-amount" type="number" step="0.01" inputmode="decimal" placeholder="Сума" style="margin-bottom:0; font-weight:bold; font-size:1.1rem; flex:1;">
             <select id="cash-fund" style="margin-bottom:0; width: 140px; flex-shrink: 0;">
                 <option value="основен">Фонд Основен</option>
                 <option value="ремонт">Фонд Ремонти</option>
@@ -1039,7 +933,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         <button onclick="setCashFilter('expense')" id="filter-exp" style="color: #991b1b; background: #fee2e2;"><i class="ph ph-arrow-up-right"></i> Разходи</button>
     </div>
     
-    <div id="expense-subfilters" class="filter-group" style="display:none; justify-content: flex-start;">
+    <div id="expense-subfilters" class="filter-group" style="display:flex; justify-content: flex-start;">
         <button onclick="setExpenseSubFilter('all')" id="sub-all" class="active" style="color: #475569; background: #f1f5f9; min-width: max-content;">Всички</button>
         <button onclick="setExpenseSubFilter('Ток')" id="sub-tok" style="color: #ca8a04; background: #fefce8; min-width: max-content;"><i class="ph ph-lightning"></i> Ток</button>
         <button onclick="setExpenseSubFilter('Вода')" id="sub-wtr" style="color: #2563eb; background: #eff6ff; min-width: max-content;"><i class="ph ph-drop"></i> Вода</button>
@@ -1050,26 +944,21 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         <button onclick="setExpenseSubFilter('Други')" id="sub-gen" style="color: #475569; background: #f8fafc; min-width: max-content;"><i class="ph ph-dots-three-circle"></i> Други</button>
     </div>
 
-
-    <div id="expense-breakdown" style="display:none; background:#fffbeb; color:#92400e; padding:12px; border-radius:10px; margin-bottom:15px; font-size:0.9rem; border:1px solid #fcd34d; justify-content:space-between;">
-        <span title="Цена на апартамент"><i class="ph ph-buildings"></i> Ап: <b id="val-apt">0.00</b></span>
-        <span title="Цена на човек"><i class="ph ph-user"></i> Чов: <b id="val-pers">0.00</b></span>
-        <span title="Цена за 1% ид. част"><i class="ph ph-percent"></i> Ид.ч: <b id="val-part">0.00</b></span>
+    <div id="expense-breakdown" style="display:flex; background:#f8fafc; color:#475569; padding:12px; border-radius:10px; margin-bottom:15px; font-size:0.9rem; border:1px solid #e2e8f0; justify-content:space-between; transition: all 0.2s;">
+        <span title="Средно на апартамент"><i class="ph ph-buildings"></i> Ап: <b id="val-apt">0.00</b></span>
+        <span title="Средно на живущ"><i class="ph ph-user"></i> Чов: <b id="val-pers">0.00</b></span>
+        <span title="Средно за 1% ид. част"><i class="ph ph-percent"></i> Ид.ч: <b id="val-part">0.00</b></span>
     </div>
     
     <div id="filtered-balance-bar" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); padding:8px 15px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:15px; box-shadow:var(--shadow-sm); font-size:0.95rem;">
-        <span style="color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;">
+        <span id="filtered-balance-label" style="color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;">
             <i class="ph ph-scales" style="font-size:1.2rem; color:var(--primary-light);"></i> Баланс:
         </span>
         <b id="filtered-balance-val" style="font-size:1.1rem; transition: color 0.3s;">0.00</b>
     </div>
     
     <div id="cash-list" class="card-list"></div>
-
 </section>
-
-
-
 
 <section id="settings" class="tab">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
@@ -1079,7 +968,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         </button>
     </div>
     
-        <div class="card" style="margin-bottom: 20px;">
+    <div class="card" style="margin-bottom: 20px;">
         <h3><i class="ph ph-file-text"></i> Данни за Разписки</h3>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Тези данни ще се попълват автоматично в имейл разписките.</p>
         
@@ -1090,7 +979,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         
         <button class="action-btn" style="margin-top:5px;" onclick="saveGenSettings()">ЗАПАЗИ ДАННИТЕ</button>
     </div>
-
     
     <div class="card" style="margin-bottom: 20px;">
         <h3>Начални Салда</h3>
@@ -1099,12 +987,12 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
         <label style="font-weight:600; color:var(--accent); display:flex; align-items:center; gap:5px;">
             <i class="ph ph-bank"></i> Фонд Основен:
         </label>
-        <input id="init-balance-main" type="number" placeholder="0.00" style="margin-bottom:15px;">
+        <input id="init-balance-main" type="number" step="0.01" placeholder="0.00" style="margin-bottom:15px;">
         
         <label style="font-weight:600; color:var(--success); display:flex; align-items:center; gap:5px;">
             <i class="ph ph-wrench"></i> Фонд Ремонт:
         </label>
-        <input id="init-balance-repair" type="number" placeholder="0.00">
+        <input id="init-balance-repair" type="number" step="0.01" placeholder="0.00">
         
         <button class="action-btn" style="margin-top:10px;" onclick="setInitialBalance()">ЗАПИШИ САЛДАТА</button>
     </div>
@@ -1126,7 +1014,6 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     </div>
 </section>
 
-
 <nav>
     <button onclick="showTab('reports')" id="nav-reports" class="active">
         <i class="ph ph-chart-pie-slice"></i>
@@ -1146,9 +1033,7 @@ button.btn-edit { background: var(--bg-body); border: 1px solid #cbd5e1; color: 
     </button>
 </nav>
 
-
 <script>
-
 
 // --- ПОМОЩНА ФУНКЦИЯ ЗА ЗАЩИТА ОТ XSS ---
 function escapeHTML(str) {
@@ -1161,49 +1046,68 @@ function escapeHTML(str) {
         .replace(/'/g, '&#039;');
 }
 
+// --- ПОМОЩНИ ФУНКЦИИ ЗА ЛОКАЛНА ДАТА (ПОПРАВКА ЗА ЧАСОВА ЗОНА) ---
+function getLocalDateStr(d = new Date()) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getLocalMonthStr(d = new Date()) {
+    return getLocalDateStr(d).slice(0, 7);
+}
     
 // --- ПОМОЩНИ ФУНКЦИИ ЗА БАЗАТА ДАННИ (PROMISES) ---
-// 1. Използва се за извличане (четене) на данни
 function dbReq(req) {
     return new Promise((resolve, reject) => {
         req.onsuccess = e => resolve(e.target.result);
-        req.onerror = () => reject(req.error);
+        req.onerror   = () => reject(req.error);
+        req.onabort   = () => reject(new DOMException("Transaction aborted", "AbortError"));
     });
 }
 
-
-// 2. Използва се за изчакване на транзакция (запис/изтриване) да приключи + ГЛОБАЛНА ЗАЩИТА
 function dbTx(tx) {
     return new Promise((resolve, reject) => {
-        tx.oncomplete = () => resolve();
-        
+        let settled = false;
+
+        tx.oncomplete = () => {
+            if (settled) return;
+            settled = true;
+            resolve();
+        };
+
         tx.onerror = (e) => {
+            if (settled) return;
+            settled = true;
+
             const err = tx.error || e.target.error;
-            
-            // Проверяваме дали грешката е заради пълна памет
+
             if (err && err.name === 'QuotaExceededError') {
                 alert("⚠️ ВНИМАНИЕ: Паметта на телефона/браузъра е ПЪЛНА!\n\nПоследните промени НЕ бяха запазени. Моля, освободете място на устройството си, преди да продължите.");
             } else {
-                // За всякакви други непредвидени грешки
                 alert("⚠️ Възникна грешка при записването на данните!\nПромените не са запазени.");
             }
-            
+
             console.error("Грешка в базата данни:", err);
-            reject(err); // Спираме изпълнението нататък
+            reject(err);
+        };
+
+        tx.onabort = () => {
+            if (settled) return;
+            settled = true;
+            console.warn("Транзакцията беше прекратена (напр. изрично tx.abort()).");
+            reject(new DOMException("Aborted", "AbortError"));
         };
     });
 }
-
-
         
-// ----- DB v7 (Запазваме името на базата за съвместимост) -----
+// ----- DB v7 -----
 let db;
 
-// 1. Първо проверяваме дали браузърът изобщо поддържа IndexedDB
 if (!window.indexedDB) {
     alert("Вашият браузър не поддържа локална база данни или сте в режим Инкогнито. Приложението няма да може да запазва информация.");
 } else {
-    // 2. Ако се поддържа, пристъпваме към отваряне на базата
     const request = indexedDB.open("DomoupravitelPro_v7", 7);
 
     request.onupgradeneeded = e => {
@@ -1221,51 +1125,35 @@ if (!window.indexedDB) {
         loadAllData(); 
     };
     
-    // 3. Добра практика: хващаме грешки, ако браузърът блокира достъпа (напр. строги privacy настройки)
     request.onerror = e => {
         console.error("Грешка при отваряне на базата данни:", e);
         alert("Достъпът до базата данни беше блокиран. Проверете дали не сте в режим Инкогнито/Private.");
     };
 }
 
-
-
 let cashFundFilter = 'all'; // 'all', 'main', 'repair'
-
 
 // --- ГЛОБАЛНИ ПРОМЕНЛИВИ ЗА ФИЛТЪР ---
 let viewMode = 'month';
-let currentPeriod = new Date().toISOString().slice(0,7);
+let currentPeriod = getLocalMonthStr();
 
 let cashFilterType = 'all'; // 'all', 'income', 'expense'
-
 let cashSubFilter = 'all'; 
 
-// --- 1. ГЛОБАЛЕН ОБЕКТ ЗА СЪСТОЯНИЕТО НА ФИЛТРИТЕ ---
 let aptFilterState = {
-    residents: 0, // 0: off, 1: show (>0), 2: hide (==0)
+    residents: 0,
     kids: 0,
     tenants: 0,
     pets: 0
 };
 
-// --- 2. ФУНКЦИЯ ЗА ПРЕВКЛЮЧВАНЕ НА БУТОНИТЕ ---
 function toggleAptFilter(type) {
-    // Върти цикъла: 0 -> 1 -> 2 -> 0
     aptFilterState[type] = (aptFilterState[type] + 1) % 3;
-    
-    // Обновява визуално бутона
     const btn = document.getElementById(`filter-${type}`);
     btn.setAttribute('data-state', aptFilterState[type]);
-    
-    // Извиква филтрирането
     filterApartments();
 }
 
-
-
-
-// --- ОБНОВЕНА ЛОГИКА ЗА ФИЛТРИТЕ (Скрити под-филтри по подразбиране) ---
 function setCashFilter(type) {
     if (cashFilterType === type) {
         if (cashFundFilter === 'all') cashFundFilter = 'main';
@@ -1274,7 +1162,6 @@ function setCashFilter(type) {
     } else {
         cashFilterType = type;
         cashFundFilter = 'all';
-        // При смяна на главния таб, връщаме под-филтъра на "Всички"
         cashSubFilter = 'all';
         document.querySelectorAll('#expense-subfilters button').forEach(b => b.classList.remove('active'));
         document.getElementById('sub-all').classList.add('active');
@@ -1302,15 +1189,8 @@ function updateCashFilterUI() {
         document.getElementById(activeBtnId).innerHTML = `${iconHtml} ` + document.getElementById(activeBtnId).innerText;
     }
 
-    // Твърдо показваме лентата с под-категориите винаги!
     document.getElementById('expense-subfilters').style.display = 'flex';
 }
-// БЕЛЕЖКА: Можеш напълно да ИЗТРИЕШ функцията toggleSubFilters(event), вече не ни трябва!
-
-
-
-
-
 
 function setExpenseSubFilter(category) {
     cashSubFilter = category;
@@ -1324,14 +1204,13 @@ function setExpenseSubFilter(category) {
     else if(category === 'Асансьор') document.getElementById('sub-elv').classList.add('active');
     else if(category === 'Почистване') document.getElementById('sub-cln').classList.add('active');
     else if(category === 'Ремонти') document.getElementById('sub-rep').classList.add('active');
-    else if(category === 'Дом съвет') document.getElementById('sub-dom').classList.add('active'); // НОВО
+    else if(category === 'Дом съвет') document.getElementById('sub-dom').classList.add('active');
 
     loadCashList();
 }
 
-
 function setDefaultDate() {
-    const today = new Date().toISOString().slice(0,7);
+    const today = getLocalMonthStr();
     document.getElementById('report-date').value = today;
     document.getElementById('cash-date').value = today;
     document.getElementById('fee-month').value = today;
@@ -1339,46 +1218,35 @@ function setDefaultDate() {
 }
 
 function syncDate(sourceId) {
-    const val = document.getElementById(sourceId).value;
+    let val = document.getElementById(sourceId).value;
+    if (!val) val = getLocalMonthStr();
     currentPeriod = val;
     document.getElementById('report-date').value = val;
     document.getElementById('cash-date').value = val;
-    document.getElementById('fee-month').value = val; // <- ДОБАВЕНО ТУК
+    document.getElementById('fee-month').value = val;
 }
+
 
 function toggleViewMode(btnId) {
     const btn = document.getElementById(btnId);
-    // Намираме и другия бутон (в другия таб), за да ги синхронизираме
     const otherBtn = btnId === 'report-view-btn' ? document.getElementById('cash-view-btn') : document.getElementById('report-view-btn');
     
     if(viewMode === 'month') {
         viewMode = 'year';
-        // Използваме innerHTML, за да вкараме иконата
         const htmlContent = '<i class="ph ph-calendar-blank"></i> Година';
-        
         btn.innerHTML = htmlContent;
         otherBtn.innerHTML = htmlContent;
-        
         btn.style.background = "var(--orange)"; 
         otherBtn.style.background = "var(--orange)";
     } else {
         viewMode = 'month';
-        
         const htmlContent = '<i class="ph ph-calendar-blank"></i> Месец';
-        
         btn.innerHTML = htmlContent;
         otherBtn.innerHTML = htmlContent;
-        
-        btn.style.background = btnId === 'report-view-btn' ? "" : "#64748b"; 
-        otherBtn.style.background = btnId === 'report-view-btn' ? "#64748b" : "";
-        
-        // Малка корекция: бутонът в Reports няма специфичен background по подразбиране (взима от класа),
-        // докато този в Cash е сив. Горният код възстановява това.
         document.getElementById('report-view-btn').style.background = "";
         document.getElementById('cash-view-btn').style.background = "#64748b";
     }
 }
-
 
 function loadAllData() { 
     loadApartmentsList(); 
@@ -1387,37 +1255,38 @@ function loadAllData() {
     loadReports(); 
     loadFeeRules(); 
     loadInitialBalances(); 
-    loadGenSettings(); // <--- ДОБАВЕНО
+    loadGenSettings();
 }
 
+let previousTabBeforePrint = 'fees';
 
 function showTab(id) {
-    // 1. ЗАТВАРЯМЕ ВСИЧКИ ОТВОРЕНИ МОДАЛИ И ФОРМИ ПРИ СМЯНА НА ЕКРАНА
+    const currentActive = document.querySelector(".tab.active");
+    if (id === 'print-view' && currentActive && currentActive.id !== 'print-view') {
+        previousTabBeforePrint = currentActive.id;
+        const backBtn = document.querySelector("#print-view .print-header button");
+        if (backBtn) {
+            backBtn.setAttribute("onclick", `showTab('${previousTabBeforePrint}')`);
+        }
+    }
+
     document.getElementById('fee-modal').style.display = 'none';
     
-    // Опционално: Ако искаш като смениш таба, да се затвори и формата за добавяне на апартамент/каса:
-    // document.getElementById("apt-form-container").style.display = "none";
-    // document.getElementById("cash-form-container").style.display = "none";
-
-    // 2. Почистваме всички ръчни настройки, които може да са блокирали бутоните
     document.querySelectorAll(".tab").forEach(t => {
         t.style.display = ""; 
         t.classList.remove("active");
     });
     
-    // 3. Активираме избрания таб
     const target = document.getElementById(id);
     if(target) {
         target.classList.add("active");
         target.style.display = ""; 
     }
 
-    // 4. Обновяваме бутоните в долната навигация
     document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
     const navBtn = document.getElementById("nav-" + id);
     if(navBtn) navBtn.classList.add("active");
 
-    // 5. СПЕЦИАЛНО: Ако сме в прозореца за печат, скриваме долната навигация
     const navBar = document.querySelector("nav");
     if(navBar) {
         if(id === 'print-view') {
@@ -1426,19 +1295,61 @@ function showTab(id) {
             navBar.style.display = 'flex';
         }
     }
+    
+    if (id !== 'print-view') {
+        localStorage.setItem('lastActiveTab', id);
+    }
 }
 
 
-// --- Helper ---
 function isDateInPeriod(dateStr) {
-    if (!dateStr) return false;
+    if (!dateStr || !currentPeriod) return false;
     if (viewMode === 'month') return dateStr.startsWith(currentPeriod);
     const year = currentPeriod.split('-')[0];
-    return dateStr.startsWith(year);
+    return Boolean(year) && dateStr.startsWith(year);
 }
 
-// ======================= REPORT LOGIC (С ВГРАДЕНА РАЗБИВКА ПО ТАКСИ) =======================
+
+// Помощна функция за безопасно извличане на разбивката по пера
+function getPaymentBreakdownItems(ep, ruleFundMap = {}, ruleCategoryMap = {}) {
+    if (ep && Array.isArray(ep.breakdownItems) && ep.breakdownItems.length > 0) {
+        return ep.breakdownItems.map(item => ({
+            name: item.name,
+            amount: Number(item.amount) || 0,
+            fund: item.fund || ruleFundMap[item.name] || 'основен',
+            category: item.category || ruleCategoryMap[item.name] || 'Други'
+        }));
+    }
+    if (!ep || !ep.details) return [];
+
+    // За стари записи махаме само служебната бележка за депозит в края, без да чупим скоби в имената на таксите
+    const rawDetails = ep.details.replace(/\s*\((Платено от депозит|Частично от депозит:[^)]*)\)\s*$/, "");
+    if (!rawDetails) return [];
+
+    const defaultFund = (ep.fundSplit && ep.fundSplit.repair > 0 && ep.fundSplit.main === 0) ? 'ремонт' : (ep.fund || 'основен');
+    const result = [];
+
+    rawDetails.split(', ').forEach(item => {
+        const parts = item.split(': ');
+        if (parts.length >= 2) {
+            const rName = parts.slice(0, -1).join(': ');
+            const rTotal = parseFloat(parts[parts.length - 1]);
+            if (!isNaN(rTotal)) {
+                result.push({
+                    name: rName,
+                    amount: rTotal,
+                    fund: ruleFundMap[rName] || defaultFund,
+                    category: ruleCategoryMap[rName] || 'Други'
+                });
+            }
+        }
+    });
+    return result;
+}
+
+// ======================= REPORT LOGIC =======================
 async function loadReports() {
+    if (!db) return;
     const tx = db.transaction(["records", "expectedPayments", "apartments", "feeRules"], "readonly");
     
     const [records, payments, apartments, rules] = await Promise.all([
@@ -1490,41 +1401,30 @@ async function loadReports() {
                 inc.main.collected += collectedMain; inc.repair.collected += collectedRepair;
             }
 
-            let rawDetails = p.details ? p.details.split(' (')[0] : ""; 
-            if (rawDetails) {
-                let items = rawDetails.split(', ');
-                items.forEach(item => {
-                    let parts = item.split(': ');
-                    if (parts.length >= 2) {
-                        let rName = parts.slice(0, -1).join(': '); 
-                        let rTotal = parseFloat(parts[parts.length - 1]); 
-                        
-                        if (!isNaN(rTotal)) {
-                            let rFund = ruleFundMap[rName];
-                            if (!rFund) rFund = (p.fundSplit && p.fundSplit.repair > 0 && p.fundSplit.main === 0) ? 'ремонт' : 'основен';
+            const items = getPaymentBreakdownItems(p, ruleFundMap);
+            items.forEach(item => {
+                const rName = item.name;
+                const rTotal = item.amount;
+                const rFund = item.fund;
+                const rCollected = rTotal * collectionRatio;
 
-                            let rCollected = rTotal * collectionRatio;
-
-                            if (rFund === 'ремонт') {
-                                if (!breakdownRepair[rName]) breakdownRepair[rName] = {total:0, collected:0};
-                                breakdownRepair[rName].total += rTotal;
-                                breakdownRepair[rName].collected += rCollected;
-                            } else {
-                                if (!breakdownMain[rName]) breakdownMain[rName] = {total:0, collected:0};
-                                breakdownMain[rName].total += rTotal;
-                                breakdownMain[rName].collected += rCollected;
-                            }
-                        }
-                    }
-                });
-            }
+                if (rFund === 'ремонт') {
+                    if (!breakdownRepair[rName]) breakdownRepair[rName] = {total:0, collected:0};
+                    breakdownRepair[rName].total += rTotal;
+                    breakdownRepair[rName].collected += rCollected;
+                } else {
+                    if (!breakdownMain[rName]) breakdownMain[rName] = {total:0, collected:0};
+                    breakdownMain[rName].total += rTotal;
+                    breakdownMain[rName].collected += rCollected;
+                }
+            });
         }
     });
 
     const generateBarWithBreakdown = (val, max, colorClass, label1, label2, iconClass, title, breakdownId, breakdownObj) => {
         const percent = max > 0 ? (val / max) * 100 : 0;
         const remaining = max - val;
-        const widthStyle = max > 0 ? `width:${Math.min(percent, 100)}%` : 'width:0%';
+        const widthStyle = max > 0 ? `width:${Math.min(Math.max(percent, 0), 100)}%` : 'width:0%';
         
         let breakdownHtml = `<div id="${breakdownId}" style="display:none; margin-top:15px; padding-top:12px; border-top:1px dashed #bae6fd;">`;
         let keys = Object.keys(breakdownObj);
@@ -1542,7 +1442,7 @@ async function loadReports() {
                         <span><b>${b.collected.toFixed(2)}</b> / ${b.total.toFixed(2)}</span>
                     </div>
                     <div class="progress-track" style="height:6px; background:rgba(0,0,0,0.06); border-radius:3px;">
-                        <div class="progress-fill ${colorClass}" style="width:${Math.min(bPct, 100)}%; opacity:0.6; border-radius:3px;"></div>
+                        <div class="progress-fill ${colorClass}" style="width:${Math.min(Math.max(bPct, 0), 100)}%; opacity:0.6; border-radius:3px;"></div>
                     </div>
                 </div>`;
             });
@@ -1617,12 +1517,10 @@ async function loadReports() {
 }
 
 
-
-
-// --- ОБНОВЕНА ФУНКЦИЯ ЗА ТЪРСЕНЕ В ТАКСИ ---
+// --- ТЪРСЕНЕ В ТАКСИ ---
 function filterFeesByApartment() {
     const searchNum = document.getElementById("fee-search-input").value;
-    const searchType = document.getElementById("fee-search-type-btn").getAttribute("data-type"); // 'ap' или 'floor'
+    const searchType = document.getElementById("fee-search-type-btn").getAttribute("data-type");
     const cards = document.querySelectorAll("#fees-list .card");
 
     cards.forEach(card => {
@@ -1630,49 +1528,34 @@ function filterFeesByApartment() {
         const cardFloor = card.getAttribute("data-floor");
         
         if (!searchNum) {
-            // Ако полето е празно, показваме всичко
             card.style.display = ""; 
         } else {
             if (searchType === 'ap') {
-                // Търсим точно съвпадение на апартамент
                 card.style.display = (cardApNum == searchNum) ? "" : "none";
             } else {
-                // Търсим точно съвпадение на етаж
                 card.style.display = (cardFloor == searchNum) ? "" : "none";
             }
         }
     });
 }
 
-
-
-
 // ======================= АПАРТАМЕНТИ =======================
 let tempCustomFees = {}; 
 let tempCustomRates = {}; 
 
-// --- 3. ОБНОВЕНА ФУНКЦИЯ ЗА ФИЛТРИРАНЕ (Замени съществуващата filterApartments) ---
 function filterApartments() {
     const query = document.getElementById("apt-search").value.toLowerCase();
     const cards = document.querySelectorAll("#ap-list .card");
     
     cards.forEach(card => {
-        // 1. Текстово търсене
         const matchesText = card.innerText.toLowerCase().includes(query);
         
-        // 2. Филтриране по атрибути (Data attributes)
-        // Взимаме стойностите от картата (ще ги добавим в loadApartmentsList)
         const residents = Number(card.getAttribute('data-residents')) || 0;
         const kids = Number(card.getAttribute('data-kids')) || 0;
         const tenants = Number(card.getAttribute('data-tenants')) || 0;
         const pets = Number(card.getAttribute('data-pets')) || 0;
 
         let matchesFilters = true;
-
-        // Логика:
-        // State 0: Пропусни (винаги true)
-        // State 1: Трябва да ИМА (> 0)
-        // State 2: Трябва да НЯМА (== 0)
 
         if (aptFilterState.residents === 1 && residents === 0) matchesFilters = false;
         if (aptFilterState.residents === 2 && residents > 0) matchesFilters = false;
@@ -1686,27 +1569,22 @@ function filterApartments() {
         if (aptFilterState.pets === 1 && pets === 0) matchesFilters = false;
         if (aptFilterState.pets === 2 && pets > 0) matchesFilters = false;
 
-        // Краен резултат: И текстът съвпада, И всички активни филтри са спазени
         card.style.display = (matchesText && matchesFilters) ? "" : "none";
     });
 }
-
-
 
 function openAptForm(isEdit = false) {
     const container = document.getElementById("apt-form-container");
     container.style.display = "block";
     document.getElementById("form-title").innerText = isEdit ? "Редакция" : "Нов Апартамент";
     
-    // --- НОВО: Автоматично скролване до формата ---
     container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // ----------------------------------------------
 
     tempCustomFees = {};
     tempCustomRates = {};
     if(!isEdit) {
         document.getElementById("ap-id").value = "";
-        document.querySelectorAll("#apt-form-container input, textarea").forEach(i => i.value="");
+        document.querySelectorAll("#apt-form-container input, #apt-form-container textarea").forEach(i => i.value="");
         document.getElementById("occupants-list").innerHTML = "";
         addOccupantRow({role:'owner', livesHere:true}); 
     }
@@ -1714,8 +1592,6 @@ function openAptForm(isEdit = false) {
 
 function closeAptForm() { 
     document.getElementById("apt-form-container").style.display = "none"; 
-    
-    // --- НОВО: Връща екрана най-горе на секцията ---
     document.getElementById("apartments").scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -1737,7 +1613,6 @@ async function editApartment(id) {
     if(apt.occupants && Array.isArray(apt.occupants)) apt.occupants.forEach(o => addOccupantRow(o));
     else addOccupantRow({name: apt.owner, role: 'owner', livesHere: true});
 }
-
 
 async function saveApartment() {
     const id = document.getElementById("ap-id").value;
@@ -1765,14 +1640,33 @@ async function saveApartment() {
         occupants: occupants, customFees: tempCustomFees, customRates: tempCustomRates, overpayment: 0 
     };
 
-    const tx = db.transaction("apartments", "readwrite");
+    const tx = db.transaction(["apartments", "expectedPayments"], "readwrite");
     const store = tx.objectStore("apartments");
+    const epStore = tx.objectStore("expectedPayments");
+
+    const allApts = await dbReq(store.getAll());
+    const duplicate = allApts.find(a => a.number === aptData.number && a.id !== Number(id));
+    if (duplicate) {
+        tx.abort();
+        return alert(`Вече съществува Апартамент № ${aptData.number}!`);
+    }
 
     if(id) { 
-        const old = await dbReq(store.get(Number(id)));
+        const numId = Number(id);
+        const old = allApts.find(a => a.id === numId);
         if(old && old.overpayment) aptData.overpayment = old.overpayment;
-        aptData.id = Number(id);
+        aptData.id = numId;
         store.put(aptData);
+
+        // Синхронизираме номера и собственика във вече генерираните месечни такси за този апартамент
+        const allEp = await dbReq(epStore.getAll());
+        allEp.forEach(p => {
+            if (p.apartmentId === numId && (p.apNumber !== aptData.number || p.owner !== aptData.owner)) {
+                p.apNumber = aptData.number;
+                p.owner = aptData.owner;
+                epStore.put(p);
+            }
+        });
     } else { 
         store.add(aptData); 
     }
@@ -1780,9 +1674,10 @@ async function saveApartment() {
     await dbTx(tx);
     closeAptForm(); 
     loadApartmentsList(); 
+    loadFeesList();
+    loadCashList();
     alert(id ? "Обновено!" : "Добавено!");
 }
-
 
 function addOccupantRow(data = {}) {
     const div = document.createElement("div");
@@ -1801,10 +1696,10 @@ function addOccupantRow(data = {}) {
                 <option value="contact" ${data.role==='contact'?'selected':''}>📞 Контакт</option>
             </select>
         </div>
-        <input class="occ-name" placeholder="Име" value="${data.name||''}">
-        <input class="occ-phone" type="tel" placeholder="Телефон" value="${data.phone||''}">
+        <input class="occ-name" placeholder="Име" value="${escapeHTML(data.name||'')}">
+        <input class="occ-phone" type="tel" placeholder="Телефон" value="${escapeHTML(data.phone||'')}">
         <div style="display:flex; align-items:center; gap:8px; margin-top:10px;">
-            <input class="occ-email" type="email" placeholder="Имейл (по желание)" value="${data.email||''}" style="margin-bottom:0; flex:1;">
+            <input class="occ-email" type="email" placeholder="Имейл (по желание)" value="${escapeHTML(data.email||'')}" style="margin-bottom:0; flex:1;">
             <label class="resident-check" style="font-size:0.85rem; color:var(--text-muted); display:flex; align-items:center; margin:0;" title="Изпращай разписки тук">
                 <input type="checkbox" class="occ-send-email" ${data.sendEmail ? 'checked' : ''} style="margin-right:5px !important;"> 
                 <i class="ph ph-envelope-simple" style="font-size:1.4rem; color:var(--accent);"></i>
@@ -1814,22 +1709,27 @@ function addOccupantRow(data = {}) {
     document.getElementById("occupants-list").appendChild(div);
 }
 
-
-
 // ----- FEES (MODAL) -----
 async function openFeeSettings() {
     const rules = await dbReq(db.transaction("feeRules", "readonly").objectStore("feeRules").getAll());
     const container = document.getElementById("fee-override-list");
     container.innerHTML = "";
     
-    if(rules.length === 0) { container.innerHTML = "Няма дефинирани такси."; return; }
+    if(rules.length === 0) { 
+        container.innerHTML = "<div style='padding:15px; text-align:center; color:var(--text-muted);'>Няма дефинирани такси в секция 'Такси'.</div>"; 
+        document.getElementById("fee-modal").style.display = "block";
+        return; 
+    }
     
     let adultCount = 0, childCount = 0, petCount = 0;
     document.querySelectorAll(".occupant-row").forEach(row => {
         const role = row.querySelector(".occ-role").value;
         const live = row.querySelector(".occ-live").checked;
-        if(role === 'pet') petCount++;
-        else if(live) { if(role === 'child') childCount++; else if(role !== 'contact') adultCount++; }
+        if(live) {
+            if(role === 'pet') petCount++;
+            else if(role === 'child') childCount++;
+            else if(role !== 'contact') adultCount++;
+        }
     });
     
     rules.forEach(rule => {
@@ -1866,7 +1766,6 @@ async function openFeeSettings() {
     document.getElementById("fee-modal").style.display = "block";
 }
 
-
 function saveFeeSettings() {
     tempCustomRates = {}; tempCustomFees = {};
     document.querySelectorAll(".fee-rate-input").forEach(inp => { const val = parseFloat(inp.value); if(!isNaN(val)) tempCustomRates[inp.getAttribute("data-id")] = val; });
@@ -1874,16 +1773,13 @@ function saveFeeSettings() {
     document.getElementById("fee-modal").style.display = "none";
 }
 
-
-
-// --- 4. МОДИФИЦИРАНА loadApartmentsList (За да добавим data-attributes) ---
-// Намери и замени старата функция loadApartmentsList с тази:
 async function loadApartmentsList() {
+    if (!db) return;
     const list = await dbReq(db.transaction("apartments","readonly").objectStore("apartments").getAll());
     const div = document.getElementById("ap-list");
-    div.innerHTML = "";
     
     let totalResidents = 0, totalKids = 0, totalTenants = 0, totalPets = 0;
+    let htmlContent = ""; 
     
     list.sort((a,b)=>a.number-b.number).forEach(a => {
         let aptResidents = 0, aptKids = 0, aptTenants = 0, aptPets = 0;
@@ -1923,8 +1819,9 @@ async function loadApartmentsList() {
         const floorText = a.floor ? ` <span style="font-size:0.9rem; color:#94a3b8; font-weight:normal;">(Ет. ${escapeHTML(a.floor)})</span>` : "";
         let overpaymentHtml = (a.overpayment && a.overpayment > 0) ? `<span style="background:#dcfce7; color:#166534; padding:2px 8px; border-radius:12px; font-size:0.75rem; margin-left:5px; font-weight:bold; display:inline-flex; align-items:center; gap:3px;"><i class="ph ph-plus-circle"></i> ${a.overpayment.toFixed(2)} €</span>` : "";
 
-        div.innerHTML += `
-        <div class="card" data-id="${a.id}" data-residents="${aptResidents}" data-kids="${aptKids}" data-tenants="${aptTenants}" data-pets="${aptPets}">
+        // Добавен data-hold-action="delete-apt" за изтриване при задържане
+        htmlContent += `
+        <div class="card" data-id="${a.id}" data-hold-action="delete-apt" data-hold-id="${a.id}" data-residents="${aptResidents}" data-kids="${aptKids}" data-tenants="${aptTenants}" data-pets="${aptPets}" title="Задръжте за изтриване на апартамента">
             <div class="card-row" style="border-bottom:1px solid #f1f5f9; padding-bottom:8px; margin-bottom:8px;">
                 <span style="font-size:1.1rem; font-weight:bold; color:var(--primary);">Ап. ${a.number}${floorText} ${overpaymentHtml}</span>
                 <button class="btn-small btn-edit" onclick="editApartment(${a.id})" title="Редакция"><i class="ph ph-pencil-simple"></i></button>
@@ -1938,6 +1835,8 @@ async function loadApartmentsList() {
         </div>`;
     });
 
+    div.innerHTML = htmlContent || "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-house-line' style='font-size:2rem; margin-bottom:10px; display:block;'></i> Няма добавени апартаменти.</div>";
+
     document.getElementById("stat-total").innerText = totalResidents;
     document.getElementById("stat-kids").innerText = totalKids;
     document.getElementById("stat-tenants").innerText = totalTenants;
@@ -1946,13 +1845,7 @@ async function loadApartmentsList() {
     filterApartments();
 }
 
-
-
-
-
-
 // ----- UI TOGGLES & FEES -----
-// 1. Отваряне/Затваряне и ИЗЧИСТВАНЕ на формата
 function resetFeeEditor() {
     document.getElementById("rule-editor").style.display = 'none';
     document.getElementById("rule-edit-id").value = ""; 
@@ -1960,13 +1853,12 @@ function resetFeeEditor() {
     document.getElementById("rule-amount").value = "";
     document.getElementById("btn-delete-rule").style.display = "none"; 
     document.getElementById("btn-save-rule").innerText = "Добави Такса"; 
-    setRuleIcon("Други"); // Връщаме иконката по подразбиране
+    setRuleIcon("Други");
 }
 
 function toggleFeeEditor() {
     const editor = document.getElementById("rule-editor");
     if (editor.style.display === 'none' || editor.style.display === '') {
-        // Ако го отваряме чисто ново -> ресетваме полетата
         document.getElementById("rule-edit-id").value = "";
         document.getElementById("rule-name").value = "";
         document.getElementById("rule-amount").value = "";
@@ -1993,11 +1885,9 @@ function toggleRulesVisibility() {
     }
 }
 
-
-// 2. Функция за ЗАПАЗВАНЕ (работи и като Добави, и като Редактирай)
 async function saveFeeRule() {
     const idVal = document.getElementById("rule-edit-id").value;
-    const name = document.getElementById("rule-name").value;
+    const name = document.getElementById("rule-name").value.replace(/,/g, ' ').trim();
     const amount = Number(document.getElementById("rule-amount").value);
     
     if(!name || isNaN(amount)) return alert("Въведете Име и Цена");
@@ -2006,7 +1896,7 @@ async function saveFeeRule() {
         name: name, amount: amount, 
         type: document.getElementById("rule-type").value, 
         fund: document.getElementById("rule-fund").value,
-        category: document.getElementById("rule-icon-btn").getAttribute("data-cat") // Запазваме категорията!
+        category: document.getElementById("rule-icon-btn").getAttribute("data-cat")
     };
 
     const tx = db.transaction("feeRules","readwrite");
@@ -2022,76 +1912,48 @@ async function saveFeeRule() {
 }
 
 async function editFeeRule(id) {
-    const r = await dbReq(db.transaction("feeRules", "readonly").objectStore("feeRules").get(id));
-    if(!r) return;
+    try {
+        const r = await dbReq(db.transaction("feeRules", "readonly").objectStore("feeRules").get(id));
+        if (!r) return;
 
-    document.getElementById("rule-editor").style.display = 'block';
-    document.getElementById("rule-edit-id").value = r.id;
-    document.getElementById("rule-name").value = r.name;
-    document.getElementById("rule-amount").value = r.amount;
-    document.getElementById("rule-type").value = r.type;
-    document.getElementById("rule-fund").value = r.fund;
-    
-    setRuleIcon(r.category || 'Други'); // Зареждаме иконката!
-    
-    document.getElementById("btn-save-rule").innerText = "Запази";
-    document.getElementById("btn-delete-rule").style.display = "block"; 
-    document.getElementById("rule-editor").scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-async function deleteCurrentRule() {
-    const idVal = document.getElementById("rule-edit-id").value;
-    if(!idVal) return;
-    
-    if(confirm("Сигурни ли сте, че искате да изтриете този шаблон за такса?")) {
-        const tx = db.transaction("feeRules","readwrite");
-        tx.objectStore("feeRules").delete(Number(idVal));
-        await dbTx(tx);
-        loadFeeRules();
-        resetFeeEditor();
-    }
-}
-
-// 3. Зареждане на такса в редактора (при натискане на моливчето)
-function editFeeRule(id) {
-    db.transaction("feeRules", "readonly").objectStore("feeRules").get(id).onsuccess = e => {
-        const r = e.target.result;
-        if(!r) return;
-
-        // Показваме редактора
         document.getElementById("rule-editor").style.display = 'block';
-        
-        // Попълваме данните
         document.getElementById("rule-edit-id").value = r.id;
         document.getElementById("rule-name").value = r.name;
         document.getElementById("rule-amount").value = r.amount;
         document.getElementById("rule-type").value = r.type;
         document.getElementById("rule-fund").value = r.fund;
-        
-        // Нагласяме бутоните
-        document.getElementById("btn-save-rule").innerText = "Запази";
-        document.getElementById("btn-delete-rule").style.display = "block"; // Показваме кошчето
-        
-        // Скролваме до редактора
-        document.getElementById("rule-editor").scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
-}
 
-// 4. Изтриване на текущо редактираната такса (от бутона в редактора)
-function deleteCurrentRule() {
-    const idVal = document.getElementById("rule-edit-id").value;
-    if(!idVal) return;
-    
-    if(confirm("Сигурни ли сте, че искате да изтриете този шаблон за такса?")) {
-        db.transaction("feeRules","readwrite").objectStore("feeRules").delete(Number(idVal)).onsuccess = () => {
-            loadFeeRules();
-            resetFeeEditor();
-        };
+        setRuleIcon(r.category || 'Други');
+
+        document.getElementById("btn-save-rule").innerText = "Запази";
+        document.getElementById("btn-delete-rule").style.display = "block";
+        document.getElementById("rule-editor").scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+        console.error("Грешка при зареждане на таксата:", err);
+        alert("Неуспешно зареждане на таксата за редакция.");
     }
 }
 
-// 5. Зареждане на списъка (Вече с моливче вместо хикс)
+async function deleteCurrentRule() {
+    const idVal = document.getElementById("rule-edit-id").value;
+    if (!idVal) return;
+
+    if (!confirm("Сигурни ли сте, че искате да изтриете този шаблон за такса?")) return;
+
+    try {
+        const tx = db.transaction("feeRules", "readwrite");
+        tx.objectStore("feeRules").delete(Number(idVal));
+        await dbTx(tx);
+        
+        loadFeeRules();
+        resetFeeEditor();
+    } catch (e) {
+        console.error("Грешка при изтриване на такса:", e);
+    }
+}
+
 async function loadFeeRules(){
+    if (!db) return;
     const rules = await dbReq(db.transaction("feeRules","readonly").objectStore("feeRules").getAll());
     document.getElementById("active-rules-list").innerHTML = rules.map(r => {
         let typeText = "на апартамент";
@@ -2102,7 +1964,6 @@ async function loadFeeRules(){
         
         const fundIcon = r.fund === 'ремонт' ? '<i class="ph ph-wrench" style="color:var(--success)"></i>' : '<i class="ph ph-bank" style="color:var(--accent)"></i>';
         
-        // Взимаме иконката за категорията
         const catObj = EXP_CATEGORIES.find(c => c.id === (r.category || 'Други')) || EXP_CATEGORIES[0];
         const catIcon = `<i class="ph ${catObj.icon}" style="color:${catObj.color}; font-size:1.1rem;"></i>`;
 
@@ -2113,68 +1974,29 @@ async function loadFeeRules(){
     }).join("");
 }
 
-
-
 function toggleCashForm() {
     const form = document.getElementById("cash-form-container");
     if (form.style.display === 'none' || form.style.display === '') {
         form.style.display = 'block';
-        clearCashFormFields(); // Изчиства при отваряне
+        clearCashFormFields();
     } else {
         form.style.display = 'none';
-        clearCashFormFields(); // Изчиства при Отказ (затваряне)
+        clearCashFormFields();
     }
 }
 
-
-// --- ИЗЧИСТВАНЕ НА ПОЛЕТАТА ВЪВ ФОРМАТА ЗА КАСА ---
 function clearCashFormFields() {
     document.getElementById("cash-source").value = "";
     document.getElementById("cash-category").value = "";
     document.getElementById("cash-amount").value = "";
     document.getElementById("cash-desc").value = "";
     document.getElementById("cash-fund").value = "основен";
-    setExpenseIcon("Други"); // <--- ДОБАВЕНО
+    setExpenseIcon("Други");
 }
-
-
-
-// --- АВТОМАТИЧНО ПОПЪЛВАНЕ ОТ ШАБЛОН ---
-function applyFeePreset() {
-    const val = document.getElementById("rule-preset").value;
-    if (val) {
-        // 1. Попълва името
-        document.getElementById("rule-name").value = val;
-        
-        // 2. Намира падащите менюта за Тип и Фонд
-        const typeSelect = document.getElementById("rule-type");
-        const fundSelect = document.getElementById("rule-fund");
-        
-        // Връщаме фонда по подразбиране на "основен" 
-        // (за да не остане "ремонт", ако преди това си цъкнал "Ремонти", а после смениш на "Асансьор")
-        fundSelect.value = "основен";
-
-        // 3. Автоматично избира логичния тип и фонд спрямо думата
-        if (val === "Дом. любимец") {
-            typeSelect.value = "pet";       // на Дом. любимец
-        } 
-        else if (val === "Асансьор" || val === "Почистване") {
-            typeSelect.value = "person";    // на Човек
-        } 
-        else if (val === "Дом съвет" || val === "Наем") {
-            typeSelect.value = "apart";     // на Апартамент
-        }
-        else if (val === "Ремонти") {
-            typeSelect.value = "percent";   // на % Ид. Части
-            fundSelect.value = "ремонт";    // Фонд Ремонти
-        }
-    }
-}
-
-
 
 // ----- CASH & PAYMENT -----
 async function loadCashList() { 
+    if (!db) return;
     const tx = db.transaction(["records", "apartments", "expectedPayments", "feeRules"], "readonly");
     
     const [records, apartments, expectedPayments, feeRules] = await Promise.all([
@@ -2185,8 +2007,7 @@ async function loadCashList() {
     ]);
 
     const d = document.getElementById("cash-list"); 
-    d.innerHTML = ""; 
-
+    
     let ruleMap = {};
     let ruleCategoryMap = {};
     feeRules.forEach(r => {
@@ -2227,30 +2048,22 @@ async function loadCashList() {
                 if (r.category === cashSubFilter) categoryFiltered.push(r);
             } 
             else if (r.type === 'приход') {
-                if (r.apartmentId && r.refPeriod && !r.description.includes('Депозит')) {
+                if (r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'))) {
                     let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
-                    if (ep && ep.details) {
+                    if (ep) {
                         let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-                        if (!ep.fundSplit) expectedTotal = r.amount;
+                        if (!ep.fundSplit) expectedTotal = Math.abs(r.amount);
                         let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
                         
                         let catSum = 0;
-                        let items = ep.details.split(', ');
+                        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
                         items.forEach(item => {
-                            let parts = item.split(': ');
-                            if (parts.length >= 2) {
-                                let rName = parts.slice(0, -1).join(': ');
-                                let rTotal = parseFloat(parts[parts.length - 1]);
-                                let rFund = ruleMap[rName] || (ep.fundSplit && ep.fundSplit.repair > 0 && ep.fundSplit.main === 0 ? 'ремонт' : 'основен');
-                                
-                                if (rFund === r.fund) {
-                                    let catName = ruleCategoryMap[rName] || 'Други';
-                                    if (catName === cashSubFilter) catSum += (rTotal * ratio);
-                                }
+                            if (item.fund === r.fund && item.category === cashSubFilter) {
+                                catSum += (item.amount * ratio);
                             }
                         });
                         
-                        if (catSum > 0.009) {
+                        if (Math.abs(catSum) > 0.009) {
                             let clone = { ...r }; 
                             clone.amount = catSum; 
                             clone.isPartialCategory = true; 
@@ -2265,30 +2078,65 @@ async function loadCashList() {
         filtered = categoryFiltered; 
     }
 
-    const breakdownDiv = document.getElementById("expense-breakdown");
-    if(cashFilterType === 'expense') {
-        breakdownDiv.style.display = "flex";
-        let currentSum = filtered.reduce((acc, r) => acc + r.amount, 0);
-        let perApt = totalApts > 0 ? (currentSum / totalApts) : 0;
-        let perPers = totalAdults > 0 ? (currentSum / totalAdults) : 0;
-        let perPart = (currentSum / 100); 
-        document.getElementById("val-apt").innerText = perApt.toFixed(2) + " ";
-        document.getElementById("val-pers").innerText = perPers.toFixed(2) + " ";
-        document.getElementById("val-part").innerHTML = perPart.toFixed(2) + " ";
-    } else { breakdownDiv.style.display = "none"; }
-
-    let currentBalance = 0;
+    // --- ИЗЧИСЛЯВАНЕ НА СУМИ И ПЛОЧКА ЗА ОСРЕДНЕНИ ПОКАЗАТЕЛИ (Ап / Чов / Ид.ч) ---
+    let totalInc = 0, totalExp = 0;
     filtered.forEach(r => {
-        if (r.type === 'приход') currentBalance += r.amount;
-        else currentBalance -= r.amount;
+        if (r.type === 'приход') totalInc += r.amount;
+        else if (r.type === 'разход') totalExp += r.amount;
     });
+    let currentBalance = totalInc - totalExp;
+
+    const breakdownDiv = document.getElementById("expense-breakdown");
+    breakdownDiv.style.display = "flex";
+
+    let targetMetric = 0;
+    let metricSign = "";
+
+    if (cashFilterType === 'expense') {
+        targetMetric = totalExp;
+        breakdownDiv.style.background = "#fffbeb";
+        breakdownDiv.style.color = "#92400e";
+        breakdownDiv.style.borderColor = "#fcd34d";
+    } else if (cashFilterType === 'income') {
+        targetMetric = totalInc;
+        breakdownDiv.style.background = "#f0fdf4";
+        breakdownDiv.style.color = "#166534";
+        breakdownDiv.style.borderColor = "#bbf7d0";
+    } else {
+        targetMetric = currentBalance;
+        if (currentBalance > 0.004) {
+            metricSign = "+";
+            breakdownDiv.style.background = "#f0fdf4";
+            breakdownDiv.style.color = "#166534";
+            breakdownDiv.style.borderColor = "#bbf7d0";
+        } else if (currentBalance < -0.004) {
+            metricSign = "";
+            breakdownDiv.style.background = "#fef2f2";
+            breakdownDiv.style.color = "#991b1b";
+            breakdownDiv.style.borderColor = "#fecaca";
+        } else {
+            metricSign = "";
+            targetMetric = 0;
+            breakdownDiv.style.background = "#f8fafc";
+            breakdownDiv.style.color = "#475569";
+            breakdownDiv.style.borderColor = "#e2e8f0";
+        }
+    }
+
+    let perApt = totalApts > 0 ? (targetMetric / totalApts) : 0;
+    let perPers = totalAdults > 0 ? (targetMetric / totalAdults) : 0;
+    let perPart = (targetMetric / 100);
+
+    document.getElementById("val-apt").innerText = metricSign + perApt.toFixed(2);
+    document.getElementById("val-pers").innerText = metricSign + perPers.toFixed(2);
+    document.getElementById("val-part").innerText = metricSign + perPart.toFixed(2);
 
     const balanceValEl = document.getElementById("filtered-balance-val");
     if (balanceValEl) {
-        let sign = currentBalance > 0 ? "+" : "";
+        let sign = currentBalance > 0.004 ? "+" : "";
         balanceValEl.innerText = sign + currentBalance.toFixed(2);
-        if (currentBalance > 0) balanceValEl.style.color = "var(--success)"; 
-        else if (currentBalance < 0) balanceValEl.style.color = "var(--danger)"; 
+        if (currentBalance > 0.004) balanceValEl.style.color = "var(--success)"; 
+        else if (currentBalance < -0.004) balanceValEl.style.color = "var(--danger)"; 
         else balanceValEl.style.color = "var(--text-main)"; 
     }
 
@@ -2304,7 +2152,13 @@ async function loadCashList() {
 
         if (canGroup) {
             let existingGroup = displayGroups.find(g => 
-                g.isGroupable && g.apartmentId === r.apartmentId && g.date === r.date && g.refPeriod === r.refPeriod && g.description === r.description
+                g.isGroupable && 
+                g.apartmentId === r.apartmentId && 
+                g.date === r.date && 
+                g.refPeriod === r.refPeriod && 
+                g.description === r.description && 
+                Boolean(g.baseRecord.isStornoed) === Boolean(r.isStornoed) &&
+                Boolean(g.baseRecord.isStornoEntry) === Boolean(r.isStornoEntry)
             );
 
             if (existingGroup) {
@@ -2324,46 +2178,33 @@ async function loadCashList() {
     // --- ПОМОЩНА ФУНКЦИЯ ЗА РАЗБИВКАТА ---
     const getBreakdownHtml = (subR) => {
         if (subR.isPartialCategory) return ""; 
-        if (subR.type !== 'приход' || !subR.apartmentId || !subR.refPeriod || subR.description.includes('Депозит')) return "";
+        if (subR.type !== 'приход' || !subR.apartmentId || !subR.refPeriod || (subR.description && subR.description.includes('Депозит'))) return "";
         
         let ep = expectedPayments.find(p => p.apartmentId === subR.apartmentId && p.period === subR.refPeriod);
-        if (!ep || !ep.details) return "";
+        if (!ep) return "";
 
-        let items = ep.details.split(', ');
+        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
+        if (items.length === 0) return "";
+
         let validItems = [];
         let expectedTotalForFund = subR.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-        
-        if (!ep.fundSplit) expectedTotalForFund = subR.amount; 
+        if (!ep.fundSplit) expectedTotalForFund = Math.abs(subR.amount); 
 
         let ratio = expectedTotalForFund > 0 ? (subR.amount / expectedTotalForFund) : 1;
 
         items.forEach(item => {
-            let parts = item.split(': ');
-            if(parts.length >= 2) {
-                let rName = parts.slice(0, -1).join(': ');
-                let rTotal = parseFloat(parts[parts.length - 1]);
-                let rFund = ruleMap[rName];
-                
-                if (!rFund) { 
-                    if (ep.fundSplit && ep.fundSplit.repair > 0 && ep.fundSplit.main === 0) rFund = 'ремонт';
-                    else rFund = 'основен';
-                }
+            if (item.fund === subR.fund) {
+                let calculatedAmount = item.amount * ratio;
+                let catObj = EXP_CATEGORIES.find(c => c.id === item.category) || EXP_CATEGORIES[0];
+                let iconHtml = `<i class="ph ${catObj.icon}" style="color:${catObj.color}; margin-right:6px; font-size:1rem;"></i>`;
 
-                if (rFund === subR.fund) {
-                    let calculatedAmount = rTotal * ratio;
-                    
-                    let catName = ruleCategoryMap[rName] || 'Други';
-                    let catObj = EXP_CATEGORIES.find(c => c.id === catName) || EXP_CATEGORIES[0];
-                    let iconHtml = `<i class="ph ${catObj.icon}" style="color:${catObj.color}; margin-right:6px; font-size:1rem;"></i>`;
-
-                    if (calculatedAmount > 0.009) { 
-                        validItems.push(`
-                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:var(--text-main); padding:3px 0;">
-                                <span style="display:flex; align-items:center;">${iconHtml} ${escapeHTML(rName)}</span>
-                                <b>${calculatedAmount.toFixed(2)}</b>
-                            </div>
-                        `);
-                    }
+                if (Math.abs(calculatedAmount) > 0.009) { 
+                    validItems.push(`
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:var(--text-main); padding:3px 0;">
+                            <span style="display:flex; align-items:center;">${iconHtml} ${escapeHTML(item.name)}</span>
+                            <b>${calculatedAmount.toFixed(2)}</b>
+                        </div>
+                    `);
                 }
             }
         });
@@ -2378,22 +2219,34 @@ async function loadCashList() {
     };
 
     // --- РЕНДЕРИРАНЕ НА КАРТИТЕ ---
+    let htmlContent = "";
+
     displayGroups.forEach(g => { 
         const isInc = g.type === "приход";
-        const c = isInc ? "var(--success)" : "var(--danger)"; 
         const r = g.baseRecord; 
-        
+        const isStornoEntry = Boolean(r.isStornoEntry);
+        const isStornoed = Boolean(r.isStornoed);
+
+        let c = isInc ? "var(--success)" : "var(--danger)";
+        if (isStornoEntry) c = "var(--orange)";
+        else if (isStornoed) c = "#94a3b8";
+
         let icon = "ph-money", title = "";
 
         if (isInc) { 
             if (r.apartmentId) { 
                 let realNumber = aptMap[r.apartmentId] || '???'; 
-                icon = "ph-house-line"; title = `От Ап. ${realNumber}`; 
-            } else { icon = "ph-bank"; title = "Приход"; } 
+                icon = isStornoEntry ? "ph-arrow-counter-clockwise" : "ph-house-line"; 
+                title = isStornoEntry ? `СТОРНО (Ап. ${realNumber})` : `От Ап. ${realNumber}`; 
+            } else { 
+                icon = isStornoEntry ? "ph-arrow-counter-clockwise" : "ph-bank"; 
+                title = isStornoEntry ? "СТОРНО Приход" : "Приход"; 
+            } 
         } else { 
             let catObj = EXP_CATEGORIES.find(cat => cat.id === (r.category || 'Други')) || EXP_CATEGORIES[0];
-            icon = catObj.icon;
+            icon = isStornoEntry ? "ph-arrow-counter-clockwise" : catObj.icon;
             title = r.sourceCat || r.category || 'Разход'; 
+            if (isStornoEntry) title = `СТОРНО: ${title}`;
         }
 
         let dateHtml = `<small style="color:#64748b; display:flex; align-items:center; gap:3px;"><i class="ph ph-calendar-blank"></i> ${r.date}</small>`;
@@ -2401,15 +2254,20 @@ async function loadCashList() {
              dateHtml += ` <small style="background:#fff7ed; color:#9a3412; padding:2px 6px; border-radius:4px; margin-left:5px; border:1px solid #ffedd5;">за ${r.refPeriod}</small>`;
         }
 
+        let stornoBadge = "";
+        if (isStornoed) {
+            stornoBadge = `<span style="background:#fee2e2; color:#991b1b; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-left:6px;">СТОРНИРАНО</span>`;
+        } else if (isStornoEntry) {
+            stornoBadge = `<span style="background:#ffedd5; color:#9a3412; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-left:6px;">СТОРНО ЗАПИС</span>`;
+        }
+
         let displayDesc = r.description || "";
         if (isInc && displayDesc.startsWith("Такса ") && !displayDesc.includes("за ")) {
             displayDesc = displayDesc.replace("Такса ", "Такса за ");
         }
 
-        // ЗАЩИТАВАМЕ текста ПРЕДИ да лепим HTML към него
         displayDesc = escapeHTML(displayDesc);
 
-        // ДОБАВЯМЕ ИКОНКИТЕ за филтрираната част
         if (r.isPartialCategory) {
             let catObj = EXP_CATEGORIES.find(c => c.id === cashSubFilter) || EXP_CATEGORIES[0];
             displayDesc = `<span style="color:${catObj.color}; font-weight:bold;"><i class="ph ${catObj.icon}"></i> Филтрирано по: ${cashSubFilter}</span><br>` + displayDesc;
@@ -2419,7 +2277,7 @@ async function loadCashList() {
         let breakdownHtml = "";
 
         if (g.records.length > 1) {
-            fundBadge = `<span style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-right:5px; display:flex; align-items:center; gap:3px;"><i class="ph ph-squares-four"></i> Общо плащане</span>`;
+            fundBadge = `<span style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-right:5px; display:flex; align-items:center; gap:3px;"><i class="ph ph-squares-four"></i> ${isStornoEntry ? 'Общо сторно' : 'Общо плащане'}</span>`;
             
             breakdownHtml = `<div style="margin-top:8px; border-top:1px dashed #e2e8f0; padding-top:6px;">`;
             g.records.forEach(subR => {
@@ -2443,7 +2301,6 @@ async function loadCashList() {
             });
             breakdownHtml += `</div>`;
             
-            // ВНИМАНИЕ: Тук ВЕЧЕ НЕ слагаме escapeHTML, защото го направихме горе!
             displayDesc = displayDesc ? `<div style="font-size:0.85rem; color:#475569; margin-top:8px;">${displayDesc}</div>` : '';
             
         } else {
@@ -2459,21 +2316,31 @@ async function loadCashList() {
             
             breakdownHtml = bdHtml;
             
-            // ВНИМАНИЕ: Тук ВЕЧЕ НЕ слагаме escapeHTML, защото го направихме горе!
             displayDesc = displayDesc ? `<div style="font-size:0.85rem; color:#475569; margin-top:8px; border-top:1px dashed #e2e8f0; padding-top:6px;">${displayDesc}</div>` : '';
         }
 
-        d.innerHTML += `
-        <div class="card" style="border-left:4px solid ${c}; padding:12px;">
+        let cashEffect = isInc ? g.totalAmount : -g.totalAmount;
+        let signStr = cashEffect > 0 ? '+' : '';
+        let amountStyle = isStornoed ? `color:#94a3b8; text-decoration:line-through; font-weight:bold; font-size:1.1rem;` : `color:${c}; font-weight:bold; font-size:1.1rem;`;
+
+        let holdAttr = "";
+        if (!isStornoed && !isStornoEntry && !r.isPartialCategory) {
+            const idsList = g.records.map(x => x.id).join(',');
+            holdAttr = `data-hold-action="storno-cash" data-hold-id="${idsList}" title="Задръжте за СТОРНО на операцията"`;
+        }
+
+        htmlContent += `
+        <div class="card" ${holdAttr} style="border-left:4px solid ${c}; padding:12px; ${isStornoed ? 'opacity:0.75;' : ''}">
             <div class="card-row">
                 <span style="font-weight:600; display:flex; align-items:center; gap:8px;"><i class="ph ${icon}" style="font-size:1.2rem; color:var(--primary-light);"></i> ${escapeHTML(title)}</span>
-                <span style="color:${c}; font-weight:bold; font-size:1.1rem;">${isInc?'+':'-'}${g.totalAmount.toFixed(2)}</span>
+                <span style="${amountStyle}">${signStr}${cashEffect.toFixed(2)}</span>
             </div>
             
             <div class="card-row" style="margin-top:8px; align-items:center;">
                 <div style="display:flex; align-items:center; flex-wrap:wrap;">
                     ${fundBadge}
                     ${dateHtml}
+                    ${stornoBadge}
                 </div>
             </div>
             
@@ -2482,36 +2349,34 @@ async function loadCashList() {
         </div>`; 
     });
     
-    if(filtered.length === 0) d.innerHTML = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-files' style='font-size:2rem; display:block; margin-bottom:10px;'></i> Няма записи за този период.</div>";
+    if (filtered.length === 0) {
+        d.innerHTML = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-files' style='font-size:2rem; display:block; margin-bottom:10px;'></i> Няма записи за този период.</div>";
+    } else {
+        d.innerHTML = htmlContent;
+    }
 }
 
 
-
-
-let isAggregatedView = false; // Състояние на бутона
+let isAggregatedView = false;
 
 function toggleAggregateMode() {
     isAggregatedView = !isAggregatedView;
     const btn = document.getElementById("btn-agg-mode");
     if (isAggregatedView) {
-        btn.style.background = "#007bff"; // Активен син цвят
-        btn.innerHTML = "ОБЩИ ЗАДЪЛЖЕНИЯ";
-        // Скриваме контролите за месец, защото гледаме всичко
+        btn.style.background = "var(--accent)";
+        btn.innerHTML = "РЕЖИМ: ОБЩИ ЗАДЪЛЖЕНИЯ";
         document.getElementById("fee-month").disabled = true;
     } else {
-        btn.style.background = "#6c757d"; // Сив цвят
-        btn.innerHTML = "ЗАДЪЛЖЕНИЯ ПО МЕСЕЦ";
+        btn.style.background = "#64748b";
+        btn.innerHTML = "РЕЖИМ: МЕСЕЧЕН";
         document.getElementById("fee-month").disabled = false;
     }
-    loadFeesList(); // Презареждаме списъка
+    loadFeesList();
 }
 
-
-
-
-
-// --- ОБНОВЕНА ФУНКЦИЯ ЗА ЗАРЕЖДАНЕ НА ТАКСИТЕ (Пази търсенето) ---
+// --- ЗАРЕЖДАНЕ НА ТАКСИТЕ ---
 async function loadFeesList() {
+    if (!db) return;
     const tx = db.transaction(["expectedPayments", "apartments"], "readonly");
     
     const [list, apartments] = await Promise.all([
@@ -2523,7 +2388,7 @@ async function loadFeesList() {
     apartments.forEach(a => aptMap[a.id] = a);
 
     const d = document.getElementById("fees-list"); 
-    d.innerHTML=""; 
+    let htmlContent = "";
 
     if (isAggregatedView) {
         let unpaid = list.filter(p => !p.paid);
@@ -2534,9 +2399,12 @@ async function loadFeesList() {
             }
             grouped[p.apartmentId].total += p.amount;
             grouped[p.apartmentId].periods.push(p.period);
+            
             if(p.fundSplit) {
-                grouped[p.apartmentId].breakdown.main += p.fundSplit.main || 0;
-                grouped[p.apartmentId].breakdown.repair += p.fundSplit.repair || 0;
+                const origTotal = (p.fundSplit.main || 0) + (p.fundSplit.repair || 0);
+                const ratio = origTotal > 0 ? (p.amount / origTotal) : 1;
+                grouped[p.apartmentId].breakdown.main += (p.fundSplit.main || 0) * ratio;
+                grouped[p.apartmentId].breakdown.repair += (p.fundSplit.repair || 0) * ratio;
             } else {
                 if(p.fund === 'ремонт') grouped[p.apartmentId].breakdown.repair += p.amount;
                 else grouped[p.apartmentId].breakdown.main += p.amount;
@@ -2546,15 +2414,14 @@ async function loadFeesList() {
         let sortedKeys = Object.keys(grouped).sort((a,b) => grouped[a].apNumber - grouped[b].apNumber);
         
         if(sortedKeys.length === 0) {
-             d.innerHTML = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-smiley' style='font-size:2rem; margin-bottom:10px; display:block;'></i> Няма висящи задължения!</div>";
+             htmlContent = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-smiley' style='font-size:2rem; margin-bottom:10px; display:block;'></i> Няма висящи задължения!</div>";
         } else {
             sortedKeys.forEach(key => {
                 let g = grouped[key];
                 g.periods.sort().reverse();
-                let displayDate = g.periods.length > 0 ? `${g.periods[0].split('-')[0]}...` : "";
                 let detailText = "";
-                if(g.breakdown.main > 0) detailText += `Основен: ${g.breakdown.main.toFixed(2)} `;
-                if(g.breakdown.repair > 0) detailText += `Ремонти: ${g.breakdown.repair.toFixed(2)}`;
+                if(g.breakdown.main > 0.004) detailText += `Основен: ${g.breakdown.main.toFixed(2)} `;
+                if(g.breakdown.repair > 0.004) detailText += `Ремонти: ${g.breakdown.repair.toFixed(2)}`;
                 let fundIcon = `<i class="ph ph-stack" style="color:var(--text-muted)"></i>`;
 
                 let aptObj = aptMap[g.apId] || {};
@@ -2565,7 +2432,7 @@ async function loadFeesList() {
                 if (!opts) opts = `<option value="Собственик">Собственик</option>`;
                 let payerUI = `<select id="payer-agg-${g.apId}" style="padding:2px 5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1; margin-left:10px; background:#f8fafc; color:var(--text-main); height: 26px; max-width: 140px;">${opts}</select>`;
 
-                d.innerHTML += `
+                htmlContent += `
                 <div class="card" data-ap-number="${g.apNumber}" data-floor="${escapeHTML(floor)}" style="border-left:4px solid var(--danger);">
                     <div class="card-row" style="border-bottom:1px solid #f1f5f9; padding-bottom:5px; margin-bottom:8px; align-items:center;">
                         <span style="font-weight:bold; display:flex; align-items:center;">Ап.${g.apNumber} ${fundIcon} ${payerUI}</span>
@@ -2590,119 +2457,149 @@ async function loadFeesList() {
         }
 
     } else {
-        // --- НОВО: Взимаме месеца от падащото меню горе ---
         const selectedMonth = document.getElementById("fee-month").value;
-
-        // --- НОВО: Филтрираме таксите само за този месец ---
         let monthlyList = list.filter(p => p.period === selectedMonth);
 
-        // Сортираме (първо неплатените, после по номер на ап.)
         monthlyList.sort((a,b) => {
             if (a.paid !== b.paid) return a.paid - b.paid;
             return a.apNumber - b.apNumber;
         });
 
-        monthlyList.forEach(p=>{ 
-            const btnClass = p.paid ? '' : (p.isPartial ? 'btn-partial' : 'btn-success');
-            const isPaid = p.paid;
-            
-            let paymentControl = "";
-            if(isPaid) {
-                let paidIcon = p.payMethod === 'bank' ? 'ph-credit-card' : 'ph-money';
-                let paidColor = p.payMethod === 'bank' ? 'var(--accent)' : 'var(--success)';
-                paymentControl = `<div style="display:flex; align-items:center; gap:5px; color:var(--success); font-weight:bold; height:42px;"><i class="ph ${paidIcon}" style="font-size:1.5rem; color:${paidColor};"></i> ПЛАТЕНО</div>`;
-            } else {
-                paymentControl = `
-                    <div style="display:flex; align-items:center; gap:0;">
-                        <button id="method-btn-${p.id}" data-method="cash" onclick="togglePaymentMethod('method-btn-${p.id}')" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#f8fafc; border:1px solid #cbd5e1; border-right:none; border-radius:10px 0 0 10px; cursor:pointer;" title="Начин на плащане: В брой"><i class="ph ph-money" style="font-size:1.4rem; color:var(--success);"></i></button>
-                        <input type="number" step="0.01" id="pay-input-${p.id}" class="pay-input" value="${p.amount.toFixed(2)}" style="width:80px; height:42px; padding:0 10px; font-weight:bold; text-align:right; margin:0; border-radius:0;">
-                        <button class="btn-small ${btnClass}" onclick="processPayment(${p.id}, ${p.apartmentId}, '${p.period}')" style="height:42px; padding:0 15px; display:flex; align-items:center; justify-content:center; border-radius:0 10px 10px 0;">ПЛАТИ</button>
-                    </div>
-                `;
-            }
-
-            let fundIcon = `<i class="ph ph-bank"></i>`;
-            if(p.fundSplit) { 
-                if(p.fundSplit.repair > 0 && p.fundSplit.main > 0) fundIcon = `<i class="ph ph-bank"></i><i class="ph ph-wrench"></i>`; 
-                else if(p.fundSplit.repair > 0) fundIcon = `<i class="ph ph-wrench"></i>`; 
-            } else if(p.fund === 'ремонт') fundIcon = `<i class="ph ph-wrench"></i>`;
-            
-            let borderColor = isPaid ? 'var(--success)' : (p.isPartial ? 'var(--orange)' : 'var(--danger)');
-            let amountColor = isPaid ? 'var(--success)' : 'var(--danger)';
-
-            let aptObj = aptMap[p.apartmentId] || {};
-            let occ = aptObj.occupants || [];
-            let floor = aptObj.floor || "";
-
-            let payerUI = "";
-            if(isPaid) {
-                payerUI = p.payerName ? `<span style="font-size:0.8rem; color:var(--text-muted); margin-left:10px;" title="Платено от"><i class="ph ph-user"></i> ${escapeHTML(p.payerName)}</span>` : "";
-            } else {
-                let opts = occ.map(o => {
-                    let sel = (p.payerName === o.name) ? "selected" : "";
-                    return `<option value="${escapeHTML(o.name)}" ${sel}>${escapeHTML(o.name)}</option>`;
-                }).join("");
-                if (!opts) opts = `<option value="${escapeHTML(p.owner || 'Собственик')}">${escapeHTML(p.owner || 'Собственик')}</option>`;
-                payerUI = `<select id="payer-${p.id}" style="padding:2px 5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1; margin-left:10px; background:#f8fafc; color:var(--text-main); height: 26px; max-width: 140px;">${opts}</select>`;
-            }
-
-            let receiptBtn = "";
-            if(isPaid || p.isPartial) {
-                receiptBtn = `<button class="btn-icon" style="width:30px; height:30px; background:#e0e7ff; color:#4f46e5 !important; margin-left:8px;" onclick="sendReceipt(${p.id}, ${p.apartmentId})" title="Прати разписка на имейл"><i class="ph ph-envelope-simple-open" style="font-size:1.1rem;"></i></button>`;
-            }
-
-            d.innerHTML += `
-            <div class="card" data-ap-number="${p.apNumber}" data-floor="${escapeHTML(floor)}" style="border-left:4px solid ${borderColor};">
-                <div class="card-row" style="border-bottom:1px solid #f1f5f9; padding-bottom:5px; margin-bottom:8px; align-items:center;">
-                    <span style="font-weight:bold; font-size:1.05rem; display:flex; align-items:center;">Ап.${p.apNumber} ${fundIcon} ${payerUI}</span>
-                    <div style="display:flex; align-items:center;">
-                        <span style="color:#64748b; font-size:0.9rem;">${p.period}</span>
-                        ${receiptBtn}
-                    </div>
-                </div>
+        if(monthlyList.length === 0) {
+            htmlContent = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-check-fat' style='font-size:2rem; margin-bottom:10px; display:block;'></i> Няма генерирани такси.</div>";
+        } else {
+            monthlyList.forEach(p=>{ 
+                const btnClass = p.paid ? '' : (p.isPartial ? 'btn-partial' : 'btn-success');
+                const isPaid = p.paid;
                 
-                <div class="card-row" style="align-items:center; margin-top:5px;">
-                    <div style="display:flex; flex-direction:column;">
-                        ${!isPaid ? '<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Дължи</span>' : ''}
-                        <b style="color:${amountColor}; font-size:1.2rem;">${p.amount.toFixed(2)}</b>
-                    </div>
-                    ${paymentControl}
-                </div>
+                let paymentControl = "";
+                if(isPaid) {
+                    let paidIcon = p.payMethod === 'bank' ? 'ph-credit-card' : 'ph-money';
+                    let paidColor = p.payMethod === 'bank' ? 'var(--accent)' : 'var(--success)';
+                    paymentControl = `<div style="display:flex; align-items:center; gap:5px; color:var(--success); font-weight:bold; height:42px;"><i class="ph ${paidIcon}" style="font-size:1.5rem; color:${paidColor};"></i> ПЛАТЕНО</div>`;
+                } else {
+                    paymentControl = `
+                        <div style="display:flex; align-items:center; gap:0;">
+                            <button id="method-btn-${p.id}" data-method="cash" onclick="togglePaymentMethod('method-btn-${p.id}')" style="height:42px; width:42px; display:flex; align-items:center; justify-content:center; background:#f8fafc; border:1px solid #cbd5e1; border-right:none; border-radius:10px 0 0 10px; cursor:pointer;" title="Начин на плащане: В брой"><i class="ph ph-money" style="font-size:1.4rem; color:var(--success);"></i></button>
+                            <input type="number" step="0.01" id="pay-input-${p.id}" class="pay-input" value="${p.amount.toFixed(2)}" style="width:80px; height:42px; padding:0 10px; font-weight:bold; text-align:right; margin:0; border-radius:0;">
+                            <button class="btn-small ${btnClass}" onclick="processPayment(${p.id}, ${p.apartmentId}, '${p.period}')" style="height:42px; padding:0 15px; display:flex; align-items:center; justify-content:center; border-radius:0 10px 10px 0;">ПЛАТИ</button>
+                        </div>
+                    `;
+                }
+
+                let fundIcon = `<i class="ph ph-bank"></i>`;
+                if(p.fundSplit) { 
+                    if(p.fundSplit.repair > 0 && p.fundSplit.main > 0) fundIcon = `<i class="ph ph-bank"></i><i class="ph ph-wrench"></i>`; 
+                    else if(p.fundSplit.repair > 0) fundIcon = `<i class="ph ph-wrench"></i>`; 
+                } else if(p.fund === 'ремонт') fundIcon = `<i class="ph ph-wrench"></i>`;
                 
-                <div class="details-text" style="margin-top:10px;">${escapeHTML(p.details)}</div>
-            </div>`; 
-        }); 
-        
-        if(list.length === 0) d.innerHTML = "<div style='text-align:center; padding:30px; color:#94a3b8'><i class='ph ph-check-fat' style='font-size:2rem; margin-bottom:10px; display:block;'></i> Няма генерирани такси.</div>";
+                let borderColor = isPaid ? 'var(--success)' : (p.isPartial ? 'var(--orange)' : 'var(--danger)');
+                let amountColor = isPaid ? 'var(--success)' : 'var(--danger)';
+
+                let aptObj = aptMap[p.apartmentId] || {};
+                let occ = aptObj.occupants || [];
+                let floor = aptObj.floor || "";
+
+                let payerUI = "";
+                if(isPaid) {
+                    payerUI = p.payerName ? `<span style="font-size:0.8rem; color:var(--text-muted); margin-left:10px;" title="Платено от"><i class="ph ph-user"></i> ${escapeHTML(p.payerName)}</span>` : "";
+                } else {
+                    let opts = occ.map(o => {
+                        let sel = (p.payerName === o.name) ? "selected" : "";
+                        return `<option value="${escapeHTML(o.name)}" ${sel}>${escapeHTML(o.name)}</option>`;
+                    }).join("");
+                    if (!opts) opts = `<option value="${escapeHTML(p.owner || 'Собственик')}">${escapeHTML(p.owner || 'Собственик')}</option>`;
+                    payerUI = `<select id="payer-${p.id}" style="padding:2px 5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1; margin-left:10px; background:#f8fafc; color:var(--text-main); height: 26px; max-width: 140px;">${opts}</select>`;
+                }
+
+                let receiptBtn = "";
+                let holdAttr = "";
+                if(isPaid || p.isPartial) {
+                    receiptBtn = `<button class="btn-icon" style="width:30px; height:30px; background:#e0e7ff; color:#4f46e5 !important; margin-left:8px;" onclick="sendReceipt(${p.id}, ${p.apartmentId})" title="Прати разписка на имейл"><i class="ph ph-envelope-simple-open" style="font-size:1.1rem;"></i></button>`;
+                    holdAttr = `data-hold-action="storno-fee" data-hold-id="${p.id}" title="Задръжте за СТОРНО на плащането"`;
+                }
+
+                htmlContent += `
+                <div class="card" ${holdAttr} data-ap-number="${p.apNumber}" data-floor="${escapeHTML(floor)}" style="border-left:4px solid ${borderColor};">
+                    <div class="card-row" style="border-bottom:1px solid #f1f5f9; padding-bottom:5px; margin-bottom:8px; align-items:center;">
+                        <span style="font-weight:bold; font-size:1.05rem; display:flex; align-items:center;">Ап.${p.apNumber} ${fundIcon} ${payerUI}</span>
+                        <div style="display:flex; align-items:center;">
+                            <span style="color:#64748b; font-size:0.9rem;">${p.period}</span>
+                            ${receiptBtn}
+                        </div>
+                    </div>
+                    
+                    <div class="card-row" style="align-items:center; margin-top:5px;">
+                        <div style="display:flex; flex-direction:column;">
+                            ${!isPaid ? '<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Дължи</span>' : ''}
+                            <b style="color:${amountColor}; font-size:1.2rem;">${p.amount.toFixed(2)}</b>
+                        </div>
+                        ${paymentControl}
+                    </div>
+                    
+                    <div class="details-text" style="margin-top:10px;">${escapeHTML(p.details)}</div>
+                </div>`; 
+            }); 
+        }
     }
     
+    d.innerHTML = htmlContent;
     filterFeesByApartment();
 }
 
-
-
-
 async function processAggregatePayment(apId) {
-    const inputVal = parseFloat(document.getElementById(`pay-agg-${apId}`).value);
-    if(isNaN(inputVal) || inputVal <= 0) return alert("Въведете валидна сума!");
-
-    const payMethod = document.getElementById(`method-agg-${apId}`).getAttribute('data-method');
-    const payerName = document.getElementById(`payer-agg-${apId}`) ? document.getElementById(`payer-agg-${apId}`).value : "Неизвестен";
+    const inputEl  = document.getElementById(`pay-agg-${apId}`);
+    const methodEl = document.getElementById(`method-agg-${apId}`);
+    
+    if (!inputEl || !methodEl) {
+        alert("Формата е невалидна. Презаредете страницата.");
+        return;
+    }
+    
+    const inputVal = parseFloat(inputEl.value);
+    if (isNaN(inputVal) || inputVal <= 0) return alert("Въведете валидна сума!");
+    
+    const payMethod = methodEl.getAttribute('data-method');
+    const payerEl   = document.getElementById(`payer-agg-${apId}`);
+    const payerName = payerEl ? payerEl.value : "Неизвестен";
 
     const tx = db.transaction(["expectedPayments", "records", "apartments"], "readwrite");
-    let store = tx.objectStore("expectedPayments");
-    let aptStore = tx.objectStore("apartments");
+    const store    = tx.objectStore("expectedPayments");
+    const aptStore = tx.objectStore("apartments");
     
-    const [all, apt] = await Promise.all([
-        dbReq(store.getAll()),
-        dbReq(aptStore.get(apId))
-    ]);
-
-    let debts = all.filter(p => p.apartmentId === apId && !p.paid).sort((a,b) => a.period.localeCompare(b.period));
-    if(debts.length === 0) return alert("Няма задължения.");
+    let all, apt;
+    try {
+        [all, apt] = await Promise.all([
+            dbReq(store.getAll()),
+            dbReq(aptStore.get(apId))
+        ]);
+    } catch (err) {
+        console.error("Грешка при четене на данни:", err);
+        tx.abort();
+        alert("Не успяхме да прочетем данните от базата.");
+        return;
+    }
+    
+    if (!apt) {
+        tx.abort();
+        alert("Апартаментът не е намерен в базата!");
+        loadFeesList();
+        return;
+    }
+    
+    const debts = all
+        .filter(p => p.apartmentId === apId && !p.paid)
+        .sort((a, b) => (a.period || "").localeCompare(b.period || ""));
+    
+    if (debts.length === 0) {
+        tx.abort();
+        alert("Няма задължения.");
+        loadFeesList();
+        return;
+    }
 
     let remainingMoney = inputVal;
-    const todayDate = new Date().toISOString().slice(0,10);
+    const todayDate = getLocalDateStr();
 
     for (let i = 0; i < debts.length; i++) {
         let debt = debts[i];
@@ -2723,9 +2620,9 @@ async function processAggregatePayment(apId) {
             remainingMoney = 0;
         }
         
-        debt.amount = Math.round(debt.amount * 100) / 100;
-        payAmount = Math.round(payAmount * 100) / 100;
-        remainingMoney = Math.round(remainingMoney * 100) / 100;
+        debt.amount       = Math.round(debt.amount * 100) / 100;
+        payAmount         = Math.round(payAmount * 100) / 100;
+        remainingMoney    = Math.round(remainingMoney * 100) / 100;
 
         debt.payMethod = payMethod;
         debt.payerName = payerName;
@@ -2733,65 +2630,128 @@ async function processAggregatePayment(apId) {
         store.put(debt);
 
         if (debt.fundSplit && (debt.fundSplit.main > 0 || debt.fundSplit.repair > 0)) {
-            let totalSplit = debt.fundSplit.main + debt.fundSplit.repair;
+            const totalSplit = debt.fundSplit.main + debt.fundSplit.repair;
             let payMain = 0;
-            if(totalSplit > 0) payMain = Math.round((payAmount * (debt.fundSplit.main / totalSplit)) * 100) / 100;
-            let payRepair = Math.round((payAmount - payMain) * 100) / 100;
+            if (totalSplit > 0) {
+                payMain = Math.round((payAmount * (debt.fundSplit.main / totalSplit)) * 100) / 100;
+            }
+            const payRepair = Math.round((payAmount - payMain) * 100) / 100;
             
-            if(payMain > 0) tx.objectStore("records").add({ date: todayDate, refPeriod: debt.period, type: "приход", fund: "основен", apartmentId: apId, amount: payMain, description: `Такса ${debt.period} (от ${payerName})` });
-            if(payRepair > 0) tx.objectStore("records").add({ date: todayDate, refPeriod: debt.period, type: "приход", fund: "ремонт", apartmentId: apId, amount: payRepair, description: `Такса ${debt.period} (от ${payerName})` });
+            if (payMain > 0) {
+                tx.objectStore("records").add({
+                    date: todayDate, refPeriod: debt.period, type: "приход",
+                    fund: "основен", apartmentId: apId, amount: payMain,
+                    description: `Такса ${debt.period} (от ${payerName})`
+                });
+            }
+            if (payRepair > 0) {
+                tx.objectStore("records").add({
+                    date: todayDate, refPeriod: debt.period, type: "приход",
+                    fund: "ремонт", apartmentId: apId, amount: payRepair,
+                    description: `Такса ${debt.period} (от ${payerName})`
+                });
+            }
         } else {
-            tx.objectStore("records").add({ date: todayDate, refPeriod: debt.period, type: "приход", fund: debt.fund || "основен", apartmentId: apId, amount: payAmount, description: `Такса ${debt.period} (от ${payerName})` });
+            tx.objectStore("records").add({
+                date: todayDate, refPeriod: debt.period, type: "приход",
+                fund: debt.fund || "основен", apartmentId: apId, amount: payAmount,
+                description: `Такса ${debt.period} (от ${payerName})`
+            });
         }
     }
 
     if (remainingMoney > 0) {
-        apt.overpayment = (apt.overpayment || 0) + remainingMoney;
+        apt.overpayment = Math.round(((apt.overpayment || 0) + remainingMoney) * 100) / 100;
         aptStore.put(apt);
-        tx.objectStore("records").add({ date: todayDate, type: "приход", fund: "основен", apartmentId: apId, amount: remainingMoney, description: `Вноска Депозит (от ${payerName})` });
-        alert(`Всички задължения покрити! Остатък от ${remainingMoney.toFixed(2)} добавен в депозита.`);
+        
+        tx.objectStore("records").add({
+            date: todayDate, refPeriod: currentPeriod, type: "приход", fund: "основен",
+            apartmentId: apId, amount: remainingMoney,
+            description: `Вноска Депозит (от ${payerName})`
+        });
     } else {
         aptStore.put(apt);
     }
 
-    await dbTx(tx);
+    try {
+        await dbTx(tx);
+    } catch (err) {
+        console.error("Грешка при запис:", err);
+        return;
+    }
+    
+    if (remainingMoney > 0) {
+        alert(`Всички задължения покрити!\nОстатък от ${remainingMoney.toFixed(2)} добавен в депозита.`);
+    }
+    
     loadFeesList(); loadReports(); loadApartmentsList(); loadCashList(); 
 }
 
-
-
-
 async function processPayment(id, apId, period) {
-    const inputVal = parseFloat(document.getElementById(`pay-input-${id}`).value);
-    if(isNaN(inputVal) || inputVal <= 0) return alert("Въведете валидна сума!");
+    const inputEl  = document.getElementById(`pay-input-${id}`);
+    const methodEl = document.getElementById(`method-btn-${id}`);
     
-    const payMethod = document.getElementById(`method-btn-${id}`).getAttribute('data-method');
-    const payerName = document.getElementById(`payer-${id}`) ? document.getElementById(`payer-${id}`).value : "Неизвестен";
+    if (!inputEl || !methodEl) {
+        alert("Формата е невалидна. Презаредете страницата.");
+        return;
+    }
+    
+    const inputVal = parseFloat(inputEl.value);
+    if (isNaN(inputVal) || inputVal <= 0) return alert("Въведете валидна сума!");
+    
+    const payMethod = methodEl.getAttribute('data-method');
+    const payerEl   = document.getElementById(`payer-${id}`);
+    const payerName = payerEl ? payerEl.value : "Неизвестен";
     
     const tx = db.transaction(["expectedPayments", "records", "apartments"], "readwrite");
     
-    // Взимаме задължението и апартамента едновременно!
-    const [payment, apt] = await Promise.all([
-        dbReq(tx.objectStore("expectedPayments").get(id)),
-        dbReq(tx.objectStore("apartments").get(apId))
-    ]);
+    let payment, apt;
+    try {
+        [payment, apt] = await Promise.all([
+            dbReq(tx.objectStore("expectedPayments").get(id)),
+            dbReq(tx.objectStore("apartments").get(apId))
+        ]);
+    } catch (err) {
+        console.error("Грешка при четене на данни:", err);
+        tx.abort();
+        alert("Не успяхме да прочетем данните от базата.");
+        return;
+    }
+    
+    if (!payment) {
+        tx.abort();
+        alert("Задължението не е намерено.\nВъзможно е да е било изтрито или платено в друг таб.");
+        loadFeesList();
+        return;
+    }
+    if (!apt) {
+        tx.abort();
+        alert("Апартаментът не е намерен в базата!");
+        loadFeesList();
+        return;
+    }
+    if (payment.paid) {
+        tx.abort();
+        alert("Това задължение вече е платено!");
+        loadFeesList();
+        return;
+    }
     
     const due = payment.amount;
     let paidTowardsFee = (inputVal < due) ? inputVal : due;
-    let surplus = (inputVal > due) ? (inputVal - due) : 0;
+    let surplus        = (inputVal > due) ? (inputVal - due) : 0;
     paidTowardsFee = Math.round(paidTowardsFee * 100) / 100;
-    surplus = Math.round(surplus * 100) / 100;
+    surplus        = Math.round(surplus * 100) / 100;
 
     if (inputVal < due) { 
-        payment.amount = Math.round((payment.amount - paidTowardsFee) * 100) / 100; 
+        payment.amount    = Math.round((payment.amount - paidTowardsFee) * 100) / 100; 
         payment.isPartial = true; 
     } else { 
-        payment.amount = 0; 
-        payment.paid = true; 
+        payment.amount    = 0; 
+        payment.paid      = true; 
         payment.isPartial = false; 
-        if(surplus > 0) { 
-            apt.overpayment = (apt.overpayment || 0) + surplus; 
-            alert(`Остатък от ${surplus.toFixed(2)} добавен към депозита.`); 
+        if (surplus > 0) { 
+            apt.overpayment = Math.round(((apt.overpayment || 0) + surplus) * 100) / 100; 
         } 
     }
     
@@ -2801,37 +2761,59 @@ async function processPayment(id, apId, period) {
     tx.objectStore("expectedPayments").put(payment);
     tx.objectStore("apartments").put(apt);
     
-    const todayDate = new Date().toISOString().slice(0,10);
+    const todayDate = getLocalDateStr();
 
     if (payment.fundSplit && (payment.fundSplit.main > 0 || payment.fundSplit.repair > 0)) {
         const totalSplit = payment.fundSplit.main + payment.fundSplit.repair;
         let payMain = 0;
-        if(totalSplit > 0) payMain = Math.round((paidTowardsFee * (payment.fundSplit.main / totalSplit)) * 100) / 100;
+        if (totalSplit > 0) {
+            payMain = Math.round((paidTowardsFee * (payment.fundSplit.main / totalSplit)) * 100) / 100;
+        }
         const payRepair = Math.round((paidTowardsFee - payMain) * 100) / 100;
         
-        if(payMain > 0) tx.objectStore("records").add({ 
-            date: todayDate, refPeriod: period, type: "приход", fund: "основен", apartmentId: apId, amount: payMain, description: `Такса ${period} (от ${payerName})` 
-        });
-        if(payRepair > 0) tx.objectStore("records").add({ 
-            date: todayDate, refPeriod: period, type: "приход", fund: "ремонт", apartmentId: apId, amount: payRepair, description: `Такса ${period} (от ${payerName})` 
-        });
+        if (payMain > 0) {
+            tx.objectStore("records").add({ 
+                date: todayDate, refPeriod: period, type: "приход",
+                fund: "основен", apartmentId: apId, amount: payMain,
+                description: `Такса ${period} (от ${payerName})` 
+            });
+        }
+        if (payRepair > 0) {
+            tx.objectStore("records").add({ 
+                date: todayDate, refPeriod: period, type: "приход",
+                fund: "ремонт", apartmentId: apId, amount: payRepair,
+                description: `Такса ${period} (от ${payerName})` 
+            });
+        }
     } else {
         tx.objectStore("records").add({ 
-            date: todayDate, refPeriod: period, type: "приход", fund: payment.fund || "основен", apartmentId: apId, amount: paidTowardsFee, description: `Такса ${period} (от ${payerName})` 
+            date: todayDate, refPeriod: period, type: "приход",
+            fund: payment.fund || "основен", apartmentId: apId, amount: paidTowardsFee,
+            description: `Такса ${period} (от ${payerName})` 
         });
     }
 
     if (surplus > 0) {
         tx.objectStore("records").add({ 
-            date: todayDate, type: "приход", fund: "основен", apartmentId: apId, amount: surplus, description: `Вноска Депозит (от ${payerName})` 
+            date: todayDate, refPeriod: period, type: "приход", fund: "основен",
+            apartmentId: apId, amount: surplus,
+            description: `Вноска Депозит (от ${payerName})` 
         });
     }
 
-    await dbTx(tx);
+    try {
+        await dbTx(tx);
+    } catch (err) {
+        console.error("Грешка при запис:", err);
+        return;
+    }
+    
+    if (surplus > 0) {
+        alert(`Остатък от ${surplus.toFixed(2)} добавен към депозита.`);
+    }
+    
     loadFeesList(); loadReports(); loadApartmentsList(); loadCashList(); 
 }
-
-
 
 async function generateMonthlyFeesUI() {
     const period = document.getElementById("fee-month").value;
@@ -2839,7 +2821,6 @@ async function generateMonthlyFeesUI() {
 
     const txRead = db.transaction(["feeRules", "expectedPayments", "apartments"], "readonly");
     
-    // Чакаме и 3-те заявки паралелно
     const [rules, existingPayments, apartments] = await Promise.all([
         dbReq(txRead.objectStore("feeRules").getAll()),
         dbReq(txRead.objectStore("expectedPayments").getAll()),
@@ -2850,7 +2831,7 @@ async function generateMonthlyFeesUI() {
     
     const txWrite = db.transaction(["expectedPayments", "apartments", "records"], "readwrite");
     let count = 0;
-    const todayDate = new Date().toISOString().slice(0,10);
+    const todayDate = getLocalDateStr();
 
     apartments.forEach(ap => {
         if (existingPayments.some(p => p.period === period && p.apartmentId === ap.id)) return; 
@@ -2858,12 +2839,15 @@ async function generateMonthlyFeesUI() {
         let adult=0, child=0, pet=0;
         if(Array.isArray(ap.occupants)) {
             ap.occupants.forEach(o => { 
-                if(o.role==='pet') pet++; 
-                else if(o.livesHere) { if(o.role==='child') child++; else if(o.role!=='contact') adult++; } 
+                if(o.livesHere) {
+                    if(o.role==='pet') pet++; 
+                    else if(o.role==='child') child++; 
+                    else if(o.role!=='contact') adult++; 
+                } 
             }); 
         } else { adult = Number(ap.occupants)||0; }
 
-        let total = 0, breakdown = [], tMain = 0, tRepair = 0;
+        let total = 0, breakdown = [], breakdownItems = [], tMain = 0, tRepair = 0;
         const cFees = ap.customFees || {}, cRates = ap.customRates || {};
 
         rules.forEach(r => {
@@ -2878,7 +2862,18 @@ async function generateMonthlyFeesUI() {
                 else if(r.type === "child") sub = rate * child;
             }
             sub = Math.round(sub * 100) / 100;
-            if(sub > 0) { total += sub; breakdown.push(`${escapeHTML(r.name)}: ${sub.toFixed(2)}`); if(r.fund === 'ремонт') tRepair += sub; else tMain += sub; }
+            if(sub > 0) { 
+                total += sub; 
+                breakdown.push(`${r.name}: ${sub.toFixed(2)}`); 
+                breakdownItems.push({
+                    ruleId: r.id,
+                    name: r.name,
+                    amount: sub,
+                    fund: r.fund || 'основен',
+                    category: r.category || 'Други'
+                });
+                if(r.fund === 'ремонт') tRepair += sub; else tMain += sub; 
+            }
         });
         
         total = Math.round(total * 100) / 100;
@@ -2886,7 +2881,7 @@ async function generateMonthlyFeesUI() {
         tRepair = Math.round(tRepair * 100) / 100;
         
         if(total > 0 || breakdown.length > 0) { 
-            let isPaid = false, details = breakdown.join(", ");
+            let isPaid = false, isPartial = false, details = breakdown.join(", ");
             
             if(ap.overpayment && ap.overpayment > 0) {
                 let usedAmount = 0;
@@ -2901,6 +2896,7 @@ async function generateMonthlyFeesUI() {
                     total = Math.round((total - usedAmount) * 100) / 100;
                     details += ` (Частично от депозит: -${usedAmount.toFixed(2)})`; 
                     ap.overpayment = 0; 
+                    isPartial = true;
                 }
 
                 if (usedAmount > 0 && tRepair > 0) {
@@ -2912,7 +2908,7 @@ async function generateMonthlyFeesUI() {
 
                     if(repairPart > 0) {
                         txWrite.objectStore("records").add({
-                            date: todayDate, type: "transfer", fund: "ремонт",   
+                            date: todayDate, refPeriod: period, type: "transfer", fund: "ремонт",   
                             apartmentId: ap.id, amount: repairPart,
                             description: `Усвоен депозит за Ремонт`
                         });
@@ -2923,14 +2919,15 @@ async function generateMonthlyFeesUI() {
             
             txWrite.objectStore("expectedPayments").add({ 
                 apartmentId: ap.id, apNumber: ap.number, owner: ap.owner, period: period, 
-                amount: total, details: details, paid: isPaid, isPartial: false, 
+                amount: total, details: details, breakdownItems: breakdownItems,
+                paid: isPaid, isPartial: isPartial, 
                 fundSplit: { main: tMain, repair: tRepair } 
             });
             count++;
         }
     });
     
-    await dbTx(txWrite); // Изчакваме всички записи
+    await dbTx(txWrite);
     if(count === 0) alert("Няма нови такси."); 
     else { 
         alert(`Успешно генерирани такси за ${count} апартамента!`); 
@@ -2939,16 +2936,301 @@ async function generateMonthlyFeesUI() {
 }
 
 
+// ======================= ЗАДЪРЖАНЕ (LONG PRESS) ЗА СТОРНО И ИЗТРИВАНЕ =======================
+let holdTimer = null;
+let holdTargetCard = null;
+let holdStartX = 0;
+let holdStartY = 0;
+
+function clearHoldTimer() {
+    if (holdTimer) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+    }
+    if (holdTargetCard) {
+        holdTargetCard.classList.remove('long-pressing');
+        holdTargetCard = null;
+    }
+}
+
+document.addEventListener('pointerdown', function(e) {
+    // Игнорираме десен бутон на мишката
+    if (e.button && e.button !== 0) return;
+    // Игнорираме кликове върху бутони, полета, падащи менюта или елементи със собствен onclick
+    if (e.target.closest('button, input, select, textarea, a, label, [onclick]')) return;
+
+    const card = e.target.closest('.card[data-hold-action]');
+    if (!card) return;
+
+    holdTargetCard = card;
+    holdStartX = e.clientX;
+    holdStartY = e.clientY;
+    card.classList.add('long-pressing');
+
+    holdTimer = setTimeout(() => {
+        const action = card.getAttribute('data-hold-action');
+        const idAttr = card.getAttribute('data-hold-id');
+        card.classList.remove('long-pressing');
+        holdTargetCard = null;
+        holdTimer = null;
+
+        if (navigator.vibrate) {
+            try { navigator.vibrate(50); } catch (err) {}
+        }
+
+        if (action === 'delete-apt') {
+            deleteApartmentByHold(Number(idAttr));
+        } else if (action === 'storno-cash') {
+            stornoCashRecords(idAttr);
+        } else if (action === 'storno-fee') {
+            stornoFeePayment(Number(idAttr));
+        }
+    }, 650);
+});
+
+document.addEventListener('pointermove', function(e) {
+    if (!holdTimer) return;
+    if (Math.abs(e.clientX - holdStartX) > 12 || Math.abs(e.clientY - holdStartY) > 12) {
+        clearHoldTimer();
+    }
+});
+
+document.addEventListener('pointerup', clearHoldTimer);
+document.addEventListener('pointercancel', clearHoldTimer);
+
+// 1. Изтриване на апартамент със задържане (само ако няма история на такси и плащания)
+async function deleteApartmentByHold(aptId) {
+    if (!aptId) return;
+    
+    const txRead = db.transaction(["apartments", "expectedPayments", "records"], "readonly");
+    const [apt, allEp, allRecords] = await Promise.all([
+        dbReq(txRead.objectStore("apartments").get(aptId)),
+        dbReq(txRead.objectStore("expectedPayments").getAll()),
+        dbReq(txRead.objectStore("records").getAll())
+    ]);
+    
+    if (!apt) return;
+
+    const hasFees = allEp.some(p => p.apartmentId === aptId);
+    const hasRecords = allRecords.some(r => r.apartmentId === aptId);
+    const hasDeposit = (apt.overpayment || 0) > 0;
+
+    if (hasFees || hasRecords || hasDeposit) {
+        return alert(`❌ Не можете да изтриете Ап. ${apt.number}, защото за него вече има генерирани такси, история на плащанията или наличен депозит!`);
+    }
+
+    if (!confirm(`⚠️ ИЗТРИВАНЕ НА АПАРТАМЕНТ\n\nСигурни ли сте, че искате да изтриете Ап. ${apt.number} (${apt.owner || 'Неизвестен'})?`)) return;
+
+    try {
+        const tx = db.transaction("apartments", "readwrite");
+        tx.objectStore("apartments").delete(aptId);
+
+        await dbTx(tx);
+        closeAptForm();
+        loadApartmentsList();
+    } catch (e) {
+        console.error("Грешка при изтриване на апартамент:", e);
+    }
+}
 
 
+// 2. Сторниране на касова операция със запис в историята
+async function stornoCashRecords(idsStr) {
+    if (!idsStr) return;
+    const ids = idsStr.split(',').map(Number).filter(Boolean);
+    if (ids.length === 0) return;
+
+    const txRead = db.transaction(["records", "apartments"], "readonly");
+    const [allRecords, allApts] = await Promise.all([
+        dbReq(txRead.objectStore("records").getAll()),
+        dbReq(txRead.objectStore("apartments").getAll())
+    ]);
+
+    let targetRecords = allRecords.filter(r => ids.includes(r.id) && !r.isStornoed && !r.isStornoEntry);
+    if (targetRecords.length === 0) {
+        return alert("Тази операция вече е сторнирана!");
+    }
+
+    // 1. ЗАЩИТА ЗА КОМБИНИРАНИ ПЛАЩАНИЯ (Фонд Основен + Фонд Ремонти):
+    // Ако се сторнира такса от апартамент (дори при пуснат филтър само за единия фонд),
+    // автоматично включваме и свързания запис от другия фонд за същото плащане.
+    targetRecords.slice().forEach(r => {
+        const isFeePayment = r.type === 'приход' && r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'));
+        if (isFeePayment) {
+            const siblings = allRecords.filter(other =>
+                other.id !== r.id &&
+                !other.isStornoed &&
+                !other.isStornoEntry &&
+                other.type === 'приход' &&
+                other.apartmentId === r.apartmentId &&
+                other.date === r.date &&
+                other.refPeriod === r.refPeriod &&
+                other.description === r.description &&
+                !targetRecords.some(tr => tr.id === other.id)
+            );
+            targetRecords.push(...siblings);
+        }
+    });
+
+    let aptMap = {};
+    allApts.forEach(a => aptMap[a.id] = a.number);
+
+    // 2. ЗАЩИТА ПРИ ВЕЧЕ УСВОЕН ДЕПОЗИТ:
+    // Проверяваме дали наличният депозит в апартамента е достатъчен преди сторниране на вноска за депозит.
+    for (let r of targetRecords) {
+        if (r.type === 'приход' && r.apartmentId && r.description && r.description.includes('Депозит')) {
+            const apt = allApts.find(a => a.id === r.apartmentId);
+            const currentDeposit = apt ? (apt.overpayment || 0) : 0;
+            if (currentDeposit + 0.004 < r.amount) {
+                return alert(
+                    `❌ Този депозит (или част от него) вече е усвоен за плащане на месечни такси!\n` +
+                    `Наличен депозит в момента: ${currentDeposit.toFixed(2)} € (опит за сторно на: ${r.amount.toFixed(2)} €).\n\n` +
+                    `За да сторнирате тази вноска, първо отидете в секция 'Такси' и сторнирайте таксата, платена с депозита (така парите ще се върнат в депозита на апартамента), и след това сторнирайте самата вноска от Каса.`
+                );
+            }
+        }
+    }
+
+    const first = targetRecords[0];
+    const totalAmt = targetRecords.reduce((sum, r) => sum + r.amount, 0);
+    const titleInfo = first.apartmentId ? `Ап. ${aptMap[first.apartmentId] || '?'} (${first.description || ''})` : (first.sourceCat || first.category || first.description || first.type);
+    const fundsNote = targetRecords.length > 1 ? `\n(Включва свързаните суми по Фонд Основен и Фонд Ремонти)` : "";
+
+    if (!confirm(`🔄 СТОРНО НА ОПЕРАЦИЯ\n\nСигурни ли сте, че искате да сторнирате:\n"${titleInfo}"\nОбща сума: ${totalAmt.toFixed(2)} €?${fundsNote}\n\nЩе бъде създаден обратен СТОРНО запис в историята на касата, а ако е такса – задължението ще бъде възстановено.`)) return;
+
+    try {
+        const tx = db.transaction(["records", "expectedPayments", "apartments"], "readwrite");
+        const recStore = tx.objectStore("records");
+        const epStore  = tx.objectStore("expectedPayments");
+        const aptStore = tx.objectStore("apartments");
+
+        const [expectedPayments, apartments] = await Promise.all([
+            dbReq(epStore.getAll()),
+            dbReq(aptStore.getAll())
+        ]);
+
+        const todayDate = getLocalDateStr();
+
+        for (let r of targetRecords) {
+            r.isStornoed = true;
+            recStore.put(r);
+
+            // Добавяме сторно запис в историята с обратен знак
+            const stornoRec = {
+                date: todayDate,
+                refPeriod: r.refPeriod || r.date.slice(0, 7),
+                type: r.type,
+                fund: r.fund,
+                apartmentId: r.apartmentId || null,
+                category: r.category || undefined,
+                sourceCat: r.sourceCat || undefined,
+                amount: -r.amount,
+                isStornoEntry: true,
+                stornoOf: r.id,
+                description: `СТОРНО на: ${r.description || r.sourceCat || r.category || r.type}`
+            };
+            recStore.add(stornoRec);
+
+            // Ако е плащане от апартамент, възстановяваме задължението или депозита
+            if (r.type === 'приход' && r.apartmentId) {
+                if (r.description && r.description.includes('Депозит')) {
+                    const apt = apartments.find(a => a.id === r.apartmentId);
+                    if (apt) {
+                        apt.overpayment = Math.max(0, Math.round(((apt.overpayment || 0) - r.amount) * 100) / 100);
+                        aptStore.put(apt);
+                    }
+                } else if (r.refPeriod) {
+                    const ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
+                    if (ep) {
+                        const origTotal = ep.fundSplit ? (ep.fundSplit.main + ep.fundSplit.repair) : (ep.amount + r.amount);
+                        ep.amount = Math.min(origTotal, Math.round((ep.amount + r.amount) * 100) / 100);
+                        if (ep.amount >= origTotal - 0.009) {
+                            ep.amount = Math.round(origTotal * 100) / 100;
+                            ep.paid = false;
+                            ep.isPartial = false;
+                        } else {
+                            ep.paid = false;
+                            ep.isPartial = true;
+                        }
+                        epStore.put(ep);
+                    }
+                }
+            }
+        }
+
+        await dbTx(tx);
+        loadCashList();
+        loadFeesList();
+        loadReports();
+        loadApartmentsList();
+        alert("Операцията беше успешно сторнирана и вписана в историята!");
+    } catch (err) {
+        console.error("Грешка при сторниране:", err);
+    }
+}
 
 
+// 3. Сторниране директно от плочка в секция "Такси"
+async function stornoFeePayment(paymentId) {
+    if (!paymentId) return;
+    const txRead = db.transaction(["expectedPayments", "records"], "readonly");
+    const [ep, allRecords] = await Promise.all([
+        dbReq(txRead.objectStore("expectedPayments").get(paymentId)),
+        dbReq(txRead.objectStore("records").getAll())
+    ]);
+
+    if (!ep || (!ep.paid && !ep.isPartial)) return;
+
+    // Намираме всички активни касови записи за тази такса
+    const matchingRecords = allRecords.filter(r =>
+        r.type === 'приход' &&
+        r.apartmentId === ep.apartmentId &&
+        r.refPeriod === ep.period &&
+        !r.isStornoed &&
+        !r.isStornoEntry &&
+        !(r.description && r.description.includes('Депозит'))
+    );
+
+    if (matchingRecords.length > 0) {
+        await stornoCashRecords(matchingRecords.map(r => r.id).join(','));
+    } else {
+        // Ако е било покрито автоматично от депозит при генерирането
+        const origTotal = ep.fundSplit ? (ep.fundSplit.main + ep.fundSplit.repair) : ep.amount;
+        const paidFromDeposit = Math.round((origTotal - ep.amount) * 100) / 100;
+        if (!confirm(`🔄 СТОРНО НА ПЛАЩАНЕ ОТ ДЕПОЗИТ (Ап. ${ep.apNumber})\n\nСумата от ${paidFromDeposit.toFixed(2)} € ще бъде върната в депозита на апартамента, а таксата за ${ep.period} ще стане отново дължима.\n\nПотвърждавате ли?`)) return;
+
+        const tx = db.transaction(["expectedPayments", "apartments", "records"], "readwrite");
+        const apt = await dbReq(tx.objectStore("apartments").get(ep.apartmentId));
+        if (apt) {
+            apt.overpayment = Math.round(((apt.overpayment || 0) + paidFromDeposit) * 100) / 100;
+            tx.objectStore("apartments").put(apt);
+        }
+        ep.amount = Math.round(origTotal * 100) / 100;
+        ep.paid = false;
+        ep.isPartial = false;
+        ep.details = ep.details ? ep.details.replace(/\s*\((Платено от депозит|Частично от депозит:[^)]*)\)\s*$/, "") : "";
+        tx.objectStore("expectedPayments").put(ep);
+
+        // Изтриваме служебния трансфер от депозит към фонд "Ремонти" за този месец (ако има такъв)
+        const transferRecords = allRecords.filter(r =>
+            r.type === 'transfer' &&
+            r.apartmentId === ep.apartmentId &&
+            r.refPeriod === ep.period
+        );
+        transferRecords.forEach(tr => tx.objectStore("records").delete(tr.id));
+
+        await dbTx(tx);
+        loadFeesList();
+        loadReports();
+        loadApartmentsList();
+        loadCashList();
+    }
+}
 
 
 function setTxType(t){ 
     const currentType = document.getElementById("cash-type").value;
     
-    // Ако реално сменяме типа (от Приход на Разход или обратно), изчистваме полетата!
     if (currentType !== t) {
         clearCashFormFields();
     }
@@ -2962,18 +3244,17 @@ function setTxType(t){
     document.getElementById("btn-exp").style.color = t==='разход' ? "white" : "#333";
 }
 
-
 // --- ДОБАВЯНЕ НА НОВА ОПЕРАЦИЯ В КАСАТА (С ПОТВЪРЖДЕНИЕ) ---
 async function addCashRecord() { 
     const amt = Number(document.getElementById("cash-amount").value); 
     if(!amt) return alert("Моля, въведете сума!"); 
 
     const selectedRefPeriod = document.getElementById("cash-date").value;
-    const createdDate = new Date().toISOString().slice(0,10);
+    const createdDate = getLocalDateStr();
     const type = document.getElementById("cash-type").value; 
     const isInc = type === 'приход';
 
-    const sourceOrCat = isInc ? document.getElementById("cash-source").value : document.getElementById("cash-category").value;
+    const sourceOrCat = (isInc ? document.getElementById("cash-source").value : document.getElementById("cash-category").value).trim();
     const fundName = document.getElementById("cash-fund").value;
 
     const confirmMsg = `Сигурни ли сте, че искате да запишете този ${type.toUpperCase()}?\n\n` +
@@ -2985,30 +3266,27 @@ async function addCashRecord() {
 
     if (!confirm(confirmMsg)) return; 
 
+    const descInput = document.getElementById("cash-desc").value.trim();
+
     const rec = { 
         date: createdDate,           
         refPeriod: selectedRefPeriod, 
         type: type, 
-        fund: document.getElementById("cash-fund").value, 
+        fund: fundName, 
         amount: amt, 
-        description: document.getElementById("cash-desc").value 
+        description: descInput 
     };
     
-    const tx = db.transaction(["records", "apartments"], "readwrite");
-    if(isInc) {
-        const apts = await dbReq(tx.objectStore("apartments").getAll());
-        const match = apts.find(a => a.number == document.getElementById("cash-source").value);
-        if (match) rec.apartmentId = match.id; 
-        else { 
-            rec.apartmentId = null; 
-            if (document.getElementById("cash-source").value) {
-                rec.description = `Източник: ${document.getElementById("cash-source").value} | ${rec.description}`; 
-            }
+    const tx = db.transaction("records", "readwrite");
+    if (isInc) {
+        rec.apartmentId = null; 
+        if (sourceOrCat) {
+            rec.description = descInput ? `Източник: ${sourceOrCat} | ${descInput}` : `Източник: ${sourceOrCat}`; 
         }
         tx.objectStore("records").add(rec);
     } else { 
         rec.category = document.getElementById("exp-icon-btn").getAttribute("data-cat"); 
-        rec.sourceCat = document.getElementById("cash-category").value; 
+        rec.sourceCat = sourceOrCat; 
         tx.objectStore("records").add(rec); 
     }
     
@@ -3018,7 +3296,6 @@ async function addCashRecord() {
     document.getElementById("cash-amount").value = ""; 
     document.getElementById("cash-desc").value = "";
 }
-
 
 
 async function setInitialBalance() {
@@ -3039,29 +3316,23 @@ async function setInitialBalance() {
     if (existRepair) { existRepair.amount = repairVal; store.put(existRepair); } 
     else { store.add({ date: "0000-01-01", type: "приход", fund: "ремонт", amount: repairVal, description: "Начален Баланс (Ремонт)" }); }
 
-    await dbTx(tx); // Изчакваме всичко да се запише
+    await dbTx(tx);
     alert("Началните салда са обновени!");
     loadReports();
 }
 
-
-
 function loadInitialBalances() {
+    if (!db) return;
     const tx = db.transaction("records", "readonly");
     tx.objectStore("records").getAll().onsuccess = e => {
         const records = e.target.result;
-        
-        // Търсим по дата и фонд, а не по ID
         const main = records.find(r => r.date === "0000-01-01" && r.fund === "основен");
-        const repair = records.find(r => r.date === "0000-01-01" && r.fund === "ремонт"); // Търсим и двете
+        const repair = records.find(r => r.date === "0000-01-01" && r.fund === "ремонт");
         
-        // Ако намерим запис, слагаме стойността, иначе 0.00
         document.getElementById("init-balance-main").value = main ? main.amount.toFixed(2) : "";
         document.getElementById("init-balance-repair").value = repair ? repair.amount.toFixed(2) : "";
     };
 }
-
-
 
 function exportDB() {
     const d = {};
@@ -3074,14 +3345,8 @@ function exportDB() {
             if (c === stores.length) {
                 const a = document.createElement("a");
                 a.href = URL.createObjectURL(new Blob([JSON.stringify(d)], { type: "application/json" }));
-                
-                // --- ТУК Е ПРОМЯНАТА ---
-                // Взимаме днешната дата (напр. 2023-10-25)
-                const date = new Date().toISOString().slice(0, 10);
-                // Слагаме я в името на файла
+                const date = getLocalDateStr();
                 a.download = `⅟вход_${date}.json`;
-                // -----------------------
-                
                 a.click();
             }
         }
@@ -3093,51 +3358,82 @@ function importDBFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    // 1. Питаме за потвърждение, преди да унищожим текущите данни
     if (!confirm("ВНИМАНИЕ!\nТова действие ще ИЗТРИЕ всички текущи данни на този телефон и ще ги ЗАМЕНИ напълно с данните от файла.\n\nСигурни ли сте, че искате да продължите?")) {
-        event.target.value = ""; // Изчистваме избора на файл, ако потребителят се откаже
+        event.target.value = "";
         return;
     }
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    
+    reader.onload = async function(e) {
         try {
             const data = JSON.parse(e.target.result);
+            const storesNames = ["apartments", "expectedPayments", "records", "settings", "feeRules"];
             
-            // Отваряме транзакция към всички таблици
-            const tx = db.transaction(["apartments", "expectedPayments", "records", "settings", "feeRules"], "readwrite");
-            
-            // 2. ПЪРВО ИЗЧИСТВАМЕ ВСИЧКИ СТАРИ ДАННИ (Премахваме Merge ефекта)
-            tx.objectStore("apartments").clear();
-            tx.objectStore("expectedPayments").clear();
-            tx.objectStore("records").clear();
-            tx.objectStore("settings").clear();
-            tx.objectStore("feeRules").clear(); // ДОБАВЕНО: Да не забравим и шаблоните за такси!
+            // Валидация дали файлът е истински архив на приложението
+            if (!data || typeof data !== "object" || Array.isArray(data)) {
+                throw new Error("Невалиден формат на архива.");
+            }
+            const hasValidStore = storesNames.some(s => Array.isArray(data[s]));
+            const hasInvalidType = storesNames.some(s => data[s] !== undefined && !Array.isArray(data[s]));
+            if (!hasValidStore || hasInvalidType) {
+                throw new Error("Файлът не съдържа валидни таблици на приложението.");
+            }
 
-            // 3. СЛЕД ТОВА НАЛИВАМЕ НОВИТЕ ДАННИ ОТ ФАЙЛА
-            if (data.apartments) data.apartments.forEach(item => tx.objectStore("apartments").put(item));
-            if (data.expectedPayments) data.expectedPayments.forEach(item => tx.objectStore("expectedPayments").put(item));
-            if (data.records) data.records.forEach(item => tx.objectStore("records").put(item));
-            if (data.settings) data.settings.forEach(item => tx.objectStore("settings").put(item));
-            if (data.feeRules) data.feeRules.forEach(item => tx.objectStore("feeRules").put(item));
+            const backupData = {};
+            const backupTx = db.transaction(storesNames, "readonly");
+            const backupResults = await Promise.all(
+                storesNames.map(storeName => dbReq(backupTx.objectStore(storeName).getAll()))
+            );
+            storesNames.forEach((storeName, idx) => {
+                backupData[storeName] = backupResults[idx];
+            });
+
+            const tx = db.transaction(storesNames, "readwrite");
+            storesNames.forEach(storeName => tx.objectStore(storeName).clear());
+
+            storesNames.forEach(storeName => {
+                if (Array.isArray(data[storeName])) {
+                    data[storeName].forEach(item => tx.objectStore(storeName).put(item));
+                }
+            });
 
             tx.oncomplete = () => {
                 alert("Данните са възстановени успешно!");
-                location.reload(); // Презареждаме приложението, за да покаже новите данни навсякъде
+                location.reload();
             };
             
             tx.onerror = () => {
-                alert("Възникна грешка при записването на данните!");
+                console.warn("Грешка при импорта. Стартиране на възстановяване на старите данни...");
+                const rollbackTx = db.transaction(storesNames, "readwrite");
+                
+                storesNames.forEach(storeName => {
+                    rollbackTx.objectStore(storeName).clear();
+                    if (backupData[storeName]) {
+                        backupData[storeName].forEach(item => rollbackTx.objectStore(storeName).put(item));
+                    }
+                });
+
+                rollbackTx.oncomplete = () => {
+                    alert("Възникна грешка при четенето на новия файл.\nСтарите ви данни бяха възстановени безопасно!");
+                    event.target.value = "";
+                };
+
+                rollbackTx.onerror = () => {
+                    alert("КРИТИЧНА ГРЕШКА при възстановяването на данните!");
+                };
             };
             
         } catch (err) {
-            alert("Грешка! Файлът е повреден или не е валиден архив.");
+            alert("Грешка! Файлът е повреден или не е валиден архив на приложението.");
             console.error(err);
+            event.target.value = "";
         }
     };
     
     reader.readAsText(file);
 }
+
 
 function resetDB(){if(confirm("Изтриване?")){indexedDB.deleteDatabase("DomoupravitelPro_v7");location.reload();}}
 
@@ -3167,27 +3463,23 @@ async function deleteMonthFees() {
 
 // --- ГЛОБАЛЕН ХЕНДЛЪР ЗА ПЕЧАТ ---
 function handleGlobalPrint() {
-    // Проверяваме кой таб е активен в момента
     const activeTabId = document.querySelector('.tab.active').id;
 
     if (activeTabId === 'fees') {
-        openFeesPrintPreview(); // Печат на задължения (Работи)
+        openFeesPrintPreview();
     } else if (activeTabId === 'cash') {
-        openCashPrintPreview(); // Печат на каса (Работи)
+        openCashPrintPreview();
     } else if (activeTabId === 'reports') {
-        // --- ЗАБРАНА ЗА ПЕЧАТ НА ФИНАНСОВ СТАТУС ---
         alert("Печатът на графиките (Финансов статус) не се поддържа.");
     } else {
         alert("Моля, отидете в секция 'Такси' или 'Каса', за да принтирате таблица.");
     }
 }
 
-
-
-// 1. ПЕЧАТ ЗА ТАКСИ (Подобрен, с колона "Платил" и име на Касиер)
+// 1. ПЕЧАТ ЗА ТАКСИ
 async function openFeesPrintPreview() {
     const period = document.getElementById("fee-month").value;
-    if(!period) return alert("Моля, изберете месец от календара!");
+    if (!isAggregatedView && !period) return alert("Моля, изберете месец от календара!");
 
     const tx = db.transaction(["expectedPayments", "apartments", "settings"], "readonly");
     const [payments, apartments, settingsRecord] = await Promise.all([
@@ -3196,31 +3488,83 @@ async function openFeesPrintPreview() {
         dbReq(tx.objectStore("settings").get(1))
     ]);
 
+    let aptMap = {};
+    apartments.forEach(a => aptMap[a.id] = a);
     const settings = settingsRecord || {};
-    const list = payments.filter(p => p.period === period);
-    
-    if(list.length === 0) return alert("Няма генерирани такси за този месец!");
 
-    list.sort((a, b) => a.apNumber - b.apNumber);
-    showTab('print-view'); 
+    let html = "";
 
-    let html = `<div class="print-title">Списък задължения: ${period}</div>`;
-    html += '<table class="print-table">';
-    html += '<thead><tr><th style="width:8%">Ап.</th><th style="width:45%">Име и Фамилия</th><th style="width:12%">Сума</th><th style="width:15%">Платил</th><th style="width:20%">Подпис</th></tr></thead>';
-    html += '<tbody>';
+    if (isAggregatedView) {
+        const unpaid = payments.filter(p => !p.paid);
+        if (unpaid.length === 0) return alert("Няма висящи задължения за печат!");
 
-    list.forEach(p => {
-        const status = p.paid ? "ПЛАТЕНО" : "";
-        html += '<tr>';
-        html += `<td style="text-align:center; font-weight:bold;">${p.apNumber}</td>`;
-        html += `<td></td>`; 
-        html += `<td style="text-align:right;"><b>${p.amount.toFixed(2)}</b></td>`;
-        html += `<td style="text-align:center; font-size:0.8rem;">${status}</td>`;
-        html += `<td></td>`; 
-        html += '</tr>';
-    });
+        let grouped = {};
+        unpaid.forEach(p => {
+            if (!grouped[p.apartmentId]) {
+                grouped[p.apartmentId] = { apId: p.apartmentId, apNumber: p.apNumber, owner: p.owner, total: 0, periods: [] };
+            }
+            grouped[p.apartmentId].total += p.amount;
+            grouped[p.apartmentId].periods.push(p.period);
+        });
 
-    html += '</tbody></table>';
+        const sortedKeys = Object.keys(grouped).sort((a, b) => grouped[a].apNumber - grouped[b].apNumber);
+        showTab('print-view');
+
+        let grandTotal = 0;
+        html += `<div class="print-title">Списък общи задължения (всички неплатени месеци)</div>`;
+        html += '<table class="print-table">';
+        html += '<thead><tr><th style="width:8%">Ап.</th><th style="width:32%">Име и Фамилия</th><th style="width:28%">Неплатени месеци</th><th style="width:12%">Общо дължи</th><th style="width:20%">Подпис</th></tr></thead>';
+        html += '<tbody>';
+
+        sortedKeys.forEach(key => {
+            const g = grouped[key];
+            g.periods.sort();
+            grandTotal += g.total;
+            const apt = aptMap[g.apId] || {};
+            const displayName = apt.owner || g.owner || "";
+
+            html += '<tr>';
+            html += `<td style="text-align:center; font-weight:bold;">${g.apNumber}</td>`;
+            html += `<td>${escapeHTML(displayName)}</td>`;
+            html += `<td style="font-size:0.85rem;">${escapeHTML(g.periods.join(", "))}</td>`;
+            html += `<td style="text-align:right;"><b>${g.total.toFixed(2)}</b></td>`;
+            html += `<td></td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        html += `<div style="text-align:right; margin-top:10px; font-size:13pt; font-weight:bold;">Общо несъбрани задължения: ${grandTotal.toFixed(2)} €</div>`;
+    } else {
+        const list = payments.filter(p => p.period === period);
+        if (list.length === 0) return alert("Няма генерирани такси за този месец!");
+
+        list.sort((a, b) => a.apNumber - b.apNumber);
+        showTab('print-view'); 
+
+        html += `<div class="print-title">Списък задължения: ${period}</div>`;
+        html += '<table class="print-table">';
+        html += '<thead><tr><th style="width:8%">Ап.</th><th style="width:45%">Име и Фамилия</th><th style="width:12%">Сума</th><th style="width:15%">Платил</th><th style="width:20%">Подпис</th></tr></thead>';
+        html += '<tbody>';
+
+        list.forEach(p => {
+            const status = p.paid ? "ПЛАТЕНО" : (p.isPartial ? "ЧАСТИЧНО" : "");
+            const origTotal = p.fundSplit ? (p.fundSplit.main + p.fundSplit.repair) : p.amount;
+            const displayAmount = p.paid ? origTotal : p.amount;
+            
+            const apt = aptMap[p.apartmentId] || {};
+            const displayName = p.payerName || apt.owner || p.owner || "";
+
+            html += '<tr>';
+            html += `<td style="text-align:center; font-weight:bold;">${p.apNumber}</td>`;
+            html += `<td>${escapeHTML(displayName)}</td>`; 
+            html += `<td style="text-align:right;"><b>${displayAmount.toFixed(2)}</b></td>`;
+            html += `<td style="text-align:center; font-size:0.8rem;">${status}</td>`;
+            html += `<td></td>`; 
+            html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+    }
     
     let manager = settings.bManager || "..........................................";
     
@@ -3233,8 +3577,8 @@ async function openFeesPrintPreview() {
     document.getElementById("print-content").innerHTML = html;
 }
 
+// 2. ПЕЧАТ ЗА КАСА
 async function openCashPrintPreview() {
-    // 1. Взимаме всички нужни таблици, включително правилата и генерираните такси
     const tx = db.transaction(["records", "apartments", "expectedPayments", "feeRules"], "readonly");
     const [records, apartments, expectedPayments, feeRules] = await Promise.all([
         dbReq(tx.objectStore("records").getAll()),
@@ -3253,7 +3597,6 @@ async function openCashPrintPreview() {
         ruleCategoryMap[r.name] = r.category || 'Други';
     });
 
-    // 2. Първичен филтър
     let filtered = records.filter(r => {
         if(r.date === "0000-01-01" || r.type === 'transfer') return false;
         const accountingDate = r.refPeriod || r.date;
@@ -3266,7 +3609,6 @@ async function openCashPrintPreview() {
     if (cashFundFilter === 'main') filtered = filtered.filter(r => r.fund === 'основен');
     else if (cashFundFilter === 'repair') filtered = filtered.filter(r => r.fund === 'ремонт');
 
-    // 3. ДЪЛБОК ФИЛТЪР ПО КАТЕГОРИЯ (Копираме магията от екрана)
     if (cashSubFilter !== 'all') {
         let categoryFiltered = [];
         
@@ -3275,32 +3617,24 @@ async function openCashPrintPreview() {
                 if (r.category === cashSubFilter) categoryFiltered.push(r);
             } 
             else if (r.type === 'приход') {
-                if (r.apartmentId && r.refPeriod && !r.description.includes('Депозит')) {
+                if (r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'))) {
                     let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
-                    if (ep && ep.details) {
+                    if (ep) {
                         let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-                        if (!ep.fundSplit) expectedTotal = r.amount;
+                        if (!ep.fundSplit) expectedTotal = Math.abs(r.amount);
                         let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
                         
                         let catSum = 0;
-                        let items = ep.details.split(', ');
+                        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
                         items.forEach(item => {
-                            let parts = item.split(': ');
-                            if (parts.length >= 2) {
-                                let rName = parts.slice(0, -1).join(': ');
-                                let rTotal = parseFloat(parts[parts.length - 1]);
-                                let rFund = ruleMap[rName] || (ep.fundSplit && ep.fundSplit.repair > 0 && ep.fundSplit.main === 0 ? 'ремонт' : 'основен');
-                                
-                                if (rFund === r.fund) {
-                                    let catName = ruleCategoryMap[rName] || 'Други';
-                                    if (catName === cashSubFilter) catSum += (rTotal * ratio);
-                                }
+                            if (item.fund === r.fund && item.category === cashSubFilter) {
+                                catSum += (item.amount * ratio);
                             }
                         });
                         
-                        if (catSum > 0.009) {
+                        if (Math.abs(catSum) > 0.009) {
                             let clone = { ...r }; 
-                            clone.amount = catSum; // Сменяме сумата само за печата
+                            clone.amount = catSum;
                             clone.isPartialCategory = true; 
                             categoryFiltered.push(clone);
                         }
@@ -3315,22 +3649,25 @@ async function openCashPrintPreview() {
 
     if(filtered.length === 0) return alert("Няма записи за печат спрямо текущите филтри!");
 
-    // Сортиране по дата
     filtered.sort((a,b) => new Date(a.date) - new Date(b.date));
 
     showTab('print-view');
 
-    // 4. Формиране на заглавието
-    let titleText = "Отчет Каса";
-    if(cashFilterType === 'income') titleText = "Приходи";
-    if(cashFilterType === 'expense') titleText = "Разходи";
-    
-    // Ако има избран под-филтър, го добавяме в заглавието на листа!
-    if(cashSubFilter !== 'all') titleText += ` (Филтър: ${cashSubFilter})`;
-    
     let periodLabel = document.getElementById('cash-date').value;
+    let titleText = "";
 
-    let html = `<div class="print-title">${titleText}: ${periodLabel}</div>`;
+    if (cashSubFilter !== 'all') {
+        titleText = `ОТЧЕТ ЗА КАТЕГОРИЯ: ${cashSubFilter.toUpperCase()} (${periodLabel})`;
+    } else {
+        if(cashFilterType === 'income') titleText = `ПРИХОДИ (${periodLabel})`;
+        else if(cashFilterType === 'expense') titleText = `РАЗХОДИ (${periodLabel})`;
+        else titleText = `ОТЧЕТ КАСА (${periodLabel})`;
+    }
+
+    if (cashFundFilter === 'main') titleText += " | Фонд Основен";
+    else if (cashFundFilter === 'repair') titleText += " | Фонд Ремонти";
+
+    let html = `<div class="print-title" style="font-size:16pt; font-weight:bold; margin-bottom:20px;">${escapeHTML(titleText)}</div>`;
     html += '<table class="print-table">';
     html += '<thead><tr><th style="width:15%">Дата</th><th style="width:40%">Описание / Източник</th><th style="width:15%">Фонд</th><th style="width:15%">Тип</th><th style="width:15%">Сума</th></tr></thead>';
     html += '<tbody>';
@@ -3341,26 +3678,29 @@ async function openCashPrintPreview() {
         let source = r.description;
         if(r.type === 'приход' && r.apartmentId) {
             source = `Ап. ${aptMap[r.apartmentId] || ''} - ${r.description}`;
-            // Добавяме малко пояснение към източника, ако сумата е филтрирана
             if (r.isPartialCategory) {
                 source += ` [само за ${cashSubFilter}]`;
             }
         } else if (r.category) {
-            source = `${r.category}: ${r.description}`;
+            source = `${r.sourceCat || r.category}: ${r.description}`;
         }
         
         let fund = r.fund === 'основен' ? 'Основен' : 'Ремонт';
-        let typeText = r.type === 'приход' ? 'Приход' : 'Разход';
+        let baseType = r.type === 'приход' ? 'Приход' : 'Разход';
+        let typeText = r.isStornoEntry ? 'СТОРНО' : (r.isStornoed ? `${baseType} (СТОРНИРАН)` : baseType);
         
         if(r.type === 'приход') totalSum += r.amount;
         else totalSum -= r.amount;
+
+        const cashEffect = r.type === 'приход' ? r.amount : -r.amount;
+        const amountStyle = r.isStornoed ? "text-align:right; text-decoration:line-through; color:#555;" : "text-align:right;";
 
         html += '<tr>';
         html += `<td>${r.date}</td>`;
         html += `<td>${escapeHTML(source)}</td>`;
         html += `<td style="text-align:center">${fund}</td>`;
         html += `<td style="text-align:center">${typeText}</td>`;
-        html += `<td style="text-align:right;">${r.amount.toFixed(2)}</td>`;
+        html += `<td style="${amountStyle}">${cashEffect > 0 ? '+' : ''}${cashEffect.toFixed(2)}</td>`;
         html += '</tr>';
     });
 
@@ -3372,253 +3712,128 @@ async function openCashPrintPreview() {
     document.getElementById("print-content").innerHTML = html;
 }
 
-
-
-
-
-
-// 2. ПЕЧАТ ЗА КАСА (Табличен вид)
-function openCashPrintPreview() {
-    // 1. Отваряме базата за всички нужни таблици
-    const tx = db.transaction(["records", "apartments", "expectedPayments", "feeRules"], "readonly");
-    
-    let records = [], apartments = [], expectedPayments = [], feeRules = [];
-
-    // 2. Изтегляме данните
-    tx.objectStore("records").getAll().onsuccess = e => records = e.target.result;
-    tx.objectStore("apartments").getAll().onsuccess = e => apartments = e.target.result;
-    tx.objectStore("expectedPayments").getAll().onsuccess = e => expectedPayments = e.target.result;
-    tx.objectStore("feeRules").getAll().onsuccess = e => feeRules = e.target.result;
-
-    // 3. Когато всичко се изтегли успешно, започваме филтрирането и рисуването
-    tx.oncomplete = () => {
-        let aptMap = {};
-        apartments.forEach(a => aptMap[a.id] = a.number);
-
-        let ruleMap = {};
-        let ruleCategoryMap = {};
-        feeRules.forEach(r => {
-            ruleMap[r.name] = r.fund;
-            ruleCategoryMap[r.name] = r.category || 'Други';
-        });
-
-        // Първичен филтър (Месец, Приход/Разход, Фонд)
-        let filtered = records.filter(r => {
-            if(r.date === "0000-01-01" || r.type === 'transfer') return false;
-            const accountingDate = r.refPeriod || r.date;
-            return isDateInPeriod(accountingDate);
-        });
-
-        if(cashFilterType === 'income') filtered = filtered.filter(r => r.type === 'приход');
-        else if (cashFilterType === 'expense') filtered = filtered.filter(r => r.type === 'разход');
-
-        if (cashFundFilter === 'main') filtered = filtered.filter(r => r.fund === 'основен');
-        else if (cashFundFilter === 'repair') filtered = filtered.filter(r => r.fund === 'ремонт');
-
-        // Дълбок филтър ПО КАТЕГОРИЯ
-        if (cashSubFilter !== 'all') {
-            let categoryFiltered = [];
-            filtered.forEach(r => {
-                if (r.type === 'разход') {
-                    if (r.category === cashSubFilter) categoryFiltered.push(r);
-                } 
-                else if (r.type === 'приход') {
-                    if (r.apartmentId && r.refPeriod && !r.description.includes('Депозит')) {
-                        let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
-                        if (ep && ep.details) {
-                            let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-                            if (!ep.fundSplit) expectedTotal = r.amount;
-                            let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
-                            
-                            let catSum = 0;
-                            let items = ep.details.split(', ');
-                            items.forEach(item => {
-                                let parts = item.split(': ');
-                                if (parts.length >= 2) {
-                                    let rName = parts.slice(0, -1).join(': ');
-                                    let rTotal = parseFloat(parts[parts.length - 1]);
-                                    let rFund = ruleMap[rName] || (ep.fundSplit && ep.fundSplit.repair > 0 && ep.fundSplit.main === 0 ? 'ремонт' : 'основен');
-                                    
-                                    if (rFund === r.fund) {
-                                        let catName = ruleCategoryMap[rName] || 'Други';
-                                        if (catName === cashSubFilter) catSum += (rTotal * ratio);
-                                    }
-                                }
-                            });
-                            
-                            if (catSum > 0.009) {
-                                let clone = { ...r }; 
-                                clone.amount = catSum;
-                                clone.isPartialCategory = true; 
-                                categoryFiltered.push(clone);
-                            }
-                        }
-                    } else if (cashSubFilter === 'Други' && !r.apartmentId) {
-                        categoryFiltered.push(r);
-                    }
-                }
-            });
-            filtered = categoryFiltered;
-        }
-
-        if(filtered.length === 0) return alert("Няма записи за печат спрямо текущите филтри!");
-
-        // Сортиране
-        filtered.sort((a,b) => new Date(a.date) - new Date(b.date));
-
-        showTab('print-view');
-
-        // --- НОВО: ФОРМИРАНЕ НА ТОЧНО ЗАГЛАВИЕ ---
-        let periodLabel = document.getElementById('cash-date').value;
-        let titleText = "";
-
-        if (cashSubFilter !== 'all') {
-            // Ако има избран под-филтър
-            titleText = `ОТЧЕТ ЗА КАТЕГОРИЯ: ${cashSubFilter.toUpperCase()} (${periodLabel})`;
-        } else {
-            // Нормални заглавия
-            if(cashFilterType === 'income') titleText = `ПРИХОДИ (${periodLabel})`;
-            else if(cashFilterType === 'expense') titleText = `РАЗХОДИ (${periodLabel})`;
-            else titleText = `ОТЧЕТ КАСА (${periodLabel})`;
-        }
-
-        // Добавяме и фонда към заглавието
-        if (cashFundFilter === 'main') titleText += " | Фонд Основен";
-        else if (cashFundFilter === 'repair') titleText += " | Фонд Ремонти";
-
-        // Генерираме HTML
-        let html = `<div class="print-title" style="font-size:16pt; font-weight:bold; margin-bottom:20px;">${titleText}</div>`;
-        html += '<table class="print-table">';
-        html += '<thead><tr><th style="width:15%">Дата</th><th style="width:40%">Описание / Източник</th><th style="width:15%">Фонд</th><th style="width:15%">Тип</th><th style="width:15%">Сума</th></tr></thead>';
-        html += '<tbody>';
-
-        let totalSum = 0;
-
-        filtered.forEach(r => {
-            let source = r.description;
-            if(r.type === 'приход' && r.apartmentId) {
-                source = `Ап. ${aptMap[r.apartmentId] || ''} - ${r.description}`;
-                // Пояснение в таблицата за филтрирани суми
-                if (r.isPartialCategory) {
-                    source += ` [само за ${cashSubFilter}]`;
-                }
-            } else if (r.category) {
-                source = `${r.category}: ${r.description}`;
-            }
-            
-            let fund = r.fund === 'основен' ? 'Основен' : 'Ремонт';
-            let typeText = r.type === 'приход' ? 'Приход' : 'Разход';
-            
-            if(r.type === 'приход') totalSum += r.amount;
-            else totalSum -= r.amount;
-
-            html += '<tr>';
-            html += `<td>${r.date}</td>`;
-            html += `<td>${escapeHTML(source)}</td>`;
-            html += `<td style="text-align:center">${fund}</td>`;
-            html += `<td style="text-align:center">${typeText}</td>`;
-            html += `<td style="text-align:right;">${r.amount.toFixed(2)}</td>`;
-            html += '</tr>';
-        });
-
-        html += '</tbody></table>';
-        html += `<div style="text-align:right; margin-top:10px; font-size:14pt; font-weight:bold;">
-                    Баланс за периода: ${totalSum.toFixed(2)} €
-                 </div>`;
-
-        document.getElementById("print-content").innerHTML = html;
-    };
-}
-
-
 // --- ФУНКЦИЯ ЗА ДИНАМИЧНА ПОМОЩ ---
 function showHelp() {
-    // Намираме кой таб е отворен в момента
     const activeTab = document.querySelector('.tab.active');
     const tabId = activeTab ? activeTab.id : 'reports';
     
     let title = "";
     let text = "";
 
-    // Определяме текста спрямо таба
     switch (tabId) {
         case 'reports':
             title = "Инфо (Финанси)";
             text = `
-                <b>Графики и Статистика:</b><br>
-                Тук виждате обобщена информация за приходите, разходите и наличностите.<br>
-                • <b>Месец / Година:</b> С бутона до датата превключвате между месечен и годишен изглед.<br>
-                • <b>Такси (Приходи):</b> Показва колко пари са събрани и колко остават от месечните такси. Натиснете графиките, за да видите разбивка.<br>
-                • <b>Разходи:</b> Общите разходи за периода, разделени по фондове.<br>
-                • <b>Наличности:</b> Реалните пари във физическата каса, депозитите (надвнесени суми) и наличностите по фондове.
+                <b>1. Преглед по Период (Месец / Година):</b><br>
+                • <b>Избор на дата:</b> Промяната на месеца тук автоматично синхронизира периода и в секциите „Такси“ и „Каса“.<br>
+                • <b>Бутон Месец / Година:</b> Превключва отчета между конкретния избран месец и обобщени данни за цялата година.<br><br>
+                <b>2. Събираемост на Такси:</b><br>
+                • Прогрес баровете показват каква част от начислените месечни такси за периода са събрани и колко остават неплатени.<br>
+                • <b>Детайлна разбивка:</b> Натиснете върху заглавието <b>„Фонд Основен“</b> или <b>„Фонд Ремонти“</b> (със стрелката), за да разгънете списък с прогреса по всяко отделно перо (напр. Ток, Асансьор, Почистване).<br><br>
+                <b>3. Разходи за периода:</b><br>
+                • Показва всички разходи, отнесени счетоводно за избрания месец/година, разделени по двата фонда.<br><br>
+                <b>4. Наличности (Общо състояние на касата):</b><br>
+                • <b>Каса (Физическа):</b> Всички реално налични пари в момента (Начални салда + Всички приходи − Всички разходи).<br>
+                • <b>Депозити (предплатени):</b> Надвнесени суми от апартаменти, които се пазят за автоматично покриване на техни бъдещи такси.<br>
+                • <b>Фонд Основен:</b> Свободните средства за текущи разходи (Физическа каса минус Фонд Ремонти и минус Депозитите).<br>
+                • <b>Фонд Ремонти:</b> Наличните средства, събрани целево за ремонти.<br><br>
+                <b>5. Бързи бутони горе вдясно:</b><br>
+                • <b>Принтер:</b> Отваря таблица за печат/PDF (когато сте в секция „Такси“ или „Каса“).<br>
+                • <b>Дискетка:</b> Бързо сваляне на резервен архив (.json файл) с всички данни.<br>
+                • <b>Зъбно колело:</b> Отваря системните настройки и началните салда.
             `;
             break;
         case 'fees':
             title = "Месечни Такси";
             text = `
-                <b>Управление на таксите:</b><br>
-                • <b>Стрелка (до заглавието):</b> Разгъва панела с дефинирани такси и бутона за генериране.<br>
-                • <b>Син бутон (+):</b> Създайте нова такса. Вече можете да избирате <b>Иконка/Категория</b> (напр. Асансьор, Ток). Това е важно, за да работят правилно дълбоките филтри в Касата!<br>
-                • <b>Бутон ГЕНЕРИРАЙ:</b> Начислява таксите за избрания месец (от календара горе) на всички апартаменти.<br>
-                • <b>Режим Месечен/Общи:</b> Превключвайте, за да плащате месец по месец или всички стари задължения наведнъж.<br>
-                • <b>ПЛАТИ:</b> Потвърждава плащането. Може да смените иконката <b>Кеш/Банка</b> преди плащане. Надвнесените пари отиват в "Депозит".<br>
-                • <b>Имейл Разписка (Синьо пликче):</b> Генерира и изпраща разписка на имейла на обитателя.
+                <b>1. Дефиниране на такси и Генериране:</b><br>
+                • <b>Син бутон (+):</b> Създава ново правило за месечна такса. Натиснете <b>иконката вляво от името</b>, за да смените категорията ѝ (Ток, Вода, Асансьор, Почистване, Ремонти, Дом съвет, Други). Изберете как се изчислява (на апартамент, човек, % ид. части, любимец или дете) и към кой фонд отива.<br>
+                • <b>Стрелка (до заглавието):</b> Разгъва списъка с активните такси (откъдето можете да ги редактирате с моливчето) и панела за генериране.<br>
+                • <b>ГЕНЕРИРАЙ ТАКСИТЕ:</b> Начислява задълженията за избрания месец за всички апартаменти. Ако даден апартамент има натрупан <b>депозит</b>, системата автоматично ще покрие (напълно или частично) новата такса от него.<br>
+                • <b>Червено кошче (до Генерирай):</b> Изтрива генерираните такси за месеца. <i>Защита:</i> Вече платени или частично платени такси НЕ се изтриват.<br><br>
+                <b>2. Режими на преглед и Търсене:</b><br>
+                • <b>РЕЖИМ (Месечен / Общи задължения):</b> Сивият бутон превключва между таксите за конкретния месец и сумарните неплатени задължения от всички минали месеци накуп (при плащане в общ режим задълженията се погасяват хронологично от най-стария месец към най-новия).<br>
+                • <b>Търсачка (Ап. / Ет.):</b> Въведете номер в полето вдясно за бързо търсене. Натиснете бутона <b>„Ап.“</b> пред полето, за да го превключите на <b>„Ет.“</b> – така можете да филтрирате списъка по номер на апартамент или по цял етаж.<br><br>
+                <b>3. Плащане, Надплащане и Разписки:</b><br>
+                • <b>Преди плащане:</b> От падащото меню до номера на апартамента изберете кой обитател плаща. Натиснете иконката с банкнота вляво от сумата, за да превключите начина на плащане между <b>В брой (зелено)</b> и <b>По банка (синьо)</b>.<br>
+                • <b>Частично плащане и Депозит:</b> Ако въведете по-малка сума и натиснете <b>ПЛАТИ</b>, плочката става оранжева (частично платена) и показва остатъка. Ако въведете <b>по-голяма сума</b> от дължимата, надвнесеният остатък автоматично се записва като <b>Депозит</b> за следващи месеци.<br>
+                • <b>Имейл Разписка (Синьо пликче):</b> Появява се след плащане и генерира официална разписка за изпращане по имейл.<br>
+                • <b>СТОРНО (Задържане):</b> Задръжте пръст върху вече платена (или частично платена) плочка, за да анулирате плащането – в Касата ще се запише сторно операция, а задължението ще стане отново активно.
             `;
             break;
         case 'cash':
             title = "Каса и Разходи";
             text = `
-                <b>Движение на парите и Анализ:</b><br>
-                • <b>Групирани плащания и Разбивка:</b> Когато такса е платена, тя се показва като една обща сума. Натиснете цветния бадж (Основен/Ремонт), за да се разгъне <b>детайлна разбивка</b> (напр. 5 лв. за Асансьор, 10 лв. за Почистване).<br>
-                • <b>Дълбоки Филтри (Категории):</b> Когато изберете "Всички" или "Разходи", се появява лента с категории (Ток, Вода...). Ако изберете например "Ток", системата ще покаже всички разходи за ток И <b>ще извлече само онази част от платените такси</b>, която е събрана конкретно за ток! Балансът горе ще ви покаже точната разлика за перото.<br>
-                • <b>Нова операция (+):</b> За ръчно добавяне на приход/разход. Използвайте бутона с иконка, за да зададете правилна категория на разхода.<br>
-                • <b>Бързи Шаблони:</b> Натиснете <b>стрелката</b> до заглавието, за да разгънете панела с вашите запазени шаблони. При клик върху шаблон, формата се отваря и попълва автоматично. За да създадете нов шаблон, отворете формата за операция (+) и натиснете синия бутон <b>ШАБЛОН (Дискетка)</b>.<br>                
-                • <b>Печат:</b> Ако сте филтрирали по категория (напр. Асансьор), бутонът за печат в хедъра ще генерира специален отчет само за тази категория!
+                <b>1. Добавяне на Приход (извън таксите) и Разход:</b><br>
+                • <b>Син бутон (+):</b> Отваря формата за нова касова операция (месечните такси от апартаменти влизат тук автоматично при плащане в таб „Такси“).<br>
+                • <b>Запис на Приход:</b> Изберете зеления бутон <b>„Приход“</b> за постъпления извън редовните такси (напр. наем от реклама/телеком, субсидия от община, лихва, дарение). Попълнете източника, сумата, фонда (Основен или Ремонти) и пояснение.<br>
+                • <b>Запис на Разход:</b> Изберете червения бутон <b>„Разход“</b>. Натиснете <b>иконката вляво от името</b>, за да изберете точната категория (<i>Ток, Вода, Асансьор, Почистване, Ремонти, Дом съвет, Други</i>), въведете име на разхода, сума, фонд и пояснение.<br>
+                • <b>Счетоводен период:</b> Всяка нова операция се записва с днешна дата, но се отнася счетоводно към месеца, избран в полето за дата под формата.<br><br>
+                <b>2. Бързи Шаблони:</b><br>
+                • <b>Запазване на шаблон:</b> Докато попълвате приход или разход във формата, натиснете бутона <b>„ШАБЛОН“</b> (с дискетка горе вдясно във формата). Можете да го запазите със или без фиксирана сума.<br>
+                • <b>Използване:</b> Натиснете <b>стрелката до заглавието „Каса & Разходи“</b>, за да разгънете вашите шаблони. При клик върху шаблон формата се отваря и попълва автоматично.<br><br>
+                <b>3. Умни Филтри (по Тип, Фонд и Категория):</b><br>
+                • <b>Всички / Приходи / Разходи:</b> Филтрира записите по тип. <b>Полезен трик:</b> Натиснете <b>още веднъж</b> върху вече активния бутон (Всички, Приходи или Разходи), за да филтрирате допълнително само по <b>Фонд Основен</b> (иконка банка) или <b>Фонд Ремонти</b> (иконка гаечен ключ)!<br>
+                • <b>Дълбок филтър по Категории (Ток, Вода и др.):</b> При избор на перо (напр. „Ток“) виждате всички разходи за ток И точно онази пропорционална част от платените такси на апартаментите, събрана за ток.<br><br>
+                <b>4. Анализ, Разбивка и СТОРНО:</b><br>
+                • <b>Осреднена плочка (Ап / Чов / Ид.ч) и Баланс:</b> Показва колко се пада средно на апартамент, на живущ и на 1% ид. части за текущо избрания филтър (разход, приход или баланс).<br>
+                • <b>Разбивка на плащане:</b> Натиснете върху цветния бадж (<b>Основен / Ремонт</b>) в картата на прихода, за да се разгъне детайлна разбивка по пера.<br>
+                • <b>СТОРНО (Задържане):</b> Задръжте пръст върху която и да е операция, за да направите <b>СТОРНО</b>. Оригиналният запис остава видим като „СТОРНИРАНО“, в историята се добавя обратен сторно запис, а ако е такса от апартамент – задължението се възстановява автоматично.
             `;
             break;
         case 'apartments':
             title = "Апартаменти";
             text = `
-                <b>Управление на обитателите:</b><br>
-                • <b>Обитатели:</b> Добавете имейл и маркирайте тикчето с пликче, за да може обитателят да получава разписки и съобщения.<br>
-                • <b>Инд. Такси (във формата):</b> "Заковава" твърда сума за конкретен апартамент (игнорира стандартните формули).<br>
-                • <b>Филтри:</b> Използвайте бутоните горе за бързо филтриране (живущи, деца, наематели, любимци).<br>
-                • <b>Масов Имейл (Самолетче):</b> Изпраща съобщение до <i>всички видими в момента</i> апартаменти. Системата автоматично <b>копира имейлите в паметта на телефона (Clipboard)</b> и отваря пощата ви, за да ги поставите в полето BCC (Скрито копие), предпазвайки личните данни и избягвайки лимитите на браузъра.
+                <b>1. Добавяне и Редакция на Апартамент:</b><br>
+                • <b>Син бутон (+) / Моливче:</b> Създава нов апартамент или редактира съществуващ (номер, етаж, % идеални части и бележки като код за чип, телефон и др.).<br>
+                • <b>Депозит (зелен бадж):</b> Ако апартаментът има надвнесена сума, тя се изписва в зелено до номера му.<br><br>
+                <b>2. Обитатели, Роли и Имейли:</b><br>
+                • <b>Роли:</b> За всеки запис можете да изберете роля – <i>Собственик, Съсобственик, Семейство, Наемател, Дете, Дом. любимец</i> или <i>Контакт</i>.<br>
+                • <b>Тикче „Живее тук“:</b> Определя дали обитателят се брои при автоматичното изчисляване на месечните такси (за човек, дете или любимец). Ролята „Контакт“ не се таксува дори да е отметната.<br>
+                • <b>Тикче с пликче (до имейла):</b> Отбележете го, за да може този обитател да получава електронни разписки при плащане и общи съобщения.<br><br>
+                <b>3. Индивидуални Такси (бутон „Инд. Такси“ във формата):</b><br>
+                • <b>Ед. Цена:</b> Променя цената за 1 брой (напр. половин такса на човек) само за този апартамент.<br>
+                • <b>Фикс. Сума:</b> Заковава твърда крайна сума за дадена такса (игнорира бройките обитатели/части). Ако въведете <b>0</b>, апартаментът се освобождава от тази такса.<br><br>
+                <b>4. Филтри, Масов Имейл и Изтриване:</b><br>
+                • <b>Цветни филтри (Живущи, Деца, Наематели, Любимци):</b> Натискането им работи в 3 стъпки – <b>1 клик (зелено)</b> показва само апартаменти С такива обитатели; <b>2 клик (червено)</b> показва само апартаменти БЕЗ такива обитатели; <b>3 клик</b> изключва филтъра.<br>
+                • <b>Масов Имейл (Самолетче):</b> Изпраща имейл (чрез скрито копие BCC) до <i>всички видими на екрана в момента</i> апартаменти според избраните филтри.<br>
+                • <b>Изтриване (Задържане):</b> Задръжте пръст върху плочката на апартамент, за да го изтриете (апартаменти с история на такси, плащания или депозит са защитени от изтриване).
             `;
             break;
         case 'settings':
             title = "Настройки";
             text = `
-                <b>Системни опции:</b><br>
-                • <b>Данни за Разписки:</b> Въведете името на сградата и касиера. Те се попълват автоматично при изпращане на имейл разписка.<br>
-                • <b>Начални Салда:</b> Въведете с колко пари стартирате (ако се прехвърляте от хартиена тетрадка).<br>
-                • <b>Архив (Дискетка в хедъра):</b> Сваляйте архив редовно! Файлът се запазва локално на вашето устройство.<br>
-                • <b>Възстановяване:</b> Качването на архив <b>напълно заменя (изтрива)</b> текущите данни на телефона с тези от файла.<br>
-                • <b>Защита на паметта:</b> Приложението следи дали паметта на телефона ви е пълна и ще ви изкара червено предупреждение, ако не може да запази нови данни (за да не се загуби информация).
+                <b>1. Офлайн Версия:</b><br>
+                • <b>ИЗТЕГЛИ ОФЛАЙН ВЕРСИЯ (червен бутон):</b> Изтегля специално копие на приложението (<code>⅟вход_ОФЛАЙН.html</code>), в което всички иконки и шрифтове са вградени директно във файла, за да работи 100% без нужда от интернет.<br><br>
+                <b>2. Данни за Разписки и Начални Салда:</b><br>
+                • <b>Данни за Разписки:</b> Името на входа/сградата, сдружението, адресът и името на домоуправителя/касиера се попълват автоматично в имейл разписките и в таблиците за печат.<br>
+                • <b>Начални Салда:</b> Задайте наличните пари във Фонд „Основен“ и Фонд „Ремонти“, с които стартирате касата (могат да се актуализират по всяко време).<br><br>
+                <b>3. Архивиране и Възстановяване:</b><br>
+                • <b>Запази архив (или Дискетката в хедъра):</b> Тъй като данните се пазят локално на вашето устройство, сваляйте редовно резервен архив (<code>.json</code> файл) след важни промени.<br>
+                • <b>Възстанови от файл:</b> Изберете запазен <code>.json</code> архив, за да прехвърлите данните на ново устройство или да върнете старо състояние (заменя изцяло текущите данни).<br>
+                • <b>ИЗТРИЙ ЦЯЛАТА БАЗА:</b> Изчиства окончателно всички въведени данни и нулира приложението.
             `;
             break;
         case 'print-view':
             title = "Преглед за печат";
             text = `
-                <b>Печат на отчети:</b><br>
-                Изберете бутона <b>ПЕЧАТ</b>, за да създадете PDF файл или да принтирате таблицата директно на хартия.<br><br>
-                <i>Съвет:</i> Това, което виждате на екрана преди печат, е това, което ще излезе на листа. Ако сте филтрирали касата по категория "Ток", ще се разпечата специален целеви отчет само за тока.
+                <b>Печат и експорт в PDF:</b><br>
+                • Този изглед се отваря от иконката <b>Принтер</b> горе вдясно, когато сте в секция <b>„Такси“</b> (генерира списък със задължения за месеца и колона за подпис) или <b>„Каса“</b> (генерира касов отчет точно според избраните в момента филтри).<br>
+                • <b>Бутон ПЕЧАТ:</b> Отваря системния прозорец за принтиране. От него можете да разпечатате таблицата на хартия (формат А4) или да изберете <b>„Запази като PDF“ (Save as PDF)</b>, за да изпратите отчета във Viber или по имейл.<br>
+                • <b>Бутон Назад:</b> Връща ви обратно към екрана, от който сте отворили прегледа.
             `;
             break;
     }
 
-    // Попълваме модала и го показваме
     document.getElementById('help-title').innerHTML = `<i class="ph ph-info"></i> Помощ: ${title}`;
     document.getElementById('help-body').innerHTML = text;
     document.getElementById('help-modal').style.display = 'flex';
 }
 
 
-
-
-
 // --- ЗАПАЗВАНЕ И ЗАРЕЖДАНЕ НА ДАННИТЕ ЗА РАЗПИСКИТЕ ---
 async function loadGenSettings() {
+    if (!db) return;
     const s = await dbReq(db.transaction("settings", "readonly").objectStore("settings").get(1));
     if(s) {
         document.getElementById("set-b-name").value = s.bName || "";
@@ -3628,23 +3843,21 @@ async function loadGenSettings() {
     }
 }
 
-
 async function saveGenSettings() {
-    const s = {
-        id: 1,
-        bName: document.getElementById("set-b-name").value,
-        bAssoc: document.getElementById("set-b-assoc").value,
-        bAddr: document.getElementById("set-b-addr").value,
-        bManager: document.getElementById("set-b-manager").value
-    };
-    
     const tx = db.transaction("settings", "readwrite");
-    tx.objectStore("settings").put(s);
+    const store = tx.objectStore("settings");
+    const existing = await dbReq(store.get(1)) || { id: 1 };
     
-    await dbTx(tx); // Изчакваме записа да приключи
+    existing.bName = document.getElementById("set-b-name").value;
+    existing.bAssoc = document.getElementById("set-b-assoc").value;
+    existing.bAddr = document.getElementById("set-b-addr").value;
+    existing.bManager = document.getElementById("set-b-manager").value;
+    
+    store.put(existing);
+    
+    await dbTx(tx);
     alert("Данните за разписките са запазени!");
 }
-
 
 // --- ГЕНЕРИРАНЕ И ИЗПРАЩАНЕ НА ИМЕЙЛ РАЗПИСКА ---
 async function sendReceipt(paymentId, aptId) {
@@ -3703,9 +3916,8 @@ async function sendReceipt(paymentId, aptId) {
     window.location.href = mailtoLink;
 }
 
-// Помощна функция за агресивно копиране (поддържа iOS, Android и Desktop)
+// Помощна функция за копиране
 async function copyToClipboard(text) {
-    // 1. Опит с модерен API (Работи на сървър / HTTPS)
     if (navigator.clipboard && window.isSecureContext) {
         try {
             await navigator.clipboard.writeText(text);
@@ -3713,18 +3925,14 @@ async function copyToClipboard(text) {
         } catch (err) { console.warn("Модерното копиране отказа."); }
     }
 
-    // 2. Опит със стария метод (Хак за локални файлове и мобилни)
     try {
         let textArea = document.createElement("textarea");
         textArea.value = text;
-        
-        // Скриваме полето, но не с display:none, защото няма да се копира
         textArea.style.position = "fixed";
         textArea.style.top = "-9999px";
         textArea.style.left = "-9999px";
         document.body.appendChild(textArea);
 
-        // Специален хак за iPhone / iPad
         if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
             textArea.contentEditable = true;
             textArea.readOnly = false;
@@ -3788,28 +3996,23 @@ async function sendMassEmail() {
     const subject = encodeURIComponent(`Съобщение до живущите - ${bName}`);
     const mailtoLink = `mailto:?bcc=${bccList}&subject=${subject}`;
 
-    // Извикваме новата функция за копиране
     let copiedSuccessfully = await copyToClipboard(bccList);
 
-    // Функция за ръчно копиране (ако браузърът блокира всичко)
     const showManualCopy = () => {
         prompt(`Браузърът блокира автоматичното копиране (заради локален файл).\n\nМоля, копирайте ръчно адресите по-долу и ги поставете в BCC (Скрито копие) на вашата поща:`, bccList);
     };
 
     if (mailtoLink.length > 1500) {
-        // За дълги списъци mailto: чупи пощата, така че разчитаме само на клипборда
         if (copiedSuccessfully) {
             alert(`Намерени са ${emails.length} имейла.\n\n⚠️ Списъкът е твърде дълъг, за да се отвори автоматично.\n\n✅ Всички имейли бяха КОПИРАНИ успешно в паметта!\n\nОтворете вашата поща, създайте ново съобщение и просто поставете (Paste) адресите в полето BCC (Скрито копие).`);
         } else {
             showManualCopy();
         }
     } else {
-        // За кратки списъци се опитваме да отворим пощата
         if (copiedSuccessfully) {
             alert(`Намерени са ${emails.length} имейла.\n✅ Те бяха копирани в паметта за всеки случай!\n\nСега ще се опитаме да отворим вашия имейл клиент автоматично...`);
             window.location.href = mailtoLink;
         } else {
-            // Ако копирането е отказано, питаме потребителя какво иска да направи
             let userChoice = confirm(`Намерени са ${emails.length} имейла.\n\nБраузърът не позволи автоматичното им копиране в паметта.\n\nНатиснете 'OK', за да отворите имейл клиента си директно (адресите ще се попълнят автоматично).\nНатиснете 'Отказ', за да ви покажем списъка за ръчно копиране.`);
             
             if (userChoice) {
@@ -3821,31 +4024,26 @@ async function sendMassEmail() {
     }
 }
 
-
-
-
 // --- ФУНКЦИЯ ЗА ПРЕВКЛЮЧВАНЕ МЕЖДУ КЕШ И БАНКА ---
 function togglePaymentMethod(btnId) {
     const btn = document.getElementById(btnId);
     const icon = btn.querySelector('i');
     
-    // Проверяваме какъв е текущият метод и го обръщаме
     if (btn.getAttribute('data-method') === 'cash') {
         btn.setAttribute('data-method', 'bank');
         icon.className = 'ph ph-credit-card';
-        icon.style.color = 'var(--accent)'; // Синьо за банка
+        icon.style.color = 'var(--accent)';
         btn.title = 'Начин на плащане: По банка';
     } else {
         btn.setAttribute('data-method', 'cash');
         icon.className = 'ph ph-money';
-        icon.style.color = 'var(--success)'; // Зелено за кеш
+        icon.style.color = 'var(--success)';
         btn.title = 'Начин на плащане: В брой';
     }
 }
 
-
-// ======================= ШАБЛОНИ ЗА КАСА (ИНЛАЙН ВЕРСИЯ) =======================
-let currentTplTab = 'разход'; // Показва разходи по подразбиране
+// ======================= ШАБЛОНИ ЗА КАСА =======================
+let currentTplTab = 'разход';
 
 function toggleCashTemplatesVisibility() {
     const container = document.getElementById('inline-cash-templates');
@@ -3922,6 +4120,7 @@ async function renderInlineTemplates(type) {
 
 async function applyCashTemplate(type, index) {
     const s = await dbReq(db.transaction("settings", "readonly").objectStore("settings").get(1));
+    if (!s || !s.cashTemplates) return;
     const templates = type === 'приход' ? s.cashTemplates.income : s.cashTemplates.expense;
     const t = templates[index];
 
@@ -3943,8 +4142,8 @@ async function applyCashTemplate(type, index) {
         document.getElementById("cash-desc").value = t.desc || "";
         
         form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!t.amount) setTimeout(() => document.getElementById("cash-amount").focus(), 300);
     }
-    if (!t.amount) setTimeout(() => document.getElementById("cash-amount").focus(), 300);
 }
 
 async function saveCashTemplate() {
@@ -3984,6 +4183,7 @@ async function deleteCashTemplate(type, index) {
     const store = tx.objectStore("settings");
 
     const s = await dbReq(store.get(1));
+    if (!s || !s.cashTemplates) return;
     if(type === 'приход') s.cashTemplates.income.splice(index, 1);
     else s.cashTemplates.expense.splice(index, 1);
     store.put(s);
@@ -3992,19 +4192,17 @@ async function deleteCashTemplate(type, index) {
     renderInlineTemplates(type);
 }
 
-
-// --- КАТЕГОРИИ РАЗХОДИ (ЗА ИКОНКИТЕ И ФИЛТРИТЕ) ---
+// --- КАТЕГОРИИ РАЗХОДИ ---
 const EXP_CATEGORIES = [
     { id: 'Други', icon: 'ph-dots-three-circle', color: 'var(--text-muted)' },
-    { id: 'Ток', icon: 'ph-lightning', color: '#eab308' }, // Жълто
-    { id: 'Вода', icon: 'ph-drop', color: '#3b82f6' }, // Синьо
-    { id: 'Асансьор', icon: 'ph-arrows-vertical', color: '#8b5cf6' }, // Лилаво
-    { id: 'Почистване', icon: 'ph-broom', color: '#10b981' }, // Зелено
-    { id: 'Ремонти', icon: 'ph-hammer', color: '#f97316' }, // Оранжево
-    { id: 'Дом съвет', icon: 'ph-users-three', color: '#0ea5e9' } // Светло синьо
+    { id: 'Ток', icon: 'ph-lightning', color: '#eab308' },
+    { id: 'Вода', icon: 'ph-drop', color: '#3b82f6' },
+    { id: 'Асансьор', icon: 'ph-arrows-vertical', color: '#8b5cf6' },
+    { id: 'Почистване', icon: 'ph-broom', color: '#10b981' },
+    { id: 'Ремонти', icon: 'ph-hammer', color: '#f97316' },
+    { id: 'Дом съвет', icon: 'ph-users-three', color: '#0ea5e9' }
 ];
 
-// Сменя иконката при кликване на бутона
 function cycleExpenseIcon(e) {
     if(e) e.preventDefault();
     const btn = document.getElementById("exp-icon-btn");
@@ -4014,7 +4212,6 @@ function cycleExpenseIcon(e) {
     setExpenseIcon(EXP_CATEGORIES[idx].id);
 }
 
-// Задава конкретна иконка (използва се и при изчистване и при зареждане на шаблон)
 function setExpenseIcon(catId) {
     const btn = document.getElementById("exp-icon-btn");
     if(!btn) return;
@@ -4024,7 +4221,6 @@ function setExpenseIcon(catId) {
     btn.title = `Категория: ${catObj.id}`;
 }
 
-// --- ПОКАЗВАНЕ/СКРИВАНЕ НА РАЗБИВКАТА В КАСАТА ---
 function toggleCashBreakdown(id) {
     const el = document.getElementById(id);
     const icon = document.getElementById(`icon-${id}`);
@@ -4039,27 +4235,19 @@ function toggleCashBreakdown(id) {
     }
 }
 
-
-// --- ГЛОБАЛНО ИЗКЛЮЧВАНЕ НА ПРЕДЛОЖЕНИЯТА (AUTOFILL) ---
 document.addEventListener('focusin', function(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        // Стандартно изключване
         e.target.setAttribute('autocomplete', 'off');
-        
-        // За някои по-упорити мобилни клавиатури (като Gboard), 
-        // които игнорират "off", това ги принуждава да спрат:
-        e.target.setAttribute('autocomplete', 'new-password'); 
     }
 });
 
-// --- ПРЕВКЛЮЧВАНЕ НА ТЪРСЕНЕТО В ТАКСИ (Ап. / Ет.) ---
 function toggleFeeSearchType() {
     const btn = document.getElementById("fee-search-type-btn");
     
     if (btn.getAttribute("data-type") === "ap") {
         btn.setAttribute("data-type", "floor");
         btn.innerText = "Ет.";
-        btn.style.background = "#e0e7ff"; // Леко синкав фон за индикация
+        btn.style.background = "#e0e7ff";
         btn.style.color = "#4338ca";
     } else {
         btn.setAttribute("data-type", "ap");
@@ -4068,14 +4256,10 @@ function toggleFeeSearchType() {
         btn.style.color = "var(--primary)";
     }
     
-    // НОВО: Изчистваме полето с числото, когато сменяме между Ап. и Ет.
     document.getElementById("fee-search-input").value = "";
-    
-    // Извикваме филтъра (тъй като полето е празно, ще покаже всички записи)
     filterFeesByApartment(); 
 }
 
-// --- ПОКАЗВАНЕ/СКРИВАНЕ НА РАЗБИВКАТА ПО ФОНДОВЕ (В ИНФО) ---
 function toggleReportBreakdown(id) {
     const el = document.getElementById(id);
     const icon = document.getElementById(`icon-${id}`);
@@ -4091,7 +4275,6 @@ function toggleReportBreakdown(id) {
     }
 }
 
-// --- ИКОНКИ ЗА ДЕФИНИРАНИ ТАКСИ ---
 function cycleRuleIcon(e) {
     if(e) e.preventDefault();
     const btn = document.getElementById("rule-icon-btn");
@@ -4110,7 +4293,13 @@ function setRuleIcon(catId) {
     btn.title = `Категория: ${catObj.id}`;
 }
 
-
+window.addEventListener('DOMContentLoaded', () => {
+    let savedTab = localStorage.getItem('lastActiveTab');
+    if (!savedTab || savedTab === 'print-view') {
+        savedTab = 'reports';
+    }
+    showTab(savedTab);
+});
 
 </script>
 
@@ -4127,14 +4316,14 @@ async function makeOffline() {
             { css: 'https://unpkg.com/@phosphor-icons/web/src/fill/style.css', base: 'https://unpkg.com/@phosphor-icons/web/src/fill/' }
         ];
         
-        // 1. Изтегляне и конвертиране на шрифтовете в Base64
         for (let s of styles) {
             const cssRes = await fetch(s.css);
             let cssText = await cssRes.text();
-            const woff2Match = cssText.match(/url\(['"]?(.*?\.woff2)['"]?\)/);
+            
+            // Извличаме точно URL адреса само на .woff2 шрифта (дори да има параметри след него)
+            const woff2Match = cssText.match(/url\(['"]?([^'")]+?\.woff2(?:\?[^'")]*)?)['"]?\)/i);
             if (woff2Match) {
-                let fontUrl = woff2Match[1];
-                if (fontUrl.startsWith('./')) fontUrl = s.base + fontUrl.substring(2);
+                const fontUrl = new URL(woff2Match[1], s.base).href;
                 const fontRes = await fetch(fontUrl);
                 const fontBlob = await fontRes.blob();
                 const base64Font = await new Promise(resolve => {
@@ -4142,39 +4331,56 @@ async function makeOffline() {
                     reader.onloadend = () => resolve(reader.result);
                     reader.readAsDataURL(fontBlob);
                 });
-                cssText = cssText.replace(/src:\s*url\([\s\S]*?;/, `src: url("${base64Font}") format("woff2");`);
+                
+                // Заменяме всички src: декларации в @font-face с единствения Base64 woff2 шрифт
+                cssText = cssText.replace(/@font-face\s*\{[\s\S]*?\}/, match => {
+                    let cleaned = match.replace(/src:\s*url\([\s\S]*?;/g, '');
+                    return cleaned.replace(/\}$/, `  src: url("${base64Font}") format("woff2");\n}`);
+                });
                 finalCSS += cssText + "\n";
             }
         }
 
-        // 2. СЪЗДАВАМЕ ВИРТУАЛНО КОПИЕ НА СТРАНИЦАТА (Напълно безопасно)
         const clonedDoc = document.documentElement.cloneNode(true);
 
-        // Изтриваме старите линкове към иконките от копието
+        ['#financial-content', '#ap-list', '#fees-list', '#cash-list', '#active-rules-list', '#print-content', '#inline-cash-template-list', '#occupants-list', '#fee-override-list'].forEach(sel => {
+            const el = clonedDoc.querySelector(sel);
+            if (el) el.innerHTML = '';
+        });
+
+        clonedDoc.querySelectorAll('.tab').forEach(t => {
+            t.style.display = '';
+            t.classList.remove('active');
+        });
+        const repTab = clonedDoc.querySelector('#reports');
+        if (repTab) repTab.classList.add('active');
+
+        clonedDoc.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        const repNav = clonedDoc.querySelector('#nav-reports');
+        if (repNav) repNav.classList.add('active');
+
         const links = clonedDoc.querySelectorAll('link[href*="phosphor"]');
         links.forEach(l => l.remove());
         
-        // Махаме и излишния таг за застраховка, ако го има
+        // Премахваме стария <style> таг с онлайн @font-face към unpkg.com
         const oldStyles = clonedDoc.querySelectorAll('style');
         oldStyles.forEach(st => {
-            if(st.innerHTML.includes('Допълнителна застраховка')) st.remove();
+            if (st.innerHTML.includes('unpkg.com/@phosphor-icons') || st.innerHTML.includes('Допълнителна застраховка')) {
+                st.remove();
+            }
         });
 
-        // Вграждаме новия CSS с Base64
         const newStyle = document.createElement('style');
         newStyle.innerHTML = '/* ВГРАДЕНИ ОФЛАЙН ИКОНКИ */\n' + finalCSS;
         clonedDoc.querySelector('head').appendChild(newStyle);
 
-        // 3. Изтриваме самия бутон и този скрипт от копието, за да ги няма в новия файл
         const offlineBtn = clonedDoc.querySelector('#make-offline-btn');
         if (offlineBtn) offlineBtn.remove();
         const offlineScript = clonedDoc.querySelector('#offline-script');
         if (offlineScript) offlineScript.remove();
 
-        // 4. Генерираме финалния HTML
         const finalHTML = '<!DOCTYPE html>\n<html lang="bg">\n' + clonedDoc.innerHTML + '\n</html>';
 
-        // 5. Стартираме изтеглянето
         const blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -4189,6 +4395,7 @@ async function makeOffline() {
         alert('Възникна грешка при изтеглянето: ' + e.message);
     }
 }
+
 </script>
 </body>
 </html>

@@ -741,6 +741,17 @@ body.backup-reminder-active header button[onclick*="exportDB"] {
   </div>
 </div>
 
+<div id="apt-contact-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="margin-bottom: 15px;">
+        <h3 id="apt-contact-title">Контакт</h3>
+        <span class="close-modal" onclick="document.getElementById('apt-contact-modal').style.display='none'">&times;</span>
+    </div>
+    <div id="apt-contact-list" style="overflow-y: auto; max-height: 60vh; margin-bottom: 15px;"></div>
+    <div id="apt-contact-footer"></div>
+  </div>
+</div>
+
 <section id="reports" class="tab active">
     <div style="display:flex; justify-content:space-between; align-items:center;">
         <h2><i class="ph ph-chart-line-up"></i> Финансов статус</h2>
@@ -1927,7 +1938,11 @@ async function loadApartmentsList() {
         <div class="card" data-id="${a.id}" data-hold-action="delete-apt" data-hold-id="${a.id}" data-residents="${aptResidents}" data-kids="${aptKids}" data-tenants="${aptTenants}" data-pets="${aptPets}" title="Задръжте за изтриване на апартамента">
             <div class="card-row" style="border-bottom:1px solid #f1f5f9; padding-bottom:8px; margin-bottom:8px;">
                 <span style="font-size:1.1rem; font-weight:bold; color:var(--primary);">Ап. ${a.number}${floorText} ${overpaymentHtml}</span>
-                <button class="btn-small btn-edit" onclick="editApartment(${a.id})" title="Редакция"><i class="ph ph-pencil-simple"></i></button>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <button class="btn-small btn-edit" style="color:var(--accent); border-color:#bfdbfe; background:#eff6ff;" onclick="openAptEmailModal(${a.id})" title="Имейл до апартамента"><i class="ph ph-envelope-simple"></i></button>
+                    <button class="btn-small btn-edit" style="color:var(--success); border-color:#bbf7d0; background:#f0fdf4;" onclick="openAptPhoneModal(${a.id})" title="Обаждане до апартамента"><i class="ph ph-phone-call"></i></button>
+                    <button class="btn-small btn-edit" onclick="editApartment(${a.id})" title="Редакция"><i class="ph ph-pencil-simple"></i></button>
+                </div>
             </div>
             <div style="background:#f8fafc; padding:10px; border-radius:8px;">${namesHtml}</div>
             <div class="card-row" style="margin-top:8px; font-size:0.8rem; color:#64748b">
@@ -1947,6 +1962,7 @@ async function loadApartmentsList() {
     
     filterApartments();
 }
+
 
 // ----- UI TOGGLES & FEES -----
 function resetFeeEditor() {
@@ -4136,6 +4152,115 @@ async function sendMassEmail() {
     }
 }
 
+// --- БЪРЗ ИМЕЙЛ И ТЕЛЕФОН ДО КОНКРЕТЕН АПАРТАМЕНТ ---
+async function openAptEmailModal(aptId) {
+    const apt = await dbReq(db.transaction("apartments", "readonly").objectStore("apartments").get(aptId));
+    if (!apt) return;
+
+    const withEmails = (apt.occupants || []).filter(o => o.email && o.email.trim() !== "");
+    if (withEmails.length === 0) {
+        return alert(`Няма вписани имейл адреси за Ап. ${apt.number}!`);
+    }
+
+    document.getElementById("apt-contact-title").innerHTML = `<i class="ph ph-envelope-simple" style="color:var(--accent);"></i> Имейл до Ап. ${apt.number}`;
+    
+    const listDiv = document.getElementById("apt-contact-list");
+    listDiv.innerHTML = withEmails.map((o) => {
+        const isChecked = (o.sendEmail !== false) ? "checked" : "";
+        return `
+        <label class="occupant-row" style="display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom:8px;">
+            <input type="checkbox" class="apt-email-check" value="${escapeHTML(o.email.trim())}" ${isChecked}>
+            <div style="display:flex; flex-direction:column;">
+                <b style="color:var(--text-main); font-size:0.95rem;">${escapeHTML(o.name || 'Без име')} <small style="color:#94a3b8; font-weight:normal;">(${escapeHTML(o.role)})</small></b>
+                <span style="font-size:0.85rem; color:var(--text-muted);">${escapeHTML(o.email.trim())}</span>
+            </div>
+        </label>`;
+    }).join("");
+
+    document.getElementById("apt-contact-footer").innerHTML = `
+        <button class="action-btn" style="margin-bottom:0; background:var(--accent); display:flex; align-items:center; justify-content:center; gap:6px;" onclick="sendCheckedAptEmails(${apt.number})">
+            <i class="ph ph-paper-plane-tilt"></i> ПИШИ
+        </button>
+    `;
+
+    document.getElementById("apt-contact-modal").style.display = "flex";
+}
+
+async function sendCheckedAptEmails(aptNumber) {
+    const checks = document.querySelectorAll("#apt-contact-list .apt-email-check:checked");
+    const emails = [];
+    checks.forEach(ch => {
+        if (ch.value && !emails.includes(ch.value)) {
+            emails.push(ch.value);
+        }
+    });
+
+    if (emails.length === 0) {
+        return alert("Моля, маркирайте поне един получател!");
+    }
+
+    const s = await dbReq(db.transaction("settings", "readonly").objectStore("settings").get(1)) || {};
+    const bName = s.bName || "Сградата";
+    const emailList = emails.join(",");
+    const subject = encodeURIComponent(`Съобщение за Ап. ${aptNumber} - ${bName}`);
+    const mailtoLink = `mailto:${emailList}?subject=${subject}`;
+
+    const copiedSuccessfully = await copyToClipboard(emailList);
+    document.getElementById("apt-contact-modal").style.display = "none";
+
+    const showManualCopy = () => {
+        prompt(`Браузърът блокира автоматичното копиране.\n\nМоля, копирайте ръчно адресите по-долу:`, emailList);
+    };
+
+    if (copiedSuccessfully) {
+        alert(`Избраните имейли (${emails.length}) са копирани в паметта!\n\nСега ще се отвори вашият имейл клиент...`);
+        window.location.href = mailtoLink;
+    } else {
+        const userChoice = confirm(`Избрани са ${emails.length} имейла.\n\nНатиснете 'OK', за да отворите имейл клиента си директно.\nНатиснете 'Отказ', за да копирате списъка ръчно.`);
+        if (userChoice) {
+            window.location.href = mailtoLink;
+        } else {
+            showManualCopy();
+        }
+    }
+}
+
+async function openAptPhoneModal(aptId) {
+    const apt = await dbReq(db.transaction("apartments", "readonly").objectStore("apartments").get(aptId));
+    if (!apt) return;
+
+    const withPhones = (apt.occupants || []).filter(o => o.phone && o.phone.trim() !== "");
+    if (withPhones.length === 0) {
+        return alert(`Няма вписани телефонни номера за Ап. ${apt.number}!`);
+    }
+
+    document.getElementById("apt-contact-title").innerHTML = `<i class="ph ph-phone-call" style="color:var(--success);"></i> Обаждане до Ап. ${apt.number}`;
+
+    const listDiv = document.getElementById("apt-contact-list");
+    listDiv.innerHTML = withPhones.map(o => {
+        const cleanPhone = o.phone.replace(/[^\d+]/g, '');
+        return `
+        <a href="tel:${escapeHTML(cleanPhone)}" class="occupant-row" style="display:flex; justify-content:space-between; align-items:center; text-decoration:none; color:inherit; margin-bottom:8px; cursor:pointer; transition:background 0.2s;">
+            <div style="display:flex; flex-direction:column;">
+                <b style="color:var(--text-main); font-size:0.95rem;">${escapeHTML(o.name || 'Без име')} <small style="color:#94a3b8; font-weight:normal;">(${escapeHTML(o.role)})</small></b>
+                <span style="font-size:0.9rem; color:var(--success); font-weight:600;">${escapeHTML(o.phone.trim())}</span>
+            </div>
+            <div style="width:38px; height:38px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center;">
+                <i class="ph ph-phone-outgoing" style="font-size:1.3rem;"></i>
+            </div>
+        </a>`;
+    }).join("");
+
+    document.getElementById("apt-contact-footer").innerHTML = `
+        <button class="action-btn" style="margin-bottom:0; background:#e2e8f0; color:var(--text-main);" onclick="document.getElementById('apt-contact-modal').style.display='none'">
+            ЗАТВОРИ
+        </button>
+    `;
+
+    document.getElementById("apt-contact-modal").style.display = "flex";
+}
+
+
 // --- ФУНКЦИЯ ЗА ПРЕВКЛЮЧВАНЕ МЕЖДУ КЕШ И БАНКА ---
 function togglePaymentMethod(btnId) {
     const btn = document.getElementById(btnId);
@@ -4455,7 +4580,7 @@ async function makeOffline() {
 
         const clonedDoc = document.documentElement.cloneNode(true);
 
-        ['#financial-content', '#ap-list', '#fees-list', '#cash-list', '#active-rules-list', '#print-content', '#inline-cash-template-list', '#occupants-list', '#fee-override-list'].forEach(sel => {
+        ['#financial-content', '#ap-list', '#apt-contact-list', '#fees-list', '#cash-list', '#active-rules-list', '#print-content', '#inline-cash-template-list', '#occupants-list', '#fee-override-list'].forEach(sel => {
             const el = clonedDoc.querySelector(sel);
             if (el) el.innerHTML = '';
         });

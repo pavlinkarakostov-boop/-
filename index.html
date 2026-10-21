@@ -979,8 +979,9 @@ body.backup-reminder-active header button[onclick*="exportDB"] {
         
         <div style="margin-bottom:10px;">
             <div id="income-fields">
-                <input id="cash-source" type="text" placeholder="Ап. № или Източник(Община, А1, ...)" style="margin-bottom:0;" autocomplete="off">
+                <input id="cash-source" type="text" placeholder="Източник (Наем А1, Община, Дарение...)" style="margin-bottom:0;" autocomplete="off">
             </div>
+
             <div id="expense-fields" style="display:none;">
                 <div style="display:flex; align-items:center;">
                     <button id="exp-icon-btn" data-cat="Други" onclick="cycleExpenseIcon(event)" style="height:48px; width:50px; display:flex; align-items:center; justify-content:center; background:#f8fafc; border:1px solid #cbd5e1; border-right:none; border-radius:10px 0 0 10px; cursor:pointer;" title="Категория: Други"><i class="ph ph-dots-three-circle" style="font-size:1.5rem; color:var(--text-muted);"></i></button>
@@ -1081,6 +1082,22 @@ body.backup-reminder-active header button[onclick*="exportDB"] {
 
     <div class="card">
         <h3>Архивиране</h3>
+        
+        <div style="margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+            <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem; color:var(--primary);">
+                <i class="ph ph-lock-key"></i> Парола за криптиране на архива:
+            </label>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <input id="backup-password" type="password" placeholder="По желание (задава се веднъж)" style="margin-bottom:0; flex:1;" oninput="saveBackupPassword()">
+                <button type="button" class="btn-small btn-edit" style="height:48px; padding:0 14px;" onclick="toggleBackupPassVisibility()" title="Покажи/Скрий паролата">
+                    <i id="backup-pass-eye" class="ph ph-eye"></i>
+                </button>
+            </div>
+            <small style="color:var(--text-muted); display:block; margin-top:6px; font-size:0.78rem; line-height:1.4;">
+                Паролата се запомня автоматично. Ако е попълнена, архивният файл (.json) се криптира при запазване и се декриптира при възстановяване.
+            </small>
+        </div>
+
         <button class="action-btn" style="background:var(--primary-light); display:flex; justify-content:center; gap:8px;" onclick="exportDB()">
             <i class="ph ph-floppy-disk"></i> Запази архив
         </button>
@@ -1094,6 +1111,7 @@ body.backup-reminder-active header button[onclick*="exportDB"] {
             <i class="ph ph-warning"></i> ИЗТРИЙ ЦЯЛАТА БАЗА
         </button>
     </div>
+
 </section>
 
 <nav>
@@ -1116,6 +1134,10 @@ body.backup-reminder-active header button[onclick*="exportDB"] {
 </nav>
 
 <script>
+
+// Чист HTML на страницата, снет преди приложението да е променило DOM-а.
+// От него се прави офлайн копието (makeOffline), за да не се копират данни от екрана.
+const PRISTINE_HTML = document.documentElement.outerHTML;
 
 // --- ПОМОЩНА ФУНКЦИЯ ЗА ЗАЩИТА ОТ XSS ---
 function escapeHTML(str) {
@@ -1231,12 +1253,30 @@ if (!window.indexedDB) {
         });
     };
     
-    request.onsuccess = e => { 
+    request.onsuccess = async e => { 
         db = e.target.result; 
         setDefaultDate(); 
+        loadBackupPassword();
         loadAllData(); 
         checkBackupReminder();
+
+        // Проверка за постоянна памет и защита от 7-дневното изтриване в Safari/iOS
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        let persisted = false;
+        if (navigator.storage && navigator.storage.persist) {
+            try {
+                persisted = await navigator.storage.persist();
+            } catch (err) {}
+        }
+        if (!persisted && !isStandalone && !localStorage.getItem('persistWarningShown')) {
+            localStorage.setItem('persistWarningShown', 'true');
+            setTimeout(() => {
+                alert("💡 СЪВЕТ ЗА СИГУРНОСТ НА ДАННИТЕ:\n\nВашият браузър (особено Safari на iPhone/iPad) може автоматично да изчисти локалната памет, ако приложението не се отваря повече от 7 дни.\n\nЗа да предотвратите това:\n1. Добавете приложението на Началния екран (Сподели -> На начален екран / Add to Home Screen).\n2. Сваляйте редовно архив от иконката с дискета горе вдясно.");
+            }, 800);
+        }
     };
+
+
 
     
     request.onerror = e => {
@@ -1338,6 +1378,12 @@ function syncDate(sourceId) {
     document.getElementById('report-date').value = val;
     document.getElementById('cash-date').value = val;
     document.getElementById('fee-month').value = val;
+
+    if (db) {
+        if (sourceId !== 'report-date') loadReports();
+        if (sourceId !== 'fee-month') loadFeesList();
+        if (sourceId !== 'cash-date') loadCashList();
+    }
 }
 
 
@@ -1359,6 +1405,11 @@ function toggleViewMode(btnId) {
         otherBtn.innerHTML = htmlContent;
         document.getElementById('report-view-btn').style.background = "";
         document.getElementById('cash-view-btn').style.background = "#64748b";
+    }
+
+    if (db) {
+        loadReports();
+        loadCashList();
     }
 }
 
@@ -1385,6 +1436,8 @@ function showTab(id) {
     }
 
     document.getElementById('fee-modal').style.display = 'none';
+    const contactModal = document.getElementById('apt-contact-modal');
+    if (contactModal) contactModal.style.display = 'none';
     
     document.querySelectorAll(".tab").forEach(t => {
         t.style.display = ""; 
@@ -1412,6 +1465,12 @@ function showTab(id) {
     
     if (id !== 'print-view') {
         localStorage.setItem('lastActiveTab', id);
+        if (db) {
+            if (id === 'reports') loadReports();
+            else if (id === 'fees') loadFeesList();
+            else if (id === 'cash') loadCashList();
+            else if (id === 'apartments') loadApartmentsList();
+        }
     }
 }
 
@@ -2113,6 +2172,60 @@ function clearCashFormFields() {
     setExpenseIcon("Други");
 }
 
+// Обща помощна функция за филтриране на записите в "Каса" (използва се за екрана и за печата)
+function getFilteredCashRecords(records, expectedPayments, ruleMap, ruleCategoryMap) {
+    let filtered = records.filter(r => {
+        if (r.date === "0000-01-01" || r.type === 'transfer') return false;
+        const accountingDate = r.refPeriod || r.date;
+        return isDateInPeriod(accountingDate);
+    });
+
+    if (cashFilterType === 'income') filtered = filtered.filter(r => r.type === 'приход');
+    else if (cashFilterType === 'expense') filtered = filtered.filter(r => r.type === 'разход');
+
+    if (cashFundFilter === 'main') filtered = filtered.filter(r => r.fund === 'основен');
+    else if (cashFundFilter === 'repair') filtered = filtered.filter(r => r.fund === 'ремонт');
+
+    if (cashSubFilter !== 'all') {
+        let categoryFiltered = [];
+
+        filtered.forEach(r => {
+            if (r.type === 'разход') {
+                if (r.category === cashSubFilter) categoryFiltered.push(r);
+            } else if (r.type === 'приход') {
+                if (r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'))) {
+                    let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
+                    if (ep) {
+                        let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
+                        if (!ep.fundSplit) expectedTotal = Math.abs(r.amount);
+                        let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
+
+                        let catSum = 0;
+                        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
+                        items.forEach(item => {
+                            if (item.fund === r.fund && item.category === cashSubFilter) {
+                                catSum += (item.amount * ratio);
+                            }
+                        });
+
+                        if (Math.abs(catSum) > 0.009) {
+                            let clone = { ...r };
+                            clone.amount = catSum;
+                            clone.isPartialCategory = true;
+                            categoryFiltered.push(clone);
+                        }
+                    }
+                } else if (cashSubFilter === 'Други' && !r.apartmentId) {
+                    categoryFiltered.push(r);
+                }
+            }
+        });
+        filtered = categoryFiltered;
+    }
+
+    return filtered;
+}
+
 // ----- CASH & PAYMENT -----
 async function loadCashList() { 
     if (!db) return;
@@ -2146,56 +2259,7 @@ async function loadCashList() {
         } else { totalAdults += (Number(a.occupants) || 0); }
     });
     
-    let filtered = records.filter(r => {
-        if(r.date === "0000-01-01" || r.type === 'transfer') return false;
-        const accountingDate = r.refPeriod || r.date;
-        return isDateInPeriod(accountingDate);
-    });
-    
-    if(cashFilterType === 'income') filtered = filtered.filter(r => r.type === 'приход');
-    else if (cashFilterType === 'expense') filtered = filtered.filter(r => r.type === 'разход');
-
-    if (cashFundFilter === 'main') filtered = filtered.filter(r => r.fund === 'основен');
-    else if (cashFundFilter === 'repair') filtered = filtered.filter(r => r.fund === 'ремонт');
-
-    // --- ДЪЛБОК ФИЛТЪР ПО КАТЕГОРИЯ ---
-    if (cashSubFilter !== 'all') {
-        let categoryFiltered = [];
-        
-        filtered.forEach(r => {
-            if (r.type === 'разход') {
-                if (r.category === cashSubFilter) categoryFiltered.push(r);
-            } 
-            else if (r.type === 'приход') {
-                if (r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'))) {
-                    let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
-                    if (ep) {
-                        let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-                        if (!ep.fundSplit) expectedTotal = Math.abs(r.amount);
-                        let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
-                        
-                        let catSum = 0;
-                        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
-                        items.forEach(item => {
-                            if (item.fund === r.fund && item.category === cashSubFilter) {
-                                catSum += (item.amount * ratio);
-                            }
-                        });
-                        
-                        if (Math.abs(catSum) > 0.009) {
-                            let clone = { ...r }; 
-                            clone.amount = catSum; 
-                            clone.isPartialCategory = true; 
-                            categoryFiltered.push(clone);
-                        }
-                    }
-                } else if (cashSubFilter === 'Други' && !r.apartmentId) {
-                    categoryFiltered.push(r);
-                }
-            }
-        });
-        filtered = categoryFiltered; 
-    }
+    let filtered = getFilteredCashRecords(records, expectedPayments, ruleMap, ruleCategoryMap);
 
     // --- ИЗЧИСЛЯВАНЕ НА СУМИ И ПЛОЧКА ЗА ОСРЕДНЕНИ ПОКАЗАТЕЛИ (Ап / Чов / Ид.ч) ---
     let totalInc = 0, totalExp = 0;
@@ -2476,6 +2540,7 @@ async function loadCashList() {
 }
 
 
+
 let isAggregatedView = false;
 
 function toggleAggregateMode() {
@@ -2590,6 +2655,8 @@ async function loadFeesList() {
             monthlyList.forEach(p=>{ 
                 const btnClass = p.paid ? '' : (p.isPartial ? 'btn-partial' : 'btn-success');
                 const isPaid = p.paid;
+                const origTotal = p.fundSplit ? ((p.fundSplit.main || 0) + (p.fundSplit.repair || 0)) : p.amount;
+                const displayAmount = isPaid ? origTotal : p.amount;
                 
                 let paymentControl = "";
                 if(isPaid) {
@@ -2636,7 +2703,15 @@ async function loadFeesList() {
                 if(isPaid || p.isPartial) {
                     receiptBtn = `<button class="btn-icon" style="width:30px; height:30px; background:#e0e7ff; color:#4f46e5 !important; margin-left:8px;" onclick="sendReceipt(${p.id}, ${p.apartmentId})" title="Прати разписка на имейл"><i class="ph ph-envelope-simple-open" style="font-size:1.1rem;"></i></button>`;
                     holdAttr = `data-hold-action="storno-fee" data-hold-id="${p.id}" title="Задръжте за СТОРНО на плащането"`;
+                } else {
+                    holdAttr = `data-hold-action="delete-single-fee" data-hold-id="${p.id}" title="Задръжте за изтриване на тази такса"`;
                 }
+
+                let statusSubLabel = isPaid 
+                    ? '<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Платена сума</span>'
+                    : (p.isPartial && origTotal > p.amount 
+                        ? `<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Дължи (от ${origTotal.toFixed(2)})</span>` 
+                        : '<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Дължи</span>');
 
                 htmlContent += `
                 <div class="card" ${holdAttr} data-ap-number="${p.apNumber}" data-floor="${escapeHTML(floor)}" style="border-left:4px solid ${borderColor};">
@@ -2650,8 +2725,8 @@ async function loadFeesList() {
                     
                     <div class="card-row" style="align-items:center; margin-top:5px;">
                         <div style="display:flex; flex-direction:column;">
-                            ${!isPaid ? '<span style="font-size:0.7rem; text-transform:uppercase; color:#94a3b8;">Дължи</span>' : ''}
-                            <b style="color:${amountColor}; font-size:1.2rem;">${p.amount.toFixed(2)}</b>
+                            ${statusSubLabel}
+                            <b style="color:${amountColor}; font-size:1.2rem;">${displayAmount.toFixed(2)}</b>
                         </div>
                         ${paymentControl}
                     </div>
@@ -2743,8 +2818,11 @@ async function processAggregatePayment(apId) {
         payAmount         = Math.round(payAmount * 100) / 100;
         remainingMoney    = Math.round(remainingMoney * 100) / 100;
 
-        debt.payMethod = payMethod;
-        debt.payerName = payerName;
+        debt.payMethod      = payMethod;
+        debt.payerName      = payerName;
+        debt.lastPaidDate   = todayDate;
+        debt.lastPaidAmount = payAmount;
+        debt.paymentCount   = (debt.paymentCount || 0) + 1;
         
         store.put(debt);
 
@@ -2874,13 +2952,15 @@ async function processPayment(id, apId, period) {
         } 
     }
     
-    payment.payMethod = payMethod;
-    payment.payerName = payerName;
+    const todayDate = getLocalDateStr();
+    payment.payMethod      = payMethod;
+    payment.payerName      = payerName;
+    payment.lastPaidDate   = todayDate;
+    payment.lastPaidAmount = paidTowardsFee;
+    payment.paymentCount   = (payment.paymentCount || 0) + 1;
     
     tx.objectStore("expectedPayments").put(payment);
     tx.objectStore("apartments").put(apt);
-    
-    const todayDate = getLocalDateStr();
 
     if (payment.fundSplit && (payment.fundSplit.main > 0 || payment.fundSplit.repair > 0)) {
         const totalSplit = payment.fundSplit.main + payment.fundSplit.repair;
@@ -3000,10 +3080,9 @@ async function generateMonthlyFeesUI() {
         tRepair = Math.round(tRepair * 100) / 100;
         
         if(total > 0 || breakdown.length > 0) { 
-            let isPaid = false, isPartial = false, details = breakdown.join(", ");
+            let isPaid = false, isPartial = false, details = breakdown.join(", "), usedAmount = 0;
             
             if(ap.overpayment && ap.overpayment > 0) {
-                let usedAmount = 0;
                 if(ap.overpayment >= total) { 
                     usedAmount = total;
                     ap.overpayment = Math.round((ap.overpayment - total) * 100) / 100;
@@ -3017,6 +3096,7 @@ async function generateMonthlyFeesUI() {
                     ap.overpayment = 0; 
                     isPartial = true;
                 }
+                usedAmount = Math.round(usedAmount * 100) / 100;
 
                 if (usedAmount > 0 && tRepair > 0) {
                     const originalTotal = tMain + tRepair;
@@ -3039,6 +3119,10 @@ async function generateMonthlyFeesUI() {
             txWrite.objectStore("expectedPayments").add({ 
                 apartmentId: ap.id, apNumber: ap.number, owner: ap.owner, period: period, 
                 amount: total, details: details, breakdownItems: breakdownItems,
+                paidFromDeposit: usedAmount,
+                lastPaidDate: usedAmount > 0 ? todayDate : undefined,
+                lastPaidAmount: usedAmount > 0 ? usedAmount : undefined,
+                paymentCount: usedAmount > 0 ? 1 : 0,
                 paid: isPaid, isPartial: isPartial, 
                 fundSplit: { main: tMain, repair: tRepair } 
             });
@@ -3103,7 +3187,10 @@ document.addEventListener('pointerdown', function(e) {
             stornoCashRecords(idAttr);
         } else if (action === 'storno-fee') {
             stornoFeePayment(Number(idAttr));
+        } else if (action === 'delete-single-fee') {
+            deleteSingleFeeByHold(Number(idAttr));
         }
+
     }, 650);
 });
 
@@ -3171,8 +3258,6 @@ async function stornoCashRecords(idsStr) {
     }
 
     // 1. ЗАЩИТА ЗА КОМБИНИРАНИ ПЛАЩАНИЯ (Фонд Основен + Фонд Ремонти):
-    // Ако се сторнира такса от апартамент (дори при пуснат филтър само за единия фонд),
-    // автоматично включваме и свързания запис от другия фонд за същото плащане.
     targetRecords.slice().forEach(r => {
         const isFeePayment = r.type === 'приход' && r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'));
         if (isFeePayment) {
@@ -3195,7 +3280,6 @@ async function stornoCashRecords(idsStr) {
     allApts.forEach(a => aptMap[a.id] = a.number);
 
     // 2. ЗАЩИТА ПРИ ВЕЧЕ УСВОЕН ДЕПОЗИТ:
-    // Проверяваме дали наличният депозит в апартамента е достатъчен преди сторниране на вноска за депозит.
     for (let r of targetRecords) {
         if (r.type === 'приход' && r.apartmentId && r.description && r.description.includes('Депозит')) {
             const apt = allApts.find(a => a.id === r.apartmentId);
@@ -3229,12 +3313,12 @@ async function stornoCashRecords(idsStr) {
         ]);
 
         const todayDate = getLocalDateStr();
+        const affectedEpSet = new Set();
 
         for (let r of targetRecords) {
             r.isStornoed = true;
             recStore.put(r);
 
-            // Добавяме сторно запис в историята с обратен знак
             const stornoRec = {
                 date: todayDate,
                 refPeriod: r.refPeriod || r.date.slice(0, 7),
@@ -3250,7 +3334,6 @@ async function stornoCashRecords(idsStr) {
             };
             recStore.add(stornoRec);
 
-            // Ако е плащане от апартамент, възстановяваме задължението или депозита
             if (r.type === 'приход' && r.apartmentId) {
                 if (r.description && r.description.includes('Депозит')) {
                     const apt = apartments.find(a => a.id === r.apartmentId);
@@ -3271,11 +3354,47 @@ async function stornoCashRecords(idsStr) {
                             ep.paid = false;
                             ep.isPartial = true;
                         }
-                        epStore.put(ep);
+                        affectedEpSet.add(ep);
                     }
                 }
             }
         }
+
+        // Актуализираме данните за разписката (lastPaidAmount, lastPaidDate, paymentCount) за засегнатите такси
+        affectedEpSet.forEach(ep => {
+            ep.paymentCount = Math.max(0, (ep.paymentCount || 1) - 1);
+
+            const remainingActiveRecords = allRecords.filter(other =>
+                !targetRecords.some(tr => tr.id === other.id) &&
+                !other.isStornoed &&
+                !other.isStornoEntry &&
+                other.type === 'приход' &&
+                other.apartmentId === ep.apartmentId &&
+                other.refPeriod === ep.period &&
+                !(other.description && other.description.includes('Депозит'))
+            );
+
+            if (remainingActiveRecords.length > 0) {
+                // Групираме останалите активни плащания от последната дата за тази такса
+                remainingActiveRecords.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+                const latestDate = remainingActiveRecords[0].date;
+                const latestDesc = remainingActiveRecords[0].description;
+                const latestSum = remainingActiveRecords
+                    .filter(x => x.date === latestDate && x.description === latestDesc)
+                    .reduce((s, x) => s + x.amount, 0);
+                ep.lastPaidDate = latestDate;
+                ep.lastPaidAmount = Math.round(latestSum * 100) / 100;
+            } else if (ep.paidFromDeposit && ep.paidFromDeposit > 0) {
+                ep.lastPaidAmount = ep.paidFromDeposit;
+                if (ep.paymentCount === 0) ep.paymentCount = 1;
+            } else {
+                ep.lastPaidDate = undefined;
+                ep.lastPaidAmount = undefined;
+                ep.paymentCount = 0;
+            }
+
+            epStore.put(ep);
+        });
 
         await dbTx(tx);
         loadCashList();
@@ -3288,8 +3407,7 @@ async function stornoCashRecords(idsStr) {
     }
 }
 
-
-// 3. Сторниране директно от плочка в секция "Такси"
+// 3. Сторниране директно от плочка в секция "Такси" (връща и касовата част, и усвоения депозит)
 async function stornoFeePayment(paymentId) {
     if (!paymentId) return;
     const txRead = db.transaction(["expectedPayments", "records"], "readonly");
@@ -3300,7 +3418,6 @@ async function stornoFeePayment(paymentId) {
 
     if (!ep || (!ep.paid && !ep.isPartial)) return;
 
-    // Намираме всички активни касови записи за тази такса
     const matchingRecords = allRecords.filter(r =>
         r.type === 'приход' &&
         r.apartmentId === ep.apartmentId &&
@@ -3310,27 +3427,75 @@ async function stornoFeePayment(paymentId) {
         !(r.description && r.description.includes('Депозит'))
     );
 
+    const origTotal = ep.fundSplit ? (ep.fundSplit.main + ep.fundSplit.repair) : ep.amount;
+    const cashPaidSum = matchingRecords.reduce((s, r) => s + r.amount, 0);
+
+    let depositUsed = (ep.paidFromDeposit !== undefined) 
+        ? Number(ep.paidFromDeposit) 
+        : Math.max(0, Math.round((origTotal - ep.amount - cashPaidSum) * 100) / 100);
+
     if (matchingRecords.length > 0) {
         await stornoCashRecords(matchingRecords.map(r => r.id).join(','));
-    } else {
-        // Ако е било покрито автоматично от депозит при генерирането
-        const origTotal = ep.fundSplit ? (ep.fundSplit.main + ep.fundSplit.repair) : ep.amount;
-        const paidFromDeposit = Math.round((origTotal - ep.amount) * 100) / 100;
-        if (!confirm(`🔄 СТОРНО НА ПЛАЩАНЕ ОТ ДЕПОЗИТ (Ап. ${ep.apNumber})\n\nСумата от ${paidFromDeposit.toFixed(2)} € ще бъде върната в депозита на апартамента, а таксата за ${ep.period} ще стане отново дължима.\n\nПотвърждавате ли?`)) return;
+        
+        const epAfter = await dbReq(db.transaction("expectedPayments", "readonly").objectStore("expectedPayments").get(paymentId));
+        if (epAfter && epAfter.amount > ep.amount && depositUsed > 0) {
+            if (confirm(`Тази такса има и усвоена част от депозит (${depositUsed.toFixed(2)} €).\n\nИскате ли да върнете и нея обратно в депозита на Ап. ${ep.apNumber}?`)) {
+                const txDep = db.transaction(["expectedPayments", "apartments", "records"], "readwrite");
+                const [freshEp, apt] = await Promise.all([
+                    dbReq(txDep.objectStore("expectedPayments").get(paymentId)),
+                    dbReq(txDep.objectStore("apartments").get(ep.apartmentId))
+                ]);
+                if (apt) {
+                    apt.overpayment = Math.round(((apt.overpayment || 0) + depositUsed) * 100) / 100;
+                    txDep.objectStore("apartments").put(apt);
+                }
+                if (freshEp) {
+                    freshEp.amount = Math.min(origTotal, Math.round((freshEp.amount + depositUsed) * 100) / 100);
+                    freshEp.paidFromDeposit = 0;
+                    if (freshEp.amount >= origTotal - 0.009) {
+                        freshEp.amount = Math.round(origTotal * 100) / 100;
+                        freshEp.paid = false;
+                        freshEp.isPartial = false;
+                        freshEp.lastPaidDate = undefined;
+                        freshEp.lastPaidAmount = undefined;
+                        freshEp.paymentCount = 0;
+                    }
+                    freshEp.details = freshEp.details ? freshEp.details.replace(/\s*\((Платено от депозит|Частично от депозит:[^)]*)\)\s*$/, "") : "";
+                    txDep.objectStore("expectedPayments").put(freshEp);
+                }
+                const transferRecords = allRecords.filter(r =>
+                    r.type === 'transfer' &&
+                    r.apartmentId === ep.apartmentId &&
+                    r.refPeriod === ep.period
+                );
+                transferRecords.forEach(tr => txDep.objectStore("records").delete(tr.id));
+
+                await dbTx(txDep);
+                loadFeesList();
+                loadReports();
+                loadApartmentsList();
+                loadCashList();
+            }
+        }
+    } else if (depositUsed > 0) {
+        if (!confirm(`🔄 СТОРНО НА ПЛАЩАНЕ ОТ ДЕПОЗИТ (Ап. ${ep.apNumber})\n\nСумата от ${depositUsed.toFixed(2)} € ще бъде върната в депозита на апартамента, а таксата за ${ep.period} ще стане отново дължима.\n\nПотвърждавате ли?`)) return;
 
         const tx = db.transaction(["expectedPayments", "apartments", "records"], "readwrite");
         const apt = await dbReq(tx.objectStore("apartments").get(ep.apartmentId));
         if (apt) {
-            apt.overpayment = Math.round(((apt.overpayment || 0) + paidFromDeposit) * 100) / 100;
+            apt.overpayment = Math.round(((apt.overpayment || 0) + depositUsed) * 100) / 100;
             tx.objectStore("apartments").put(apt);
         }
         ep.amount = Math.round(origTotal * 100) / 100;
+        ep.paidFromDeposit = 0;
         ep.paid = false;
         ep.isPartial = false;
+        ep.lastPaidDate = undefined;
+        ep.lastPaidAmount = undefined;
+        ep.paymentCount = 0;
         ep.details = ep.details ? ep.details.replace(/\s*\((Платено от депозит|Частично от депозит:[^)]*)\)\s*$/, "") : "";
         tx.objectStore("expectedPayments").put(ep);
 
-        // Изтриваме служебния трансфер от депозит към фонд "Ремонти" за този месец (ако има такъв)
         const transferRecords = allRecords.filter(r =>
             r.type === 'transfer' &&
             r.apartmentId === ep.apartmentId &&
@@ -3345,6 +3510,27 @@ async function stornoFeePayment(paymentId) {
         loadCashList();
     }
 }
+
+
+// 4. Изтриване на единична неплатена такса със задържане (за лесно прегенериране само за 1 апартамент)
+async function deleteSingleFeeByHold(paymentId) {
+    if (!paymentId) return;
+    const ep = await dbReq(db.transaction("expectedPayments", "readonly").objectStore("expectedPayments").get(paymentId));
+    if (!ep || ep.paid || ep.isPartial) return;
+
+    if (!confirm(`🗑️ ИЗТРИВАНЕ НА НЕПЛАТЕНА ТАКСА\n\nИскате ли да изтриете таксата на Ап. ${ep.apNumber} за месец ${ep.period} (${ep.amount.toFixed(2)} €)?\n\nСъвет: След изтриването можете да натиснете „ГЕНЕРИРАЙ ТАКСИТЕ“, за да се преизчисли таксата само за този апартамент.`)) return;
+
+    try {
+        const tx = db.transaction("expectedPayments", "readwrite");
+        tx.objectStore("expectedPayments").delete(paymentId);
+        await dbTx(tx);
+        loadFeesList();
+        loadReports();
+    } catch (e) {
+        console.error("Грешка при изтриване на единична такса:", e);
+    }
+}
+
 
 
 function setTxType(t){ 
@@ -3453,33 +3639,232 @@ function loadInitialBalances() {
     };
 }
 
-function exportDB() {
-    const d = {};
-    const stores = ["settings", "apartments", "fees", "expectedPayments", "records", "feeRules"];
-    let c = 0;
-    stores.forEach(s => {
-        db.transaction(s, "readonly").objectStore(s).getAll().onsuccess = e => {
-            d[s] = e.target.result;
-            c++;
-            if (c === stores.length) {
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(new Blob([JSON.stringify(d)], { type: "application/json" }));
-                const date = getLocalDateStr();
-                a.download = `⅟вход_${date}.json`;
-                a.click();
-                clearUnsavedChanges();
-            }
+// --- ПАРОЛА И КРИПТИРАНЕ НА АРХИВА (SHA-256 CTR + HMAC) ---
+function saveBackupPassword() {
+    const inp = document.getElementById("backup-password");
+    if (inp) {
+        localStorage.setItem("backupPassword", inp.value);
+    }
+}
+
+function loadBackupPassword() {
+    const inp = document.getElementById("backup-password");
+    if (inp) {
+        inp.value = localStorage.getItem("backupPassword") || "";
+    }
+}
+
+function toggleBackupPassVisibility() {
+    const inp = document.getElementById("backup-password");
+    const icon = document.getElementById("backup-pass-eye");
+    if (!inp || !icon) return;
+    if (inp.type === "password") {
+        inp.type = "text";
+        icon.className = "ph ph-eye-slash";
+    } else {
+        inp.type = "password";
+        icon.className = "ph ph-eye";
+    }
+}
+
+function concatUint8(...arrays) {
+    const totalLen = arrays.reduce((acc, arr) => acc + arr.length, 0);
+    const res = new Uint8Array(totalLen);
+    let offset = 0;
+    for (const arr of arrays) {
+        res.set(arr, offset);
+        offset += arr.length;
+    }
+    return res;
+}
+
+function bytesToBase64(bytes) {
+    let binary = "";
+    const chunk = 8192;
+    for (let i = 0; i < bytes.length; i += chunk) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+}
+
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+function sha256Bytes(msgBytes) {
+    const K = [
+        0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+        0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+        0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+        0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+        0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+        0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+        0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+        0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+    ];
+    let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    const l = msgBytes.length;
+    const bitLenHi = Math.floor((l * 8) / 0x100000000);
+    const bitLenLo = (l * 8) >>> 0;
+    const padLen = ((l + 9 + 63) & ~63);
+    const padded = new Uint8Array(padLen);
+    padded.set(msgBytes);
+    padded[l] = 0x80;
+    const view = new DataView(padded.buffer);
+    view.setUint32(padLen - 8, bitLenHi, false);
+    view.setUint32(padLen - 4, bitLenLo, false);
+
+    const W = new Int32Array(64);
+    for (let i = 0; i < padLen; i += 64) {
+        for (let t = 0; t < 16; t++) W[t] = view.getInt32(i + t * 4, false);
+        for (let t = 16; t < 64; t++) {
+            const s0 = ((W[t-15] >>> 7) | (W[t-15] << 25)) ^ ((W[t-15] >>> 18) | (W[t-15] << 14)) ^ (W[t-15] >>> 3);
+            const s1 = ((W[t-2] >>> 17) | (W[t-2] << 15)) ^ ((W[t-2] >>> 19) | (W[t-2] << 13)) ^ (W[t-2] >>> 10);
+            W[t] = (W[t-16] + s0 + W[t-7] + s1) | 0;
         }
+        let [a, b, c, d, e, f, g, h] = H;
+        for (let t = 0; t < 64; t++) {
+            const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+            const ch = (e & f) ^ (~e & g);
+            const temp1 = (h + S1 + ch + K[t] + W[t]) | 0;
+            const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+            const maj = (a & b) ^ (a & c) ^ (b & c);
+            const temp2 = (S0 + maj) | 0;
+            h = g; g = f; f = e; e = (d + temp1) | 0;
+            d = c; c = b; b = a; a = (temp1 + temp2) | 0;
+        }
+        H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+        H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+    }
+    const out = new Uint8Array(32);
+    const outView = new DataView(out.buffer);
+    for (let i = 0; i < 8; i++) outView.setInt32(i * 4, H[i], false);
+    return out;
+}
+
+function deriveBackupKeys(password, saltBytes) {
+    const passBytes = new TextEncoder().encode(password);
+    let key = concatUint8(saltBytes, passBytes);
+    for (let i = 0; i < 5000; i++) {
+        key = sha256Bytes(key);
+    }
+    const encKey = sha256Bytes(concatUint8(key, new Uint8Array([1])));
+    const macKey = sha256Bytes(concatUint8(key, new Uint8Array([2])));
+    return { encKey, macKey };
+}
+
+function xorStreamCipher(inputBytes, encKey, ivBytes) {
+    const output = new Uint8Array(inputBytes.length);
+    const counterBytes = new Uint8Array(4);
+    const counterView = new DataView(counterBytes.buffer);
+    let blockIndex = 0;
+    for (let offset = 0; offset < inputBytes.length; offset += 32) {
+        counterView.setUint32(0, blockIndex++, false);
+        const keystream = sha256Bytes(concatUint8(encKey, ivBytes, counterBytes));
+        const chunkLen = Math.min(32, inputBytes.length - offset);
+        for (let j = 0; j < chunkLen; j++) {
+            output[offset + j] = inputBytes[offset + j] ^ keystream[j];
+        }
+    }
+    return output;
+}
+
+function encryptBackupData(jsonStr, password) {
+    const salt = new Uint8Array(16);
+    const iv = new Uint8Array(16);
+    crypto.getRandomValues(salt);
+    crypto.getRandomValues(iv);
+
+    const { encKey, macKey } = deriveBackupKeys(password, salt);
+    const plainBytes = new TextEncoder().encode(jsonStr);
+    const cipherBytes = xorStreamCipher(plainBytes, encKey, iv);
+    const macBytes = sha256Bytes(concatUint8(macKey, iv, cipherBytes));
+
+    return JSON.stringify({
+        encrypted: true,
+        v: 1,
+        salt: bytesToBase64(salt),
+        iv: bytesToBase64(iv),
+        mac: bytesToBase64(macBytes),
+        data: bytesToBase64(cipherBytes)
     });
 }
 
+function decryptBackupData(payloadObj, password) {
+    try {
+        const salt = base64ToBytes(payloadObj.salt);
+        const iv = base64ToBytes(payloadObj.iv);
+        const expectedMac = base64ToBytes(payloadObj.mac);
+        const cipherBytes = base64ToBytes(payloadObj.data);
 
-// --- ВЪЗСТАНОВЯВАНЕ ОТ АРХИВ (ПЪЛНА ЗАМЯНА НА ДАННИТЕ) ---
+        const { encKey, macKey } = deriveBackupKeys(password, salt);
+        const actualMac = sha256Bytes(concatUint8(macKey, iv, cipherBytes));
+
+        if (actualMac.length !== expectedMac.length) return null;
+        let diff = 0;
+        for (let i = 0; i < actualMac.length; i++) {
+            diff |= (actualMac[i] ^ expectedMac[i]);
+        }
+        if (diff !== 0) return null; // Грешна парола
+
+        const plainBytes = xorStreamCipher(cipherBytes, encKey, iv);
+        return new TextDecoder().decode(plainBytes);
+    } catch (e) {
+        return null;
+    }
+}
+
+async function exportDB() {
+    if (!db) return;
+    try {
+        const stores = ["settings", "apartments", "fees", "expectedPayments", "records", "feeRules"];
+        const tx = db.transaction(stores, "readonly");
+        const results = await Promise.all(stores.map(s => dbReq(tx.objectStore(s).getAll())));
+        
+        const d = {};
+        stores.forEach((s, idx) => { d[s] = results[idx]; });
+
+        let outputStr = JSON.stringify(d);
+        const pass = (localStorage.getItem("backupPassword") || "").trim();
+        if (pass) {
+            outputStr = encryptBackupData(outputStr, pass);
+        }
+
+        const blob = new Blob([outputStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const date = getLocalDateStr();
+        a.download = `⅟вход_${date}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+        if (localStorage.getItem('hasUnsavedChanges') === 'true') {
+            setTimeout(() => {
+                if (confirm("Архивният файл беше изпратен за запазване.\n\nПотвърждавате ли, че изтеглянето на устройството ви приключи успешно?")) {
+                    clearUnsavedChanges();
+                }
+            }, 400);
+        }
+    } catch (err) {
+        console.error("Грешка при експорт:", err);
+        alert("Възникна грешка при генерирането на архива.");
+    }
+}
+
+// --- ВЪЗСТАНОВЯВАНЕ ОТ АРХИВ (С ПОДДРЪЖКА НА ПАРОЛА И ЧАСТИЧНИ ТАБЛИЦИ) ---
 function importDBFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!confirm("ВНИМАНИЕ!\nТова действие ще ИЗТРИЕ всички текущи данни на този телефон и ще ги ЗАМЕНИ напълно с данните от файла.\n\nСигурни ли сте, че искате да продължите?")) {
+    if (!confirm("ВНИМАНИЕ!\nТова действие ще ЗАМЕНИ текущите данни на това устройство с данните от архивния файл.\n\nСигурни ли сте, че искате да продължите?")) {
         event.target.value = "";
         return;
     }
@@ -3488,56 +3873,87 @@ function importDBFile(event) {
     
     reader.onload = async function(e) {
         try {
-            const data = JSON.parse(e.target.result);
-            const storesNames = ["apartments", "expectedPayments", "records", "settings", "feeRules"];
+            let data = JSON.parse(e.target.result);
+
+            // Проверка дали архивът е криптиран с парола
+            if (data && data.encrypted === true) {
+                let pass = (localStorage.getItem("backupPassword") || "").trim();
+                let decryptedStr = pass ? decryptBackupData(data, pass) : null;
+
+                while (decryptedStr === null) {
+                    const prompted = prompt(
+                        pass 
+                            ? "❌ Запазената парола не съвпада с паролата на този архив!\n\nМоля, въведете паролата, с която е криптиран файлът:"
+                            : "🔒 Този архив е защитен с парола.\n\nМоля, въведете паролата за декриптиране:"
+                    );
+                    if (prompted === null) {
+                        event.target.value = "";
+                        return;
+                    }
+                    pass = prompted.trim();
+                    decryptedStr = decryptBackupData(data, pass);
+                }
+
+                // Запомняме успешната парола и на това устройство
+                localStorage.setItem("backupPassword", pass);
+                loadBackupPassword();
+                data = JSON.parse(decryptedStr);
+            }
+
+            const allStoresNames = ["apartments", "expectedPayments", "records", "settings", "feeRules", "fees"];
             
-            // Валидация дали файлът е истински архив на приложението
             if (!data || typeof data !== "object" || Array.isArray(data)) {
                 throw new Error("Невалиден формат на архива.");
             }
-            const hasValidStore = storesNames.some(s => Array.isArray(data[s]));
-            const hasInvalidType = storesNames.some(s => data[s] !== undefined && !Array.isArray(data[s]));
-            if (!hasValidStore || hasInvalidType) {
+            const storesToRestore = allStoresNames.filter(s => Array.isArray(data[s]));
+            const hasInvalidType = allStoresNames.some(s => data[s] !== undefined && !Array.isArray(data[s]));
+            if (storesToRestore.length === 0 || hasInvalidType) {
                 throw new Error("Файлът не съдържа валидни таблици на приложението.");
             }
 
+            // Проверяваме всеки запис ПРЕДИ да изтрием каквото и да е: put() с невалиден ключ хвърля грешка
+            const isValidId = id => id === undefined || (typeof id === "number" && Number.isFinite(id)) || typeof id === "string";
+            const isValidRecord = r => r !== null && typeof r === "object" && !Array.isArray(r) && isValidId(r.id);
+            const badStore = storesToRestore.find(s => !data[s].every(isValidRecord));
+            if (badStore) {
+                throw new Error("Таблица „" + badStore + "“ съдържа невалиден запис.");
+            }
+
             const backupData = {};
-            const backupTx = db.transaction(storesNames, "readonly");
+            const backupTx = db.transaction(storesToRestore, "readonly");
             const backupResults = await Promise.all(
-                storesNames.map(storeName => dbReq(backupTx.objectStore(storeName).getAll()))
+                storesToRestore.map(storeName => dbReq(backupTx.objectStore(storeName).getAll()))
             );
-            storesNames.forEach((storeName, idx) => {
+            storesToRestore.forEach((storeName, idx) => {
                 backupData[storeName] = backupResults[idx];
             });
 
-            const tx = db.transaction(storesNames, "readwrite");
-            storesNames.forEach(storeName => tx.objectStore(storeName).clear());
-
-            storesNames.forEach(storeName => {
-                if (Array.isArray(data[storeName])) {
-                    data[storeName].forEach(item => tx.objectStore(storeName).put(item));
-                }
-            });
+            const tx = db.transaction(storesToRestore, "readwrite");
+            let abortedByUs = false;   // транзакцията е прекратена от catch по-долу
+            let errorHandled = false;  // tx.onerror вече е обработил грешката
 
             tx.oncomplete = () => {
                 localStorage.removeItem('hasUnsavedChanges');
                 alert("Данните са възстановени успешно!");
                 location.reload();
             };
-            
+
             tx.onerror = () => {
+                if (abortedByUs) return;
+                errorHandled = true;
                 console.warn("Грешка при импорта. Стартиране на възстановяване на старите данни...");
-                const rollbackTx = db.transaction(storesNames, "readwrite");
+                const rollbackTx = db.transaction(storesToRestore, "readwrite");
                 
-                storesNames.forEach(storeName => {
-                    rollbackTx.objectStore(storeName).clear();
+                storesToRestore.forEach(storeName => {
+                    const store = rollbackTx.objectStore(storeName);
+                    store.clear();
                     if (backupData[storeName]) {
-                        backupData[storeName].forEach(item => rollbackTx.objectStore(storeName).put(item));
+                        backupData[storeName].forEach(item => store.put(item));
                     }
                 });
 
                 rollbackTx.oncomplete = () => {
-                    alert("Възникна грешка при четенето на новия файл.\nСтарите ви данни бяха възстановени безопасно!");
+                    alert("Възникна грешка при записването на новия файл.\nСтарите ви данни бяха възстановени безопасно!");
                     event.target.value = "";
                 };
 
@@ -3545,7 +3961,27 @@ function importDBFile(event) {
                     alert("КРИТИЧНА ГРЕШКА при възстановяването на данните!");
                 };
             };
-            
+
+            // Прекратяване без грешка в отделен запис (напр. липса на място при commit)
+            tx.onabort = () => {
+                if (abortedByUs || errorHandled) return;
+                alert("Браузърът отказа да запише новите данни (вероятно няма място).\nСтарите ви данни са запазени.");
+                event.target.value = "";
+            };
+
+            // Ако put() хвърли грешка, без abort() транзакцията би се записала наполовина (след clear)
+            try {
+                storesToRestore.forEach(storeName => {
+                    const store = tx.objectStore(storeName);
+                    store.clear();
+                    data[storeName].forEach(item => store.put(item));
+                });
+            } catch (putErr) {
+                abortedByUs = true;
+                try { tx.abort(); } catch (_) {}
+                throw putErr;
+            }
+
         } catch (err) {
             alert("Грешка! Файлът е повреден или не е валиден архив на приложението.");
             console.error(err);
@@ -3556,13 +3992,43 @@ function importDBFile(event) {
     reader.readAsText(file);
 }
 
-function resetDB() {
-    if (confirm("Изтриване?")) {
+async function resetDB() {
+    const check = prompt("⚠️ ВНИМАНИЕ: Това действие ще изтрие БЕЗВЪЗВРАТНО всички апартаменти, такси, касови операции и настройки!\n\nЗа да потвърдите, напишете думата ИЗТРИЙ:");
+    if (check && check.trim().toUpperCase() === "ИЗТРИЙ") {
+        try {
+            if (db) {
+                const allStores = Array.from(db.objectStoreNames);
+                const tx = db.transaction(allStores, "readwrite");
+                allStores.forEach(s => tx.objectStore(s).clear());
+                await new Promise(resolve => {
+                    tx.oncomplete = resolve;
+                    tx.onerror = resolve;
+                    tx.onabort = resolve;
+                });
+                db.close();
+            }
+        } catch (e) {
+            console.warn("Грешка при изчистване на таблиците:", e);
+        }
+
+        // Изчистваме всички настройки в localStorage и всички полета на екрана
         localStorage.removeItem('hasUnsavedChanges');
-        indexedDB.deleteDatabase("DomoupravitelPro_v7");
-        location.reload();
+        localStorage.removeItem('backupPassword');
+        localStorage.removeItem('lastActiveTab');
+        document.querySelectorAll("input, textarea").forEach(el => {
+            if (el.type !== "hidden" && el.type !== "month") el.value = "";
+        });
+
+        const delReq = indexedDB.deleteDatabase("DomoupravitelPro_v7");
+        delReq.onsuccess = () => location.reload();
+        delReq.onerror   = () => location.reload();
+        delReq.onblocked = () => location.reload();
+    } else if (check !== null) {
+        alert("Изтриването е отменено (невалидна дума за потвърждение).");
     }
 }
+
+
 
 
 async function deleteMonthFees() {
@@ -3725,55 +4191,7 @@ async function openCashPrintPreview() {
         ruleCategoryMap[r.name] = r.category || 'Други';
     });
 
-    let filtered = records.filter(r => {
-        if(r.date === "0000-01-01" || r.type === 'transfer') return false;
-        const accountingDate = r.refPeriod || r.date;
-        return isDateInPeriod(accountingDate);
-    });
-
-    if(cashFilterType === 'income') filtered = filtered.filter(r => r.type === 'приход');
-    else if (cashFilterType === 'expense') filtered = filtered.filter(r => r.type === 'разход');
-
-    if (cashFundFilter === 'main') filtered = filtered.filter(r => r.fund === 'основен');
-    else if (cashFundFilter === 'repair') filtered = filtered.filter(r => r.fund === 'ремонт');
-
-    if (cashSubFilter !== 'all') {
-        let categoryFiltered = [];
-        
-        filtered.forEach(r => {
-            if (r.type === 'разход') {
-                if (r.category === cashSubFilter) categoryFiltered.push(r);
-            } 
-            else if (r.type === 'приход') {
-                if (r.apartmentId && r.refPeriod && !(r.description && r.description.includes('Депозит'))) {
-                    let ep = expectedPayments.find(p => p.apartmentId === r.apartmentId && p.period === r.refPeriod);
-                    if (ep) {
-                        let expectedTotal = r.fund === 'ремонт' ? (ep.fundSplit ? ep.fundSplit.repair : 0) : (ep.fundSplit ? ep.fundSplit.main : 0);
-                        if (!ep.fundSplit) expectedTotal = Math.abs(r.amount);
-                        let ratio = expectedTotal > 0 ? (r.amount / expectedTotal) : 1;
-                        
-                        let catSum = 0;
-                        let items = getPaymentBreakdownItems(ep, ruleMap, ruleCategoryMap);
-                        items.forEach(item => {
-                            if (item.fund === r.fund && item.category === cashSubFilter) {
-                                catSum += (item.amount * ratio);
-                            }
-                        });
-                        
-                        if (Math.abs(catSum) > 0.009) {
-                            let clone = { ...r }; 
-                            clone.amount = catSum;
-                            clone.isPartialCategory = true; 
-                            categoryFiltered.push(clone);
-                        }
-                    }
-                } else if (cashSubFilter === 'Други' && !r.apartmentId) {
-                    categoryFiltered.push(r);
-                }
-            }
-        });
-        filtered = categoryFiltered;
-    }
+    let filtered = getFilteredCashRecords(records, expectedPayments, ruleMap, ruleCategoryMap);
 
     if(filtered.length === 0) return alert("Няма записи за печат спрямо текущите филтри!");
 
@@ -3839,6 +4257,7 @@ async function openCashPrintPreview() {
 
     document.getElementById("print-content").innerHTML = html;
 }
+
 
 // --- ФУНКЦИЯ ЗА ДИНАМИЧНА ПОМОЩ ---
 function showHelp() {
@@ -4011,8 +4430,12 @@ async function sendReceipt(paymentId, aptId) {
     }
 
     const to = emails.join(",");
-    const dateStr = new Date().toLocaleDateString('bg-BG');
-    const receiptNo = `РЗП-${payment.id}-${new Date().getFullYear()}`;
+    const payDateStr = payment.lastPaidDate 
+        ? payment.lastPaidDate.split('-').reverse().join('.') 
+        : new Date().toLocaleDateString('bg-BG');
+    const paySeq = payment.paymentCount || 1;
+    const receiptYear = payment.lastPaidDate ? payment.lastPaidDate.split('-')[0] : new Date().getFullYear();
+    const receiptNo = `РЗП-${payment.id}-${paySeq}/${receiptYear}`;
     
     let bName = settings.bName || "[Име на сградата]";
     let bAssoc = settings.bAssoc ? `\nСдружение: ${settings.bAssoc}` : "";
@@ -4023,17 +4446,21 @@ async function sendReceipt(paymentId, aptId) {
     if(payment.fundSplit) originalTotal = payment.fundSplit.main + payment.fundSplit.repair;
     else originalTotal = payment.amount;
 
-    let paidAmount = payment.paid ? originalTotal : (payment.isPartial ? (originalTotal - payment.amount) : 0);
+    let totalPaidSoFar = payment.paid ? originalTotal : (payment.isPartial ? (originalTotal - payment.amount) : 0);
+    let currentReceiptAmount = payment.lastPaidAmount ? payment.lastPaidAmount : totalPaidSoFar;
     let methodText = payment.payMethod === 'bank' ? 'По банка' : 'В брой';
     let payerName = payment.payerName || apt.owner || "Собственик / Наемател";
 
-    let body = `РАЗПИСКА ЗА ПЛАЩАНЕ № ${receiptNo}\nДата: ${dateStr}\n-----------------------------------\n`;
+    let body = `РАЗПИСКА ЗА ПЛАЩАНЕ № ${receiptNo}\nДата на плащане: ${payDateStr}\n-----------------------------------\n`;
     body += `Сграда / Вход: ${bName}${bAssoc}\n`;
     body += `Адрес: ${bAddr}\n\n`;
     body += `Получено от: ${payerName} (Апартамент № ${apt.number})\n`; 
     body += `Основание: ${payment.details || `Такса ${payment.period}`}\n`;
     body += `Период: ${payment.period}\n`;
-    body += `СУМА: ${paidAmount.toFixed(2)} €\n`;
+    body += `ПЛАТЕНА СУМА: ${currentReceiptAmount.toFixed(2)} €\n`;
+    if (payment.isPartial || Math.abs(totalPaidSoFar - currentReceiptAmount) > 0.009) {
+        body += `Общо платено за периода: ${totalPaidSoFar.toFixed(2)} € (Остатък за доплащане: ${payment.amount.toFixed(2)} €)\n`;
+    }
     body += `Начин на плащане: ${methodText}\n`;
     body += `-----------------------------------\n`;
     body += `Касиер / Домоуправител: ${manager}\n`;
@@ -4578,23 +5005,9 @@ async function makeOffline() {
             }
         }
 
-        const clonedDoc = document.documentElement.cloneNode(true);
-
-        ['#financial-content', '#ap-list', '#apt-contact-list', '#fees-list', '#cash-list', '#active-rules-list', '#print-content', '#inline-cash-template-list', '#occupants-list', '#fee-override-list'].forEach(sel => {
-            const el = clonedDoc.querySelector(sel);
-            if (el) el.innerHTML = '';
-        });
-
-        clonedDoc.querySelectorAll('.tab').forEach(t => {
-            t.style.display = '';
-            t.classList.remove('active');
-        });
-        const repTab = clonedDoc.querySelector('#reports');
-        if (repTab) repTab.classList.add('active');
-
-        clonedDoc.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-        const repNav = clonedDoc.querySelector('#nav-reports');
-        if (repNav) repNav.classList.add('active');
+        // Копието се прави от чистия HTML, а не от живия DOM: така в него не попадат
+        // данни от екрана, попълнени полета, отворени модали и т.н.
+        const clonedDoc = new DOMParser().parseFromString(PRISTINE_HTML, 'text/html');
 
         const links = clonedDoc.querySelectorAll('link[href*="phosphor"]');
         links.forEach(l => l.remove());
@@ -4602,21 +5015,21 @@ async function makeOffline() {
         // Премахваме стария <style> таг с онлайн @font-face към unpkg.com
         const oldStyles = clonedDoc.querySelectorAll('style');
         oldStyles.forEach(st => {
-            if (st.innerHTML.includes('unpkg.com/@phosphor-icons') || st.innerHTML.includes('Допълнителна застраховка')) {
+            if (st.textContent.includes('unpkg.com/@phosphor-icons')) {
                 st.remove();
             }
         });
 
-        const newStyle = document.createElement('style');
-        newStyle.innerHTML = '/* ВГРАДЕНИ ОФЛАЙН ИКОНКИ */\n' + finalCSS;
-        clonedDoc.querySelector('head').appendChild(newStyle);
+        const newStyle = clonedDoc.createElement('style');
+        newStyle.textContent = '/* ВГРАДЕНИ ОФЛАЙН ИКОНКИ */\n' + finalCSS;
+        clonedDoc.head.appendChild(newStyle);
 
         const offlineBtn = clonedDoc.querySelector('#make-offline-btn');
         if (offlineBtn) offlineBtn.remove();
         const offlineScript = clonedDoc.querySelector('#offline-script');
         if (offlineScript) offlineScript.remove();
 
-        const finalHTML = '<!DOCTYPE html>\n<html lang="bg">\n' + clonedDoc.innerHTML + '\n</html>';
+        const finalHTML = '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML;
 
         const blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
         const a = document.createElement('a');
